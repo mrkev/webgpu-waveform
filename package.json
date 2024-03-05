@@ -1,0 +1,49 @@
+{
+  "name": "NEW_LIB",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./dist/NEW_LIB.umd.cjs",
+  "module": "./dist/NEW_LIB.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/NEW_LIB.js",
+      "require": "./dist/NEW_LIB.umd.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && npm run build:lib && npm run build:site",
+    "build:site": "vite build -c vite.config.ts",
+    "build:lib": "vite build -c vite.config.lib.ts",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-react": "^7.33.2",
+    "jsdom": "^24.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "vite-plugin-dts": "^3.7.3",
+    "vitest": "^1.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.20",
+    "@types/react": "^18.2.58",
+    "@types/react-dom": "^18.2.19",
+    "@typescript-eslint/eslint-plugin": "^7.0.2",
+    "@typescript-eslint/parser": "^7.0.2",
+    "@vitejs/plugin-react": "^4.2.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "react-github-btn": "^1.4.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.1.4"
+  }
+}
