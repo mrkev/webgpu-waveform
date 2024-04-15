@@ -21,7 +21,8 @@
     "build:site": "vite build -c vite.config.ts --emptyOutDir",
     "build:lib": "vite build -c vite.config.lib.ts --emptyOutDir",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "echo 'no tests atm'"
   },
   "peerDependencies": {
     "react": ">= 18.0.0",
