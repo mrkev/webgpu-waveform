@@ -1,10 +1,15 @@
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
+import mdx from "@mdx-js/rollup";
+import highlight from "rehype-highlight";
+// from: https://mikebifulco.com/posts/mdx-auto-link-headings-with-rehype-slug
+// add IDs to any h1-h6 tag that doesn't have one, using a slug made from its text
+import rehypeSlug from "rehype-slug";
 
 // Builds the site
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), mdx({ rehypePlugins: [highlight, rehypeSlug] })],
   root: "src",
   build: {
     outDir: "../docs",

@@ -1,1 +1,1 @@
-export { add } from "./lib/add";
+export { GPUWaveformRenderer } from "./lib/GPUWaveformRenderer";

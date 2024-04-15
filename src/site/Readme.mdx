@@ -1,0 +1,140 @@
+import { usePromise, audioContext, loadSound } from "./utils";
+import { GPUWaveform } from "../lib/GPUWaveform";
+import str from './GPUWaveformExample.tsx?raw'
+
+# webgpu-waveform
+
+Render waveforms to `<canvas />` using [WebGPU](https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API)
+
+
+
+{/* * this is an audio file that sounds and looks like a cow: 
+
+{/* * TODO: where did I get these waveforms? */}
+
+## Usage
+
+There's three ways to use this library:
+- as a class: `GPUWaveformRenderer` (vanilla JS)
+- as a hook: `useWaveformRenderer` (React)
+- as a component: `GPUWaveform` (React)
+
+<br />
+
+### Using the `GPUWaveformRenderer` class
+
+// TODO
+
+{/* 
+```javascript
+// TODO
+const channelData = audioBuffer.getChannelData(0);
+const gpu = useWebGPU(canvasRef);
+
+const renderer = GPUWaveformRenderer.createPipeline(
+  channelData,
+  gpu // todo change this one
+);
+
+renderer?.render(s, offset, width, height);
+``` */}
+
+<br />
+
+### Using the `useWaveformRenderer` hook
+
+The hook `useWaveformRenderer` has the following signature:
+
+```typescript
+function useWaveformRenderer(
+  canvasRef: React.RefObject<HTMLCanvasElement>,
+  audioBuffer: AudioBuffer
+): GPUWaveformRenderer | null;
+```
+
+It takes in the following arguments:
+
+- `canvasRef: React.RefObject<HTMLCanvasElement>` — the canvas element to render to
+- `audioBuffer: AudioBuffer` — the buffer to render
+
+And returns `null` during setup, or `GPUWaveformRenderer` if the webgpu device could be initialized, setup was successful, and a renderer for `audioBuffer` on `canvas` could be successfully created.
+
+**Example:**
+
+```javascript
+function Example({audioBuffer, width, height}) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const renderer = useWaveformRenderer(canvasRef, audioBuffer);
+
+  useEffect(() => {
+    renderer?.render(audioBuffer.length / width, 0, width, height);
+  }, [renderer, audioBuffer, width, height]);
+
+  return <canvas ref={canvasRef} width={width} height={height} />;
+});
+
+```
+
+**Result:**
+
+<p><Example /></p>
+
+### Using the `GPUWaveform` component
+
+The component `GPUWaveform` takes the following properties:
+
+- `audioBuffer: AudioBuffer;` — the buffer to render
+- `scale?: number;` — the "zoom" level. Namely, number of samples per pixel in the x axis
+- `offset?: number;` — // TODO: offset in px or in samples?
+- and all the props of `React.CanvasHTMLAttributes<HTMLCanvasElement>` — these are passed directly to the rendered canvas
+
+Example:
+
+```javascript
+export function Example({audioBuffer}) {
+  return (
+    <GPUWaveform
+      audioBuffer={audioBuffer}
+      scale={800}
+      width={300}
+      height={100}
+    />
+  )
+}
+```
+
+Result:
+
+<p><Example /></p>
+
+
+
+export function Example() {
+  const cowAudio = usePromise(() => loadSound(audioContext, "Cow-Shaped.wav"));
+  const fishAudio = usePromise(() =>
+    loadSound(audioContext, "Fish-Shaped.wav")
+  );
+
+
+  switch (cowAudio[0]) {
+    case "resolved":
+      return (
+        <GPUWaveform
+          // ref={waveformRef}
+          audioBuffer={cowAudio[1]}
+          scale={800}
+          // offset={
+          //   lockPlayback
+          //     ? offsetFrOfPlaybackPos(playbackPos)
+          //     : waveformStartFr
+          // }
+          width={300}
+          height={100}
+        />
+      );
+    case "pending":
+      return <>loading...</>;
+    case "rejected":
+      return <>error: {`${cowAudio[1]}`}</>;
+  }
+}
