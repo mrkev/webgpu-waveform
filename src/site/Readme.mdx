@@ -1,6 +1,6 @@
 import { GPUWaveform, useWaveformRenderer } from "../index";
 import { audioContext, loadSound, usePromise } from "./utils";
-import { Example, Example1, Example2, Example3 } from "./Examples"
+import { Example, Main, Example1, Example2, Example3 } from "./Examples"
 import { useRef, useEffect } from 'react'
 import GitHubButton from 'react-github-btn'
 
@@ -17,7 +17,7 @@ export function H3ID({ id, children }) {
 Render waveforms to `<canvas />` using [WebGPU](https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API)
 
 <p>
-  <a href="#"><i className="ri-github-fill" ></i> View on github</a>
+  <a href="https://github.com/mrkev/webgpu-waveform"><i className="ri-github-fill" ></i> View on github</a>
 </p>
 
 
@@ -29,6 +29,60 @@ There's three ways to use this library:
 - as a component: <a href="#GPUWaveform">`GPUWaveform`</a> (React)
 
 _Note: Examples here use a waveform that looks like a cow. Source: [Japhy Riddle](https://www.youtube.com/watch?v=qeUAHHPt-LY)_
+
+<Example render={audioBuffer => <Main audioBuffer={audioBuffer} />} />
+
+<p>
+<details>
+  <summary style={{background: 'black'}}>Source</summary>
+```tsx
+export function Main({ audioBuffer }: { audioBuffer: AudioBuffer }) {
+  const [offsetFr, setOffsetFr] = useState(0);
+  const [frPerPx, setFrPerPx] = useState(441);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        Offset:{" "}
+        <input
+          type="range"
+          min={0}
+          max={audioBuffer.length}
+          value={offsetFr}
+          onChange={(v) => {
+            const value = parseInt(v.target.value);
+            setOffsetFr(value);
+          }}
+        ></input>{" "}
+        {offsetFr} frames
+      </div>
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        Scale:{" "}
+        <input
+          type="range"
+          min={1}
+          max={1764}
+          value={frPerPx}
+          onChange={(v) => {
+            const value = parseInt(v.target.value);
+            setFrPerPx(value);
+          }}
+        ></input>{" "}
+        {frPerPx} frames / pixel
+      </div>
+
+      <GPUWaveform
+        audioBuffer={audioBuffer}
+        scale={frPerPx}
+        offset={offsetFr}
+        height={50}
+      />
+    </div>
+  );
+}
+```
+</details>
+</p>
 
 <br />
 
@@ -147,9 +201,6 @@ export function Example({audioBuffer}) {
 Result:
 
 <Example render={audioBuffer => <Example3 audioBuffer={audioBuffer} />} />
-
-
-
 
 
 <footer>

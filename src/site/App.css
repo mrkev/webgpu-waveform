@@ -49,3 +49,12 @@ footer a:link {
 footer a:visited {
   color: #888;
 }
+
+details > pre {
+  margin: 0;
+  padding: 0;
+}
+
+details > summary {
+  padding: 0px 1ch;
+}
