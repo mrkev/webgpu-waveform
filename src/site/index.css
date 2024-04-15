@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Averia+Libre:ital,wght@0,400;0,700;1,400;1,700&family=Averia+Serif+Libre:ital,wght@0,300;0,700;1,300;1,700&family=Caveat&family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Spectral:ital,wght@0,300;0,600;1,300;1,600&display=swap&family=Noto+Sans+Symbols+2&display=swap");
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -16,7 +18,7 @@
 a {
   font-weight: 500;
   color: #646cff;
-  text-decoration: inherit;
+  /* text-decoration: inherit; */
 }
 a:hover {
   color: #535bf2;
@@ -27,6 +29,7 @@ body {
   display: flex;
   min-width: 320px;
   min-height: 100vh;
+  counter-reset: h3-counter;
 }
 
 h1 {
@@ -77,4 +80,38 @@ code {
   button {
     background-color: #f9f9f9;
   }
+}
+
+a:has(> h3):visited {
+  color: rgba(255, 255, 255, 0.87);
+}
+
+a:has(> h3):link {
+  color: rgba(255, 255, 255, 0.87);
+}
+
+a:has(> h3) {
+  color: inherit;
+  text-decoration: none;
+}
+
+h3 {
+  counter-increment: h3-counter;
+  position: relative;
+}
+
+a:hover > h3 {
+  text-decoration: underline;
+}
+
+a:hover > h3::before {
+  content: "# ";
+  position: absolute;
+  left: -2ch;
+}
+
+h3::before {
+  content: counter(h3-counter) ". ";
+  position: absolute;
+  left: -2ch;
 }

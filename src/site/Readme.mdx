@@ -1,47 +1,69 @@
-import { usePromise, audioContext, loadSound } from "./utils";
-import { GPUWaveform } from "../lib/GPUWaveform";
-import str from './GPUWaveformExample.tsx?raw'
+import { GPUWaveform, useWaveformRenderer } from "../index";
+import { audioContext, loadSound, usePromise } from "./utils";
+import { Example, Example1, Example2, Example3 } from "./Examples"
+import { useRef, useEffect } from 'react'
+import GitHubButton from 'react-github-btn'
+
+export function H3ID({ id, children }) {
+  return (
+    <a href={`#${id}`}>
+      <h3 id={id}>{children}</h3>
+    </a>
+  )
+}
 
 # webgpu-waveform
 
 Render waveforms to `<canvas />` using [WebGPU](https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API)
 
+<p>
+  <a href="#"><i className="ri-github-fill" ></i> View on github</a>
+</p>
 
-
-{/* * this is an audio file that sounds and looks like a cow: 
-
-{/* * TODO: where did I get these waveforms? */}
 
 ## Usage
 
 There's three ways to use this library:
-- as a class: `GPUWaveformRenderer` (vanilla JS)
-- as a hook: `useWaveformRenderer` (React)
-- as a component: `GPUWaveform` (React)
+- as a class: <a href="#GPUWaveformRenderer">`GPUWaveformRenderer`</a> (vanilla JS)
+- as a hook: <a href="#useWaveformRenderer">`useWaveformRenderer`</a> (React)
+- as a component: <a href="#GPUWaveform">`GPUWaveform`</a> (React)
+
+_Note: Examples here use a waveform that looks like a cow. Source: [Japhy Riddle](https://www.youtube.com/watch?v=qeUAHHPt-LY)_
 
 <br />
 
-### Using the `GPUWaveformRenderer` class
+<H3ID id={'GPUWaveformRenderer'}>Using the `GPUWaveformRenderer` class</H3ID>
 
-// TODO
+The class `GPUWaveformRenderer` is initialized using the static method `.create(...)`. It has the following definition:
 
-{/* 
+```typescript
+static async create(
+  canvas: HTMLCanvasElement,
+  channelData: Float32Array
+): GPUWaveformRenderer
+```
+
+It takes in the following arguments:
+
+- `canvas: HTMLCanvasElement` — the canvas element to render to
+- `channelData: Float32Array` — the array of PCM samples to render
+
+*Example:*
+
 ```javascript
-// TODO
-const channelData = audioBuffer.getChannelData(0);
-const gpu = useWebGPU(canvasRef);
+async function example(canvas, audioBuffer) {
+  const channelData = audioBuffer.getChannelData(0);
+  const renderer = await GPUWaveformRenderer.create(canvas, channelData);
 
-const renderer = GPUWaveformRenderer.createPipeline(
-  channelData,
-  gpu // todo change this one
-);
+  renderer?.render(800, 0, canvas.width, canvas.height);
+}
+```
 
-renderer?.render(s, offset, width, height);
-``` */}
+*Result:*
 
-<br />
+<Example render={audioBuffer => <Example1 audioBuffer={audioBuffer} />} />
 
-### Using the `useWaveformRenderer` hook
+<H3ID id={'useWaveformRenderer'}>Using the `useWaveformRenderer` hook</H3ID>
 
 The hook `useWaveformRenderer` has the following signature:
 
@@ -49,7 +71,7 @@ The hook `useWaveformRenderer` has the following signature:
 function useWaveformRenderer(
   canvasRef: React.RefObject<HTMLCanvasElement>,
   audioBuffer: AudioBuffer
-): GPUWaveformRenderer | null;
+): RendererStatus;
 ```
 
 It takes in the following arguments:
@@ -57,7 +79,22 @@ It takes in the following arguments:
 - `canvasRef: React.RefObject<HTMLCanvasElement>` — the canvas element to render to
 - `audioBuffer: AudioBuffer` — the buffer to render
 
-And returns `null` during setup, or `GPUWaveformRenderer` if the webgpu device could be initialized, setup was successful, and a renderer for `audioBuffer` on `canvas` could be successfully created.
+And returns an object of the following type:
+
+```typescript
+type RendererStatus =
+  | { status: "initializing" }
+  | { status: "error"; error: any }
+  | { status: "ready";
+      instance: GPUWaveformRenderer;
+    };
+```
+
+The objects are returned during the following stages of initialization:
+
+- `{ status: "initializing" }` — during setup, when connecting to the GPU device
+- `{ status: "error"; error: any }` — if an error happens at initalization
+- `{ status: "ready"; instance: GPUWaveformRenderer }` — if the webgpu device could be initialized, setup was successful, and a renderer for `audioBuffer` on `canvas` could be successfully created.
 
 **Example:**
 
@@ -67,26 +104,30 @@ function Example({audioBuffer, width, height}) {
   const renderer = useWaveformRenderer(canvasRef, audioBuffer);
 
   useEffect(() => {
+    if (renderer.status !== "ready") {
+      return;
+    }
+
     renderer?.render(audioBuffer.length / width, 0, width, height);
   }, [renderer, audioBuffer, width, height]);
 
   return <canvas ref={canvasRef} width={width} height={height} />;
-});
+};
 
 ```
 
 **Result:**
 
-<p><Example /></p>
+<Example render={audioBuffer => <Example2 audioBuffer={audioBuffer} width={300} height={100} />} />
 
-### Using the `GPUWaveform` component
+<H3ID id={'GPUWaveform'}>Using the `GPUWaveform` component</H3ID>
 
 The component `GPUWaveform` takes the following properties:
 
 - `audioBuffer: AudioBuffer;` — the buffer to render
 - `scale?: number;` — the "zoom" level. Namely, number of samples per pixel in the x axis
-- `offset?: number;` — // TODO: offset in px or in samples?
-- and all the props of `React.CanvasHTMLAttributes<HTMLCanvasElement>` — these are passed directly to the rendered canvas
+- `offset?: number;` — the number of samples to skip from the beggining of the buffer
+- ...and all the props of `React.CanvasHTMLAttributes<HTMLCanvasElement>` — these are passed directly to the rendered canvas
 
 Example:
 
@@ -105,36 +146,12 @@ export function Example({audioBuffer}) {
 
 Result:
 
-<p><Example /></p>
+<Example render={audioBuffer => <Example3 audioBuffer={audioBuffer} />} />
 
 
 
-export function Example() {
-  const cowAudio = usePromise(() => loadSound(audioContext, "Cow-Shaped.wav"));
-  const fishAudio = usePromise(() =>
-    loadSound(audioContext, "Fish-Shaped.wav")
-  );
 
 
-  switch (cowAudio[0]) {
-    case "resolved":
-      return (
-        <GPUWaveform
-          // ref={waveformRef}
-          audioBuffer={cowAudio[1]}
-          scale={800}
-          // offset={
-          //   lockPlayback
-          //     ? offsetFrOfPlaybackPos(playbackPos)
-          //     : waveformStartFr
-          // }
-          width={300}
-          height={100}
-        />
-      );
-    case "pending":
-      return <>loading...</>;
-    case "rejected":
-      return <>error: {`${cowAudio[1]}`}</>;
-  }
-}
+<footer>
+    Built by Kevin Chavez · <a href="https://twitter.com/aykev"><i className="ri-twitter-fill"></i></a> <a href="https://github.com/mrkev"><i className="ri-github-fill" ></i></a>
+</footer>

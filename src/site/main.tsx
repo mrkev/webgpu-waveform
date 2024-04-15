@@ -5,6 +5,7 @@ import App from "./App.tsx";
 // import "concrete.css";
 import "./modernist.css";
 import "./index.css";
+import "remixicon/fonts/remixicon.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

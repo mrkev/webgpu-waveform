@@ -20,38 +20,34 @@ export class GPUWaveformRenderer {
 
   // TODO: make other things use create too for consistency and to remove duplication. `createPipeline` should be private.
   static async create(canvas: HTMLCanvasElement, channelData: Float32Array) {
-    try {
-      const context = nullthrows(canvas.getContext("webgpu"));
-      if (!navigator.gpu) {
-        throw new Error("WebGPU not supported on this browser.");
-      }
-
-      const adapter = await navigator.gpu.requestAdapter();
-      if (adapter == null) {
-        throw new Error("No appropriate GPUAdapter found.");
-      }
-
-      const device = await adapter.requestDevice();
-      const canvasFormat = navigator.gpu.getPreferredCanvasFormat();
-      context.configure({
-        device: device,
-        format: canvasFormat,
-        // https://webgpufundamentals.org/webgpu/lessons/webgpu-transparency.html
-        alphaMode: "premultiplied", //by default, canvas is opaque. dont ignore alpha.
-      });
-
-      return GPUWaveformRenderer.createPipeline(
-        channelData,
-        device,
-        context,
-        canvasFormat
-      );
-    } catch (e) {
-      return { status: "error", error: e };
+    const context = nullthrows(canvas.getContext("webgpu"));
+    if (!navigator.gpu) {
+      throw new Error("WebGPU not supported on this browser.");
     }
+
+    const adapter = await navigator.gpu.requestAdapter();
+    if (adapter == null) {
+      throw new Error("No appropriate GPUAdapter found.");
+    }
+
+    const device = await adapter.requestDevice();
+    const canvasFormat = navigator.gpu.getPreferredCanvasFormat();
+    context.configure({
+      device: device,
+      format: canvasFormat,
+      // https://webgpufundamentals.org/webgpu/lessons/webgpu-transparency.html
+      alphaMode: "premultiplied", //by default, canvas is opaque. dont ignore alpha.
+    });
+
+    return GPUWaveformRenderer.createPipeline(
+      channelData,
+      device,
+      context,
+      canvasFormat
+    );
   }
 
-  static createPipeline(
+  private static createPipeline(
     channelData: Float32Array,
     device: GPUDevice,
     context: GPUCanvasContext,

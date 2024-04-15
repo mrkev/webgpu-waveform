@@ -18,9 +18,9 @@ export default defineConfig({
     lib: {
       // Could also be a dictionary or array of multiple entry points
       entry: resolve(__dirname, "src/index.ts"),
-      name: "NEW_LIB",
+      name: "webgpu-waveform",
       // the proper extensions will be added
-      fileName: "NEW_LIB",
+      fileName: "webgpu-waveform",
     },
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled nto your library

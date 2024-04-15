@@ -1,15 +1,15 @@
-import React, { useEffect, useRef } from "react";
+import { CanvasHTMLAttributes, forwardRef, useEffect, useRef } from "react";
 import { mergeRefs } from "react-merge-refs";
 import useResizeObserver from "use-resize-observer";
 import { useWaveformRenderer } from "./useWaveformRenderer";
 
-export const GPUWaveform = React.forwardRef(function GPUWaveformImpl(
+export const GPUWaveform = forwardRef(function GPUWaveformImpl(
   {
     audioBuffer,
     scale,
     offset = 0,
     ...props
-  }: React.CanvasHTMLAttributes<HTMLCanvasElement> & {
+  }: CanvasHTMLAttributes<HTMLCanvasElement> & {
     audioBuffer: AudioBuffer;
     scale?: number;
     offset?: number;
@@ -34,8 +34,12 @@ export const GPUWaveform = React.forwardRef(function GPUWaveformImpl(
       return;
     }
 
+    if (renderer.status !== "ready") {
+      return;
+    }
+
     const s = scale != null ? scale : audioBuffer.length / width;
-    renderer?.render(s, offset, width, height);
+    renderer.instance.render(s, offset, width, height);
     // renderer?.render(Math.round(Math.exp((Math.log(1000) / 100) * scale)));
   }, [audioBuffer, height, offset, renderer, scale, width]);
 

@@ -1,30 +1,33 @@
-import React, { useEffect, useState } from "react";
+import { RefObject, useEffect, useState } from "react";
 import { GPUWaveformRenderer } from "./GPUWaveformRenderer";
-import { useWebGPU } from "./useWebGPU";
+import { nullthrows } from "./useWebGPU";
+
+type RendererStatus =
+  | { status: "initializing" }
+  | { status: "error"; error: any }
+  | {
+      status: "ready";
+      instance: GPUWaveformRenderer;
+    };
 
 export function useWaveformRenderer(
-  canvasRef: React.RefObject<HTMLCanvasElement>,
+  canvasRef: RefObject<HTMLCanvasElement>,
   audioBuffer: AudioBuffer
-): GPUWaveformRenderer | null {
-  const gpu = useWebGPU(canvasRef);
-  const [renderer, setRenderer] = useState<GPUWaveformRenderer | null>(null);
+): RendererStatus {
+  const [renderer, setRenderer] = useState<RendererStatus>({
+    status: "initializing",
+  });
 
   useEffect(() => {
+    const canvas = nullthrows(canvasRef.current);
     const channelData = audioBuffer.getChannelData(0);
 
-    if (gpu.status !== "ready") {
-      return;
-    }
-
-    const waveformRenderer = GPUWaveformRenderer.createPipeline(
-      channelData,
-      gpu.device,
-      gpu.context,
-      gpu.canvasFormat
-    );
-
-    setRenderer(waveformRenderer);
-  }, [audioBuffer, gpu]);
+    GPUWaveformRenderer.create(canvas, channelData)
+      .then((waveformRenderer) =>
+        setRenderer({ status: "ready", instance: waveformRenderer })
+      )
+      .catch((err) => setRenderer({ status: "error", error: err }));
+  }, [audioBuffer, canvasRef]);
 
   return renderer;
 }

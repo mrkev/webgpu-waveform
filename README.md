@@ -1,6 +1,7 @@
-# Template for a library with React + TypeScript + Vite
+# webgpu-waveform
 
-- `build:site` build the website to `docs`, so it can be served on Github Pages
-- `build:lib` build the library to `dist`, where `package.json` is configured to expect it
+Render waveforms to `<canvas />` using [WebGPU](https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API)
 
-**NOTE: Make sure to search and replace all instances of `"NEW_LIB"` with the appropriate value for your library**
+<p>
+  <a href="#"><i className="ri-github-fill" ></i> View on github</a>
+</p>

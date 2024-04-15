@@ -11,12 +11,17 @@ copy it. */
 /* begin body type */ /* 4 - modern sans a */
 
 body {
-  font-size: 1em;
+  /* font-size: 1em; */
   font-weight: normal;
   word-spacing: normal;
   letter-spacing: normal;
   text-transform: none;
   font-family: Myriad Web, Geneva, Arial, Helvetica, sans-serif;
+  /* font-family: et-book, Palatino, "Palatino Linotype", "Palatino LT STD",
+    "Book Antiqua", Georgia, serif; */
+  /* font-family: "Averia Serif Libre", serif; */
+
+  font-size: 1.1em;
   font-size-adjust: 0.48;
 }
 
@@ -228,7 +233,7 @@ label {
   word-spacing: normal;
   letter-spacing: normal;
   text-transform: none;
-  text-decoration: none;
+  /* text-decoration: none; */
   /* border-color: black; */
   border-style: none;
 }
@@ -340,36 +345,36 @@ tr {
 }
 
 a:link {
-  text-decoration: none;
+  /* text-decoration: none; */
   font-weight: bold;
-  color: #c00;
+  /* color: #c00; */
   /* background: #ffc; */
 }
 
 a:visited {
-  text-decoration: none;
+  /* text-decoration: none; */
   font-weight: bold;
   color: #999;
   /* background: #ffc; */
 }
 
 a:active {
-  text-decoration: none;
+  /* text-decoration: none; */
   font-weight: bold;
-  color: #f00;
+  /* color: #f00; */
   /* background: #fc0; */
 }
 
 a:hover {
-  text-decoration: none;
-  color: #c00;
+  /* text-decoration: none; */
+  /* color: #c00; */
   /* background: #fc0; */
 }
 
 a.offsite {
   text-decoration: none;
   font-weight: normal;
-  color: #c00;
+  /* color: #c00; */
   /* background: #ffc; */
 }
 

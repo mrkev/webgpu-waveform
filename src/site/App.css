@@ -35,6 +35,17 @@
   padding: 2em;
 }
 
-.read-the-docs {
+footer {
+  color: #888;
+  font-size: 0.825em;
+  margin-top: 7em;
+}
+
+footer a:link {
+  color: #888;
+  text-decoration: none;
+}
+
+footer a:visited {
   color: #888;
 }
