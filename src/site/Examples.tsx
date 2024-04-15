@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GPUWaveform } from "../lib/GPUWaveform";
-import { audioContext, loadSound, usePromise } from "./utils";
-import { useWaveformRenderer } from "../lib/useWaveformRenderer";
 import { GPUWaveformRenderer } from "../lib/GPUWaveformRenderer";
-import { nullthrows } from "../lib/useWebGPU";
+import { useWaveformRenderer } from "../lib/useWaveformRenderer";
+import { audioContext, loadSound, usePromise } from "./utils";
 
 export function Example({
   render,
@@ -93,6 +92,16 @@ export function Example1({ audioBuffer }: { audioBuffer: AudioBuffer }) {
     example1(canvasRef.current, audioBuffer).catch(console.error);
   }, [renderer, audioBuffer]);
 
+  if (renderer.status === "error") {
+    return (
+      <pre style={{ color: "red" }}>
+        {renderer.error instanceof Error
+          ? renderer.error.message
+          : String(renderer.error)}
+      </pre>
+    );
+  }
+
   return <canvas ref={canvasRef} width={300} height={100} />;
 }
 
@@ -115,6 +124,16 @@ export function Example2({
 
     renderer.instance.render(audioBuffer.length / width, 0, width, height);
   }, [renderer, audioBuffer, width, height]);
+
+  if (renderer.status === "error") {
+    return (
+      <pre style={{ color: "red" }}>
+        {renderer.error instanceof Error
+          ? renderer.error.message
+          : String(renderer.error)}
+      </pre>
+    );
+  }
 
   return <canvas ref={canvasRef} width={width} height={height} />;
 }

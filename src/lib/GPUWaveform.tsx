@@ -43,5 +43,15 @@ export const GPUWaveform = forwardRef(function GPUWaveformImpl(
     // renderer?.render(Math.round(Math.exp((Math.log(1000) / 100) * scale)));
   }, [audioBuffer, height, offset, renderer, scale, width]);
 
+  if (renderer.status === "error") {
+    return (
+      <pre style={{ color: "red" }}>
+        {renderer.error instanceof Error
+          ? renderer.error.message
+          : String(renderer.error)}
+      </pre>
+    );
+  }
+
   return <canvas ref={mergeRefs([canvasRef, ref])} {...props} />;
 });

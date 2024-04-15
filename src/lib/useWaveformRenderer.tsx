@@ -19,7 +19,10 @@ export function useWaveformRenderer(
   });
 
   useEffect(() => {
-    const canvas = nullthrows(canvasRef.current);
+    const canvas = nullthrows(
+      canvasRef.current,
+      "expected canvas to not be nil"
+    );
     const channelData = audioBuffer.getChannelData(0);
 
     GPUWaveformRenderer.create(canvas, channelData)

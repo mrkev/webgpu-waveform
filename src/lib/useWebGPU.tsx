@@ -39,15 +39,21 @@ async function initializeWebGPU() {
   return [canvasFormat, adapter, device, encoder] as const;
 }
 
-export function useWebGPU(
+function useWebGPU(
   canvasRef: React.RefObject<HTMLCanvasElement>
 ): WebGPUStatus {
   const [status, setStatus] = useState<WebGPUStatus>({ status: "waiting" });
   useEffect(() => {
     async function main() {
       try {
-        const canvas = nullthrows(canvasRef.current);
-        const context = nullthrows(canvas.getContext("webgpu"));
+        const canvas = nullthrows(
+          canvasRef.current,
+          "expected canvas to not be nil"
+        );
+        const context = nullthrows(
+          canvas.getContext("webgpu"),
+          "null webgpu context"
+        );
 
         const [canvasFormat, adapter, device, encoder] =
           await initializeWebGPU();

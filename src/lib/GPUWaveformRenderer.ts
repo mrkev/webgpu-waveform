@@ -20,10 +20,14 @@ export class GPUWaveformRenderer {
 
   // TODO: make other things use create too for consistency and to remove duplication. `createPipeline` should be private.
   static async create(canvas: HTMLCanvasElement, channelData: Float32Array) {
-    const context = nullthrows(canvas.getContext("webgpu"));
     if (!navigator.gpu) {
-      throw new Error("WebGPU not supported on this browser.");
+      throw new Error("WebGPU not supported in this browser.");
     }
+
+    const context = nullthrows(
+      canvas.getContext("webgpu"),
+      "nil webgpu context"
+    );
 
     const adapter = await navigator.gpu.requestAdapter();
     if (adapter == null) {
