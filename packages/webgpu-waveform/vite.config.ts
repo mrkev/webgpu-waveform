@@ -12,7 +12,7 @@ export default defineConfig({
   plugins: [react(), mdx({ rehypePlugins: [highlight, rehypeSlug] })],
   root: "src",
   build: {
-    outDir: "../docs",
+    outDir: "../../../docs",
     // minify: false,
   },
   // instead of having absolute paths pointing at assets in `index.html`, use

@@ -1,69 +1,18 @@
 {
-  "name": "webgpu-waveform",
-  "private": false,
-  "version": "1.1.0",
-  "type": "module",
-  "main": "./dist/webgpu-waveform.umd.cjs",
-  "module": "./dist/webgpu-waveform.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/webgpu-waveform.js",
-      "require": "./dist/webgpu-waveform.umd.cjs"
-    }
-  },
-  "files": [
-    "dist"
+  "private": true,
+  "workspaces": [
+    "packages/*"
   ],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && npm run build:lib && npm run build:site",
-    "build:site": "vite build -c vite.config.ts --emptyOutDir",
-    "build:lib": "vite build -c vite.config.lib.ts --emptyOutDir",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "test": "echo 'no tests atm'"
-  },
-  "peerDependencies": {
-    "react": ">= 18.0.0",
-    "react-dom": ">= 18.0.0"
-  },
-  "peerDependenciesMeta": {
-    "react": {
-      "optional": true
-    },
-    "react-dom": {
-      "optional": true
-    }
-  },
-  "dependencies": {
-    "react-merge-refs": "^2.1.1",
-    "use-resize-observer": "^9.1.0"
+    "dev": "npm run --workspace=webgpu-waveform dev",
+    "build": "npm run --workspace=webgpu-waveform build",
+    "build:site": "npm run --workspace=webgpu-waveform build:site",
+    "build:lib": "npm run --workspace=webgpu-waveform build:lib",
+    "lint": "npm run --workspace=webgpu-waveform lint",
+    "preview": "npm run --workspace=webgpu-waveform preview",
+    "test": "npm run --workspace=webgpu-waveform test'"
   },
   "devDependencies": {
-    "@mdx-js/rollup": "^3.0.1",
-    "@types/mdx": "^2.0.13",
-    "@types/node": "^20.11.20",
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
-    "@typescript-eslint/eslint-plugin": "^7.14.1",
-    "@typescript-eslint/parser": "^7.14.1",
-    "@vitejs/plugin-react": "^4.3.1",
-    "@webgpu/types": "^0.1.43",
-    "concrete.css": "^3.0.0",
-    "eslint": "^8.57.0",
-    "eslint-config-react-app": "^7.0.1",
-    "eslint-plugin-react": "^7.33.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.5",
-    "normalize.css": "^8.0.1",
-    "react-github-btn": "^1.4.0",
-    "rehype-highlight": "^7.0.0",
-    "rehype-slug": "^6.0.0",
-    "remixicon": "^4.3.0",
-    "typescript": "^5.5.2",
-    "vite": "^5.3.2",
-    "vite-plugin-dts": "^3.9.1",
-    "vitest": "^1.3.1"
+    "lerna": "^8.1.5"
   }
 }
