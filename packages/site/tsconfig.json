@@ -20,8 +20,8 @@
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
-    "types": ["@webgpu/types"]
+    "types": ["vite/client", "@webgpu/types", "@types/mdx"]
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "vite-env.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

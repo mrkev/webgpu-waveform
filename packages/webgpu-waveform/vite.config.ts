@@ -1,22 +1,34 @@
-import mdx from "@mdx-js/rollup";
-import react from "@vitejs/plugin-react";
-import highlight from "rehype-highlight";
+import { resolve } from "path";
 import { defineConfig } from "vite";
-// from: https://mikebifulco.com/posts/mdx-auto-link-headings-with-rehype-slug
-// add IDs to any h1-h6 tag that doesn't have one, using a slug made from its text
-import rehypeSlug from "rehype-slug";
+import dts from "vite-plugin-dts";
 
-// Builds the site
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), mdx({ rehypePlugins: [highlight, rehypeSlug] })],
-  root: "src",
-  build: {
-    outDir: "../../../docs",
-    // minify: false,
+  logLevel: "info",
+  plugins: [dts()],
+  server: {
+    port: 5174,
   },
-  // instead of having absolute paths pointing at assets in `index.html`, use
-  // relative paths. Works better with github pages where /assets/foobar.js
-  // referes to another site
-  base: "./",
+  build: {
+    outDir: "dist",
+    minify: false,
+    lib: {
+      // Could also be a dictionary or array of multiple entry points
+      entry: resolve(__dirname, "src/index.ts"),
+      name: "webgpu-waveform",
+      // the proper extensions will be added
+      fileName: "webgpu-waveform",
+    },
+    rollupOptions: {
+      // make sure to externalize deps that shouldn't be bundled nto your library
+      external: ["react", "react-dom"],
+      output: {
+        // Provide global variables to use in the UMD build for externalized deps
+        globals: {
+          react: "React",
+          "reactd-dom": "ReactDOM",
+        },
+      },
+    },
+  },
 });

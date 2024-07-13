@@ -19,7 +19,17 @@ module.exports = {
   parserOptions: {
     ecmaVersion: "latest",
     sourceType: "module",
-    project: ["./tsconfig.json", "./tsconfig.node.json"],
+    project: [
+      "./packages/site/tsconfig.json",
+      "./packages/site/tsconfig.node.json",
+      "./packages/webgpu-waveform/tsconfig.json",
+      "./packages/webgpu-waveform/tsconfig.node.json",
+    ],
     tsconfigRootDir: __dirname,
+  },
+  settings: {
+    react: {
+      version: "detect",
+    },
   },
 };

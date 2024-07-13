@@ -1,4 +1,4 @@
-import { GPUWaveform } from "../lib/GPUWaveform";
+import { GPUWaveform } from "webgpu-waveform";
 import { audioContext, loadSound, usePromise } from "./utils";
 
 export function Example() {

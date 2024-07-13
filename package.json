@@ -4,15 +4,20 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "npm run --workspace=webgpu-waveform dev",
-    "build": "npm run --workspace=webgpu-waveform build",
-    "build:site": "npm run --workspace=webgpu-waveform build:site",
-    "build:lib": "npm run --workspace=webgpu-waveform build:lib",
-    "lint": "npm run --workspace=webgpu-waveform lint",
-    "preview": "npm run --workspace=webgpu-waveform preview",
-    "test": "npm run --workspace=webgpu-waveform test'"
+    "dev": "lerna run dev --stream --parallel",
+    "build": "lerna run build --stream",
+    "build:site": "npm run --workspace=site build",
+    "build:lib": "npm run --workspace=webgpu-waveform build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "devDependencies": {
-    "lerna": "^8.1.5"
+    "lerna": "^8.1.5",
+    "@typescript-eslint/eslint-plugin": "^7.14.1",
+    "@typescript-eslint/parser": "^7.14.1",
+    "eslint": "^8.57.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5"
   }
 }

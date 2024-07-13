@@ -1,23 +1,10 @@
 {
-  "name": "webgpu-waveform",
+  "name": "site",
   "private": false,
   "version": "1.1.0",
   "type": "module",
-  "main": "./dist/webgpu-waveform.umd.cjs",
-  "module": "./dist/webgpu-waveform.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/webgpu-waveform.js",
-      "require": "./dist/webgpu-waveform.umd.cjs",
-      "types": "./dist/index.d.ts"
-    }
-  },
-  "files": [
-    "dist"
-  ],
   "scripts": {
-    "dev": "vite build -c vite.config.ts --watch",
+    "dev": "vite",
     "build": "tsc && vite build -c vite.config.ts --emptyOutDir",
     "preview": "vite preview",
     "test": "echo 'no tests atm'"
@@ -36,7 +23,8 @@
   },
   "dependencies": {
     "react-merge-refs": "^2.1.1",
-    "use-resize-observer": "^9.1.0"
+    "use-resize-observer": "^9.1.0",
+    "webgpu-waveform": "file:../../webgpu-waveform"
   },
   "devDependencies": {
     "@mdx-js/rollup": "^3.0.1",
@@ -44,7 +32,21 @@
     "@types/node": "^20.11.20",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^7.14.1",
+    "@typescript-eslint/parser": "^7.14.1",
+    "@vitejs/plugin-react": "^4.3.1",
     "@webgpu/types": "^0.1.43",
+    "concrete.css": "^3.0.0",
+    "eslint": "^8.57.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "normalize.css": "^8.0.1",
+    "react-github-btn": "^1.4.0",
+    "rehype-highlight": "^7.0.0",
+    "rehype-slug": "^6.0.0",
+    "remixicon": "^4.3.0",
     "typescript": "^5.5.2",
     "vite": "^5.3.2",
     "vite-plugin-dts": "^3.9.1",

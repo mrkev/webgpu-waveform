@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { GPUWaveform } from "../lib/GPUWaveform";
-import { GPUWaveformRenderer } from "../lib/GPUWaveformRenderer";
-import { useWaveformRenderer } from "../lib/useWaveformRenderer";
+import { GPUWaveform } from "webgpu-waveform";
+import { GPUWaveformRenderer } from "webgpu-waveform";
+import { useWaveformRenderer } from "webgpu-waveform";
 import { audioContext, loadSound, usePromise } from "./utils";
 
 export function Example({
