@@ -9,6 +9,6 @@ import "./modernist.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <Readme />;
+    <Readme />
   </React.StrictMode>
 );

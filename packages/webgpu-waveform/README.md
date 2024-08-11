@@ -6,13 +6,17 @@ Render waveforms to `<canvas />` using [WebGPU](https://developer.mozilla.org/en
 
 Visit [https://aykev.dev/webgpu-waveform/](https://aykev.dev/webgpu-waveform/) for examples
 
-## Usage
+## Installation
 
 This package is distributed for both usage with ESM and UMD. It includes TypeScript definition files too. Install from the npm registry:
 
 ```bash
 npm i webgpu-waveform
 ```
+
+For usage with React, check out the [webgpu-waveform-react](https://github.com/mrkev/webgpu-waveform/tree/main/packages/webgpu-waveform-react) package.
+
+## Usage
 
 <h3 id="GPUWaveformRenderer">Using the `GPUWaveformRenderer` class</h3>
 
