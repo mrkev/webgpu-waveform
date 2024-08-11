@@ -4,7 +4,7 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "lerna run dev --stream --parallel",
+    "dev": "npx nx run-many -t dev",
     "build": "npx nx run-many -t build",
     "build:site": "npm run --workspace=site build",
     "build:lib": "npm run --workspace=webgpu-waveform build",
@@ -18,7 +18,6 @@
     "eslint-plugin-react": "^7.35.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.9",
-    "lerna": "^8.1.6",
     "nx": "19.4.3",
     "@nx/eslint": "19.4.3"
   },
