@@ -3,7 +3,7 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["{projectRoot}/dist"],
-      "cache": true
+      "cache": false
     },
     "test": {
       "cache": true

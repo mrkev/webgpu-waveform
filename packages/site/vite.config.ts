@@ -11,7 +11,7 @@ import rehypeSlug from "rehype-slug";
 export default defineConfig({
   plugins: [react(), mdx({ rehypePlugins: [highlight, rehypeSlug] })],
   build: {
-    outDir: "../../../docs",
+    outDir: "../../docs",
     rollupOptions: {
       input: {
         site: "./index.html",
