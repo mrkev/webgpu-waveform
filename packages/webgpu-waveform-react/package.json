@@ -1,15 +1,15 @@
 {
-  "name": "webgpu-waveform",
+  "name": "webgpu-waveform-react",
   "private": false,
-  "version": "2.0.0",
+  "version": "1.0.0",
   "type": "module",
-  "main": "./dist/webgpu-waveform.umd.cjs",
-  "module": "./dist/webgpu-waveform.js",
+  "main": "./dist/webgpu-waveform-react.umd.cjs",
+  "module": "./dist/webgpu-waveform-react.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/webgpu-waveform.js",
-      "require": "./dist/webgpu-waveform.umd.cjs",
+      "import": "./dist/webgpu-waveform-react.js",
+      "require": "./dist/webgpu-waveform-react.umd.cjs",
       "types": "./dist/index.d.ts"
     }
   },
@@ -22,8 +22,19 @@
     "preview": "vite preview",
     "test": "echo 'no tests atm'"
   },
+  "peerDependencies": {
+    "react": ">= 18.0.0",
+    "react-dom": ">= 18.0.0"
+  },
+  "dependencies": {
+    "react-merge-refs": "^2.1.1",
+    "use-resize-observer": "^9.1.0",
+    "webgpu-waveform": "workspace:*"
+  },
   "devDependencies": {
     "@types/node": "^20.11.20",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
     "@webgpu/types": "^0.1.43",
     "typescript": "^5.5.2",
     "vite": "^5.3.2",

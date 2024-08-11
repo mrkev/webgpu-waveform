@@ -1,4 +1,4 @@
-import { nullthrows } from "./useWebGPU";
+import { nullthrows } from "./nullthrows";
 
 export class GPUWaveformRenderer {
   readonly bindGroup: GPUBindGroup;

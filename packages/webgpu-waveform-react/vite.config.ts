@@ -15,9 +15,9 @@ export default defineConfig({
     lib: {
       // Could also be a dictionary or array of multiple entry points
       entry: resolve(__dirname, "src/index.ts"),
-      name: "webgpu-waveform",
+      name: "webgpu-waveform-react",
       // the proper extensions will be added
-      fileName: "webgpu-waveform",
+      fileName: "webgpu-waveform-react",
     },
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled nto your library
@@ -26,7 +26,7 @@ export default defineConfig({
         // Provide global variables to use in the UMD build for externalized deps
         globals: {
           react: "React",
-          "react-dom": "ReactDOM",
+          "reactd-dom": "ReactDOM",
         },
       },
     },

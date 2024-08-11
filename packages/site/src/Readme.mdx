@@ -1,46 +1,33 @@
-import { GPUWaveform, useWaveformRenderer } from "webgpu-waveform";
+import { GPUWaveform, useWaveformRenderer } from "webgpu-waveform-react";
 import { audioContext, loadSound, usePromise } from "./utils";
 import { Example, Main, Example1, Example2, Example3 } from "./Examples"
 import { useRef, useEffect } from 'react'
 import GitHubButton from 'react-github-btn'
+import React from 'react'
 
-export function H3ID({ id, children }) {
+export function HID({ h = 'h4', id, children }) {
   return (
     <a href={`#${id}`}>
-      <h3 id={id}>{children}</h3>
+      {React.createElement(h, {id}, ...(Array.isArray(children) ? children : [children]))}
     </a>
   )
 }
 
 # webgpu-waveform
 
-Render waveforms to `<canvas />` using [WebGPU](https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API)
+Render waveforms to `<canvas />` using [WebGPU](https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API). It's faster.
 
 <p>
   <a href="https://github.com/mrkev/webgpu-waveform"><i className="ri-github-fill" ></i> View on github</a>
 </p>
 
 
-## Usage
-
-This package is distributed for both usage with ESM and UMD. It inclused TypeScript types too. Install from the npm registry:
-
-```bash
-npm i webgpu-waveform
-```
-
-
-There's three ways to use this library:
-- as a class: <a href="#GPUWaveformRenderer">`GPUWaveformRenderer`</a> (vanilla JS)
-- as a hook: <a href="#useWaveformRenderer">`useWaveformRenderer`</a> (React)
-- as a component: <a href="#GPUWaveform">`GPUWaveform`</a> (React)
-
 _Note: Examples here use a waveform that looks like a cow. Source: [Japhy Riddle](https://www.youtube.com/watch?v=qeUAHHPt-LY)_
 
 <Example render={audioBuffer => <Main audioBuffer={audioBuffer} />} />
 
-<p>
-<details>
+
+<details style={{paddingLeft: '11%'}}>
   <summary style={{background: 'black'}}>Source</summary>
 ```tsx
 export function Main({ audioBuffer }: { audioBuffer: AudioBuffer }) {
@@ -89,13 +76,26 @@ export function Main({ audioBuffer }: { audioBuffer: AudioBuffer }) {
 }
 ```
 </details>
-</p>
 
-<br />
+## Usage
 
-<H3ID id={'GPUWaveformRenderer'}>Using the `GPUWaveformRenderer` class</H3ID>
+There's 2 packages:
 
-The class `GPUWaveformRenderer` is initialized using the static method `.create(...)`. It has the following definition:
+- [`webgpu-waveform`](#pacakge:webgpu-waveform) (vanilla JS/TS)
+- [`webgpu-waveform-react`](#pacakge:webgpu-waveform-react) (to use with [React](https://react.dev/))
+
+Both are distributed to be ESM and UMD compatible, and include TypeScript type declarations.
+
+
+<HID h='h3' id='pacakge:webgpu-waveform'>`webgpu-waveform`</HID>
+
+Install from the npm registry:
+
+```bash
+npm i webgpu-waveform
+```
+
+Use `GPUWaveformRenderer.create(...)` to create a new `GPUWaveformRenderer`.
 
 ```typescript
 static async create(
@@ -109,9 +109,22 @@ It takes in the following arguments:
 - `canvas: HTMLCanvasElement` — the canvas element to render to
 - `channelData: Float32Array` — the array of PCM samples to render
 
+Finally, use `.render` on the `GPUWaveformRenderer` to render the waveform. It has the following signature:
+
+```typescript
+render(
+  scale: number,
+  offset: number,
+  width: number,
+  height: number
+);
+```
+
 *Example:*
 
 ```javascript
+import { GPUWaveformRenderer } from 'webgpu-waveform';
+
 async function example(canvas, audioBuffer) {
   const channelData = audioBuffer.getChannelData(0);
   const renderer = await GPUWaveformRenderer.create(canvas, channelData);
@@ -124,7 +137,45 @@ async function example(canvas, audioBuffer) {
 
 <Example render={audioBuffer => <Example1 audioBuffer={audioBuffer} />} />
 
-<H3ID id={'useWaveformRenderer'}>Using the `useWaveformRenderer` hook</H3ID>
+
+<HID h='h3' id="pacakge:webgpu-waveform-react">`webgpu-waveform-react`</HID>
+
+There's two ways to use this library:
+- as a component: <a href="#GPUWaveform">`GPUWaveform`</a>
+- as a hook: <a href="#useWaveformRenderer">`useWaveformRenderer`</a>
+
+<HID id={'GPUWaveform'}>Using the `GPUWaveform` component</HID>
+
+The component `GPUWaveform` takes the following properties:
+
+- `audioBuffer: AudioBuffer;` — the buffer to render
+- `scale?: number;` — the "zoom" level. Namely, number of samples per pixel in the x axis
+- `offset?: number;` — the number of samples to skip from the beggining of the buffer
+- ...and all the props of `React.CanvasHTMLAttributes<HTMLCanvasElement>` — these are passed directly to the rendered canvas
+
+Example:
+
+```typescript
+import { GPUWaveform } from 'webgpu-waveform-react';
+
+
+export function ExampleComponent({ audioBuffer }: { audioBuffer: AudioBuffer }) {
+  return (
+    <GPUWaveform
+      audioBuffer={audioBuffer}
+      scale={800}
+      width={300}
+      height={100}
+    />
+  )
+}
+```
+
+Result:
+
+<Example render={audioBuffer => <Example3 audioBuffer={audioBuffer} />} />
+
+<HID id={'useWaveformRenderer'}>Using the `useWaveformRenderer` hook</HID>
 
 The hook `useWaveformRenderer` has the following signature:
 
@@ -159,8 +210,11 @@ The objects are returned during the following stages of initialization:
 
 **Example:**
 
-```javascript
-function Example({audioBuffer, width, height}) {
+```typescript
+import { useWaveformRenderer } from 'webgpu-waveform-react';
+
+
+function ExampleComponent({ audioBuffer, width, height }: { audioBuffer: AudioBuffer, width: number, height: number }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const renderer = useWaveformRenderer(canvasRef, audioBuffer);
 
@@ -181,35 +235,6 @@ function Example({audioBuffer, width, height}) {
 
 <Example render={audioBuffer => <Example2 audioBuffer={audioBuffer} width={300} height={100} />} />
 
-<H3ID id={'GPUWaveform'}>Using the `GPUWaveform` component</H3ID>
-
-The component `GPUWaveform` takes the following properties:
-
-- `audioBuffer: AudioBuffer;` — the buffer to render
-- `scale?: number;` — the "zoom" level. Namely, number of samples per pixel in the x axis
-- `offset?: number;` — the number of samples to skip from the beggining of the buffer
-- ...and all the props of `React.CanvasHTMLAttributes<HTMLCanvasElement>` — these are passed directly to the rendered canvas
-
-Example:
-
-```javascript
-export function Example({audioBuffer}) {
-  return (
-    <GPUWaveform
-      audioBuffer={audioBuffer}
-      scale={800}
-      width={300}
-      height={100}
-    />
-  )
-}
-```
-
-Result:
-
-<Example render={audioBuffer => <Example3 audioBuffer={audioBuffer} />} />
-
-
 <footer>
-    Built by Kevin Chavez · <a href="https://twitter.com/aykev"><i className="ri-twitter-fill"></i></a> <a href="https://github.com/mrkev"><i className="ri-github-fill" ></i></a>
+    Built by <a href='http://aykev.dev'>Kevin Chavez</a> · <a href="https://twitter.com/aykev"><i className="ri-twitter-fill"></i></a> <a href="https://github.com/mrkev"><i className="ri-github-fill" ></i></a>
 </footer>

@@ -5,7 +5,7 @@
   ],
   "scripts": {
     "dev": "lerna run dev --stream --parallel",
-    "build": "lerna run build --stream",
+    "build": "npx nx run-many -t build",
     "build:site": "npm run --workspace=site build",
     "build:lib": "npm run --workspace=webgpu-waveform build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
@@ -18,7 +18,9 @@
     "eslint-plugin-react": "^7.35.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.9",
-    "lerna": "^8.1.6"
+    "lerna": "^8.1.6",
+    "nx": "19.4.3",
+    "@nx/eslint": "19.4.3"
   },
   "dependencies": {
     "@eslint/compat": "^1.1.1",

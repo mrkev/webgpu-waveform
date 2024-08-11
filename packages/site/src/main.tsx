@@ -1,14 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
+import Readme from "./Readme.mdx";
 // import "normalize.css";
 // import "concrete.css";
-import "./modernist.css";
-import "./index.css";
 import "remixicon/fonts/remixicon.css";
+import "./index.css";
+import "./modernist.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <App />
+    <Readme />;
   </React.StrictMode>
 );

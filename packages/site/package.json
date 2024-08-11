@@ -24,7 +24,8 @@
   "dependencies": {
     "react-merge-refs": "^2.1.1",
     "use-resize-observer": "^9.1.0",
-    "webgpu-waveform": "file:../../webgpu-waveform"
+    "webgpu-waveform": "workspace:*",
+    "webgpu-waveform-react": "workspace:*"
   },
   "devDependencies": {
     "@mdx-js/rollup": "^3.0.1",

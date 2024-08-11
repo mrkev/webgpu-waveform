@@ -1,5 +1,5 @@
 import { RefObject, useEffect, useState } from "react";
-import { GPUWaveformRenderer } from "./GPUWaveformRenderer";
+import { GPUWaveformRenderer } from "webgpu-waveform";
 import { nullthrows } from "./useWebGPU";
 
 type RendererStatus =

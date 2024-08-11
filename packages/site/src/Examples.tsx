@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { GPUWaveform } from "webgpu-waveform";
+import { GPUWaveform } from "webgpu-waveform-react";
 import { GPUWaveformRenderer } from "webgpu-waveform";
-import { useWaveformRenderer } from "webgpu-waveform";
+import { useWaveformRenderer } from "webgpu-waveform-react";
 import { audioContext, loadSound, usePromise } from "./utils";
 
 export function Example({
@@ -13,7 +13,7 @@ export function Example({
   switch (cowAudio[0]) {
     case "resolved":
       const example = render(cowAudio[1]);
-      return <p>{example}</p>;
+      return <div style={{ paddingLeft: "11%" }}>{example}</div>;
     case "pending":
       return <p>loading...</p>;
     case "rejected":
