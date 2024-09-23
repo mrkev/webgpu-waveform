@@ -1,7 +1,7 @@
 {
   "name": "webgpu-waveform",
   "private": false,
-  "version": "2.0.0",
+  "version": "2.0.1",
   "type": "module",
   "main": "./dist/webgpu-waveform.umd.cjs",
   "module": "./dist/webgpu-waveform.js",
@@ -28,5 +28,14 @@
     "typescript": "^5.5.2",
     "vite": "^5.3.2",
     "vite-plugin-dts": "^3.9.1"
-  }
+  },
+  "keywords": [
+    "webgpu",
+    "waveform",
+    "webaudio",
+    "shader",
+    "render",
+    "audio",
+    "pcm"
+  ]
 }
