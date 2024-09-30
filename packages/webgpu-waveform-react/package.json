@@ -38,6 +38,12 @@
     "vite": "^5.4.8",
     "vite-plugin-dts": "^4.2.3"
   },
+  "homepage": "https://aykev.dev/webgpu-waveform/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mrkev/webgpu-waveform.git",
+    "directory": "packages/webgpu-waveform-react"
+  },
   "keywords": [
     "react",
     "hooks",
