@@ -23,11 +23,9 @@
     "test": "echo 'no tests atm'"
   },
   "devDependencies": {
-    "@types/node": "^20.11.20",
-    "@webgpu/types": "^0.1.43",
-    "typescript": "^5.5.2",
-    "vite": "^5.3.2",
-    "vite-plugin-dts": "^3.9.1"
+    "@webgpu/types": "^0.1.46",
+    "vite": "^5.4.8",
+    "vite-plugin-dts": "^4.2.3"
   },
   "keywords": [
     "webgpu",

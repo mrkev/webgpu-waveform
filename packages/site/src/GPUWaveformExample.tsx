@@ -3,9 +3,6 @@ import { audioContext, loadSound, usePromise } from "./utils";
 
 export function Example() {
   const cowAudio = usePromise(() => loadSound(audioContext, "Cow-Shaped.wav"));
-  const fishAudio = usePromise(() =>
-    loadSound(audioContext, "Fish-Shaped.wav")
-  );
 
   switch (cowAudio[0]) {
     case "resolved":
