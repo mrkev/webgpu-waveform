@@ -1,24 +1,26 @@
 import { fixupConfigRules } from "@eslint/compat";
 import { FlatCompat } from "@eslint/eslintrc";
-import js from "@eslint/js";
-import tsParser from "@typescript-eslint/parser";
+import eslint from "@eslint/js";
 import reactRefresh from "eslint-plugin-react-refresh";
 import globals from "globals";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import tseslint from "typescript-eslint";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const compat = new FlatCompat({
   baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
+  recommendedConfig: eslint.configs.recommended,
+  allConfig: eslint.configs.all,
 });
 
-export default [
+export default tseslint.config(
+  eslint.configs.recommended,
+  ...tseslint.configs.recommended,
   {
-    ignores: ["**/dist", "**/.eslintrc.cjs"],
+    ignores: ["**/dist", "eslint.config.mjs", "docs"],
   },
   ...fixupConfigRules(
     compat.extends(
@@ -35,19 +37,9 @@ export default [
       globals: {
         ...globals.browser,
       },
-      parser: tsParser,
+
       ecmaVersion: "latest",
       sourceType: "module",
-      parserOptions: {
-        project: [
-          "./tsconfig.node.json",
-          "./packages/site/tsconfig.json",
-          "./packages/site/tsconfig.node.json",
-          "./packages/webgpu-waveform/tsconfig.json",
-          "./packages/webgpu-waveform/tsconfig.node.json",
-        ],
-        tsconfigRootDir: __dirname,
-      },
     },
 
     settings: {
@@ -57,7 +49,34 @@ export default [
     },
 
     rules: {
+      "@typescript-eslint/no-empty-function": [
+        "warn",
+        {
+          allow: ["private-constructors"],
+        },
+      ],
+
+      "@typescript-eslint/ban-types": "off",
+      "no-useless-escape": "off",
+      indent: "off",
+      quotes: "off",
+      "no-unused-vars": "off",
+
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+        },
+      ],
+
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-var-requires": "off",
+      "@typescript-eslint/ban-ts-ignore": "off",
+      "@typescript-eslint/no-non-null-assertion": "off",
       "react/no-unescaped-entities": "off",
+      "no-case-declarations": "off",
       "react-refresh/only-export-components": [
         "warn",
         {
@@ -65,5 +84,5 @@ export default [
         },
       ],
     },
-  },
-];
+  }
+);
