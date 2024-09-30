@@ -1,7 +1,7 @@
 {
   "name": "webgpu-waveform-react",
   "private": false,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "main": "./dist/webgpu-waveform-react.umd.cjs",
   "module": "./dist/webgpu-waveform-react.js",
