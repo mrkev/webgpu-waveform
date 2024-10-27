@@ -1,6 +1,7 @@
 import { GPUWaveform, useWaveformRenderer } from "webgpu-waveform-react";
 import { audioContext, loadSound, usePromise } from "./utils";
-import { Example, Main, Example1, Example2, Example3 } from "./Examples"
+import { Example, Example1, Example2, Example3 } from "./Examples"
+import { Playground } from "./Playground";
 import { useRef, useEffect } from 'react'
 import GitHubButton from 'react-github-btn'
 import React from 'react'
@@ -8,7 +9,7 @@ import React from 'react'
 export function HID({ h = 'h4', id, children }) {
   return (
     <a href={`#${id}`}>
-      {React.createElement(h, {id}, ...(Array.isArray(children) ? children : [children]))}
+      {React.createElement(h, { id }, ...(Array.isArray(children) ? children : [children]))}
     </a>
   )
 }
@@ -24,7 +25,7 @@ Render waveforms to `<canvas />` using [WebGPU](https://developer.mozilla.org/en
 
 _Note: Examples here use a waveform that looks like a cow. Source: [Japhy Riddle](https://www.youtube.com/watch?v=qeUAHHPt-LY)_
 
-<Example render={audioBuffer => <Main audioBuffer={audioBuffer} />} />
+<Example render={audioBuffer => <Playground audioBuffer={audioBuffer} />} />
 
 
 <details style={{paddingLeft: '11%'}}>
@@ -33,9 +34,18 @@ _Note: Examples here use a waveform that looks like a cow. Source: [Japhy Riddle
 export function Main({ audioBuffer }: { audioBuffer: AudioBuffer }) {
   const [offsetFr, setOffsetFr] = useState(0);
   const [frPerPx, setFrPerPx] = useState(441);
+  const [color, setColor] = useState("#00FF00");
 
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        Color:{" "}
+        <input
+          type="color"
+          value={color}
+          onChange={(e) => setColor(e.target.value)}
+        />
+      </div>
       <div style={{ display: "flex", flexDirection: "row" }}>
         Offset:{" "}
         <input
@@ -70,6 +80,7 @@ export function Main({ audioBuffer }: { audioBuffer: AudioBuffer }) {
         scale={frPerPx}
         offset={offsetFr}
         height={50}
+        color={color}
       />
     </div>
   );

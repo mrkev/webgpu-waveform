@@ -1,3 +1,8 @@
+v2.1.0
+
+- now using the same version numbef for both `webgpu-waveform` and `webgpu-waveform-react`
+- can now set waveform color
+
 webgpu-waveform 2.0.0
 
 - removed react dependency

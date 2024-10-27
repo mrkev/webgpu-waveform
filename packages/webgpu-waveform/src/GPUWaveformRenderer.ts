@@ -1,4 +1,7 @@
+import Color from "color";
 import { nullthrows } from "./nullthrows";
+
+const DEFAULT_WAVEFORM_COLOR = [0, 1, 0, 1] as const; // green
 
 export class GPUWaveformRenderer {
   readonly bindGroup: GPUBindGroup;
@@ -10,6 +13,9 @@ export class GPUWaveformRenderer {
   readonly uniformArray: Float32Array;
   readonly uniformBuffer: GPUBuffer;
 
+  readonly waveformColor: Float32Array;
+  readonly waveformColorBuffer: GPUBuffer;
+
   readonly channelData: Float32Array;
   readonly channelDataStorage: GPUBuffer;
 
@@ -17,6 +23,18 @@ export class GPUWaveformRenderer {
 
   readonly device: GPUDevice;
   readonly context: GPUCanvasContext;
+
+  protected setWaveformColor([r, g, b, a]: readonly [
+    r: number,
+    g: number,
+    b: number,
+    a: number
+  ]) {
+    this.waveformColor[0] = r;
+    this.waveformColor[1] = g;
+    this.waveformColor[2] = b;
+    this.waveformColor[3] = a;
+  }
 
   // TODO: make other things use create too for consistency and to remove duplication. `createPipeline` should be private.
   static async create(canvas: HTMLCanvasElement, channelData: Float32Array) {
@@ -34,7 +52,9 @@ export class GPUWaveformRenderer {
       throw new Error("No appropriate GPUAdapter found.");
     }
 
-    const device = await adapter.requestDevice();
+    const device = await adapter.requestDevice({
+      label: `Device ${new Date().getTime()}`,
+    });
     const canvasFormat = navigator.gpu.getPreferredCanvasFormat();
     context.configure({
       device: device,
@@ -57,7 +77,7 @@ export class GPUWaveformRenderer {
     context: GPUCanvasContext,
     canvasFormat: GPUTextureFormat
   ) {
-    const vertexBufferLayout = {
+    const vertexBufferLayout: GPUVertexBufferLayout = {
       arrayStride: 8,
       attributes: [
         {
@@ -74,7 +94,7 @@ export class GPUWaveformRenderer {
      * and higher scale factors.
      */
     const cellShaderModule = device.createShaderModule({
-      label: "Cell shader",
+      label: "Waveform Shader",
       code: `
           struct VertexInput {
             @location(0) pos: vec2f,
@@ -88,18 +108,13 @@ export class GPUWaveformRenderer {
   
           @group(0) @binding(0) var<uniform> uniforms: vec4f;
           @group(0) @binding(1) var<storage> channelData: array<f32>;
+          @group(0) @binding(2) var<uniform> waveformColor: vec4f;
           
           @vertex
           fn vertexMain(
             @location(0) pos: vec2f,
             @builtin(instance_index) instance: u32
           ) -> VertexOutput {
-  
-            // let i = f32(instance);
-
-            // Compute the cell coordinate from the instance_index
-            // let cell = vec2f(i % uniforms[0], floor(i / uniforms[0]));
-          
             var output: VertexOutput;
             output.pos = vec4f(pos, 0, 1);
             output.cell = vec2f(0, 0); // unused
@@ -173,7 +188,7 @@ export class GPUWaveformRenderer {
             // 0.02 just so the lines look connected
             let sfinal = select(
               vec4f(0, 0, 0, 0),
-              vec4f(0, 1, 0, 1),
+              waveformColor,
               yPosNorm <= max_sample + 0.02 && yPosNorm + 0.02 >= min_sample
             );
             
@@ -229,7 +244,7 @@ export class GPUWaveformRenderer {
       -1, -1, 1, -1, 1, 1,
       // Triangle 2
       -1, -1, 1, 1, -1, 1,
-    ]);
+    ] as const);
     this.vertexBuffer = this.device.createBuffer({
       label: "Cell vertices",
       size: this.vertices.byteLength,
@@ -238,7 +253,7 @@ export class GPUWaveformRenderer {
     this.vertexCount = this.vertices.length / 2; // 6 vertices
 
     // UNIFORMS
-    this.uniformArray = new Float32Array([1, canvas.width, canvas.height, 0]); // scale, width, height
+    this.uniformArray = new Float32Array([1, canvas.width, canvas.height, 0]); // scale, width, height, offset
     this.uniformBuffer = this.device.createBuffer({
       label: "Grid Uniforms",
       size: this.uniformArray.byteLength,
@@ -253,9 +268,17 @@ export class GPUWaveformRenderer {
       usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
     });
 
+    // WAVEFORM COLOR
+    this.waveformColor = new Float32Array(DEFAULT_WAVEFORM_COLOR);
+    this.waveformColorBuffer = this.device.createBuffer({
+      label: "Waveform Color",
+      size: this.waveformColor.byteLength,
+      usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+    });
+
     this.cellPipeline = cellPipeline;
     this.bindGroup = this.device.createBindGroup({
-      label: "Cell renderer bind group",
+      label: "GPU Waveform renderer bind group",
       layout: cellPipeline.getBindGroupLayout(0),
       entries: [
         {
@@ -266,30 +289,47 @@ export class GPUWaveformRenderer {
           binding: 1,
           resource: { buffer: this.channelDataStorage },
         },
+        {
+          binding: 2,
+          resource: { buffer: this.waveformColorBuffer },
+        },
       ],
     });
   }
 
-  render(scale: number, offset: number, width: number, height: number) {
-    const { context, device } = this;
+  render(
+    scale: number,
+    offset: number,
+    width: number,
+    height: number,
+    color?: string | [r: number, g: number, b: number, a: number]
+  ) {
     const canvas = this.context.canvas;
     canvas.width = width;
     canvas.height = height;
+
+    const waveformColor = ensureColorFormat(color ?? DEFAULT_WAVEFORM_COLOR);
 
     this.uniformArray[0] = scale;
     this.uniformArray[1] = width;
     this.uniformArray[2] = height;
     this.uniformArray[3] = offset;
+    this.setWaveformColor(waveformColor);
     // console.log("UNIFORM", this.uniformArray);
 
-    device.queue.writeBuffer(this.vertexBuffer, 0, this.vertices);
-    device.queue.writeBuffer(this.uniformBuffer, 0, this.uniformArray);
-    device.queue.writeBuffer(this.channelDataStorage, 0, this.channelData);
+    this.device.queue.writeBuffer(this.vertexBuffer, 0, this.vertices);
+    this.device.queue.writeBuffer(this.uniformBuffer, 0, this.uniformArray);
+    this.device.queue.writeBuffer(this.channelDataStorage, 0, this.channelData);
+    this.device.queue.writeBuffer(
+      this.waveformColorBuffer,
+      0,
+      this.waveformColor
+    );
 
     const renderPassOpts = {
       colorAttachments: [
         {
-          view: context.getCurrentTexture().createView(),
+          view: this.context.getCurrentTexture().createView({ label: "view" }),
           loadOp: "clear",
           // other clear value?
           clearValue: { r: 0, g: 0, b: 0, a: 0 },
@@ -298,7 +338,9 @@ export class GPUWaveformRenderer {
       ],
     } as const;
 
-    const encoder = device.createCommandEncoder();
+    const encoder = this.device.createCommandEncoder({
+      label: `encoder ${new Date().getTime()}`,
+    });
     const pass = encoder.beginRenderPass(renderPassOpts);
 
     pass.setPipeline(this.cellPipeline);
@@ -308,6 +350,23 @@ export class GPUWaveformRenderer {
 
     pass.end();
     // Finish the command buffer and immediately submit it.
-    device.queue.submit([encoder.finish()]);
+    this.device.queue.submit([encoder.finish()]);
   }
+}
+
+function ensureColorFormat(
+  arg: string | readonly [r: number, g: number, b: number, a: number]
+): readonly [r: number, g: number, b: number, a: number] {
+  if (!(typeof arg === "string")) {
+    return arg;
+  }
+
+  const color = Color(arg);
+
+  return [
+    color.red() / 255,
+    color.green() / 255,
+    color.blue() / 255,
+    color.alpha(),
+  ];
 }

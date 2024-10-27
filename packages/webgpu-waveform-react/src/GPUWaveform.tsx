@@ -8,11 +8,13 @@ export const GPUWaveform = forwardRef(function GPUWaveformImpl(
     audioBuffer,
     scale,
     offset = 0,
+    color = "#00FF00",
     ...props
   }: CanvasHTMLAttributes<HTMLCanvasElement> & {
     audioBuffer: AudioBuffer;
     scale?: number;
     offset?: number;
+    color?: string;
   },
   ref
 ) {
@@ -39,9 +41,9 @@ export const GPUWaveform = forwardRef(function GPUWaveformImpl(
     }
 
     const s = scale != null ? scale : audioBuffer.length / width;
-    renderer.instance.render(s, offset, width, height);
+    renderer.instance.render(s, offset, width, height, color);
     // renderer?.render(Math.round(Math.exp((Math.log(1000) / 100) * scale)));
-  }, [audioBuffer, height, offset, renderer, scale, width]);
+  }, [audioBuffer, color, height, offset, renderer, scale, width]);
 
   if (renderer.status === "error") {
     return (

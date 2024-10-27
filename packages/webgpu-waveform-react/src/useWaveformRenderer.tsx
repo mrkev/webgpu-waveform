@@ -26,10 +26,10 @@ export function useWaveformRenderer(
     const channelData = audioBuffer.getChannelData(0);
 
     GPUWaveformRenderer.create(canvas, channelData)
-      .then((waveformRenderer) =>
+      .then((waveformRenderer: GPUWaveformRenderer) =>
         setRenderer({ status: "ready", instance: waveformRenderer })
       )
-      .catch((err) => setRenderer({ status: "error", error: err }));
+      .catch((err: any) => setRenderer({ status: "error", error: err }));
   }, [audioBuffer, canvasRef]);
 
   return renderer;

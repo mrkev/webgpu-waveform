@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { GPUWaveform } from "webgpu-waveform-react";
 import { GPUWaveformRenderer } from "webgpu-waveform";
 import { useWaveformRenderer } from "webgpu-waveform-react";
@@ -19,58 +19,6 @@ export function Example({
     case "rejected":
       return <p>error: {`${cowAudio[1]}`}</p>;
   }
-}
-
-export function Main({ audioBuffer }: { audioBuffer: AudioBuffer }) {
-  const [offsetFr, setOffsetFr] = useState(0);
-  const [frPerPx, setFrPerPx] = useState(441);
-
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        border: "4px solid black",
-        padding: "1ch",
-      }}
-    >
-      <div style={{ display: "flex", flexDirection: "row" }}>
-        Offset:{" "}
-        <input
-          type="range"
-          min={0}
-          max={audioBuffer.length}
-          value={offsetFr}
-          onChange={(v) => {
-            const value = parseInt(v.target.value);
-            setOffsetFr(value);
-          }}
-        ></input>{" "}
-        {offsetFr} frames
-      </div>
-      <div style={{ display: "flex", flexDirection: "row" }}>
-        Scale:{" "}
-        <input
-          type="range"
-          min={1}
-          max={1764}
-          value={frPerPx}
-          onChange={(v) => {
-            const value = parseInt(v.target.value);
-            setFrPerPx(value);
-          }}
-        ></input>{" "}
-        {frPerPx} frames / pixel
-      </div>
-
-      <GPUWaveform
-        audioBuffer={audioBuffer}
-        scale={frPerPx}
-        offset={offsetFr}
-        height={100}
-      />
-    </div>
-  );
 }
 
 async function example1(canvas: HTMLCanvasElement, audioBuffer: AudioBuffer) {
