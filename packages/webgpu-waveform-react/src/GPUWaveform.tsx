@@ -1,7 +1,7 @@
 import { CanvasHTMLAttributes, forwardRef, useEffect, useRef } from "react";
 import { mergeRefs } from "react-merge-refs";
-import useResizeObserver from "use-resize-observer";
 import { useWaveformRenderer } from "./useWaveformRenderer";
+import { nullthrows } from "./useWebGPU";
 
 export const GPUWaveform = forwardRef(function GPUWaveformImpl(
   {
@@ -9,6 +9,9 @@ export const GPUWaveform = forwardRef(function GPUWaveformImpl(
     scale,
     offset = 0,
     color = "#00FF00",
+    // canvas props
+    width,
+    height,
     ...props
   }: CanvasHTMLAttributes<HTMLCanvasElement> & {
     audioBuffer: AudioBuffer;
@@ -19,30 +22,21 @@ export const GPUWaveform = forwardRef(function GPUWaveformImpl(
   ref
 ) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const renderer = useWaveformRenderer(canvasRef, audioBuffer);
-
-  const { width, height } = useResizeObserver<HTMLCanvasElement>({
-    ref: canvasRef,
-    // onResize: useCallback(
-    //   ({ width }: { width?: number; height?: number }) => {
-    //     // project.viewport.projectDivWidth.set(width ?? 0);
-    //   },
-    //   [project.viewport.projectDivWidth],
-    // ),
-  });
+  const renderer = useWaveformRenderer(audioBuffer);
 
   useEffect(() => {
-    if (width == null || height == null) {
-      return;
-    }
-
     if (renderer.status !== "ready") {
       return;
     }
 
-    const s = scale != null ? scale : audioBuffer.length / width;
-    renderer.instance.render(s, offset, width, height, color);
-    // renderer?.render(Math.round(Math.exp((Math.log(1000) / 100) * scale)));
+    const context = nullthrows(
+      nullthrows(canvasRef.current).getContext("webgpu"),
+      "nil webgpu context"
+    );
+
+    const s = scale != null ? scale : audioBuffer.length / context.canvas.width;
+
+    renderer.instance.render(context, s, offset, color);
   }, [audioBuffer, color, height, offset, renderer, scale, width]);
 
   if (renderer.status === "error") {
@@ -55,5 +49,12 @@ export const GPUWaveform = forwardRef(function GPUWaveformImpl(
     );
   }
 
-  return <canvas ref={mergeRefs([canvasRef, ref])} {...props} />;
+  return (
+    <canvas
+      ref={mergeRefs([canvasRef, ref])}
+      width={width}
+      height={height}
+      {...props}
+    />
+  );
 });

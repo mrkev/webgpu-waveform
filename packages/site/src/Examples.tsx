@@ -1,7 +1,9 @@
 import { useEffect, useRef } from "react";
-import { GPUWaveform } from "webgpu-waveform-react";
-import { GPUWaveformRenderer } from "webgpu-waveform";
-import { useWaveformRenderer } from "webgpu-waveform-react";
+import {
+  GPUWaveform,
+  useWaveformRenderer,
+} from "../../webgpu-waveform-react/src/index";
+import { GPUWaveformRenderer } from "../../webgpu-waveform/src/index";
 import { audioContext, loadSound, usePromise } from "./utils";
 
 export function Example({
@@ -23,14 +25,14 @@ export function Example({
 
 async function example1(canvas: HTMLCanvasElement, audioBuffer: AudioBuffer) {
   const channelData = audioBuffer.getChannelData(0);
-  const renderer = await GPUWaveformRenderer.create(canvas, channelData);
+  const renderer = await GPUWaveformRenderer.create(channelData);
 
-  renderer?.render(800, 0, canvas.width, canvas.height);
+  renderer?.render(canvas, 800, 0);
 }
 
 export function Example1({ audioBuffer }: { audioBuffer: AudioBuffer }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const renderer = useWaveformRenderer(canvasRef, audioBuffer);
+  const renderer = useWaveformRenderer(audioBuffer);
 
   useEffect(() => {
     if (canvasRef.current == null) {
@@ -63,14 +65,14 @@ export function Example2({
   height: number;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const renderer = useWaveformRenderer(canvasRef, audioBuffer);
+  const renderer = useWaveformRenderer(audioBuffer);
 
   useEffect(() => {
     if (renderer.status !== "ready") {
       return;
     }
 
-    renderer.instance.render(audioBuffer.length / width, 0, width, height);
+    renderer.instance.render(canvasRef.current!, audioBuffer.length / width, 0);
   }, [renderer, audioBuffer, width, height]);
 
   if (renderer.status === "error") {
@@ -90,9 +92,14 @@ export function Example3({ audioBuffer }: { audioBuffer: AudioBuffer }) {
   return (
     <GPUWaveform
       audioBuffer={audioBuffer}
-      scale={800}
-      width={300}
-      height={100}
+      scale={400}
+      style={{
+        width: 300,
+        height: 100,
+      }}
+      color="#FFFF00"
+      width={300 * devicePixelRatio}
+      height={100 * devicePixelRatio}
     />
   );
 }

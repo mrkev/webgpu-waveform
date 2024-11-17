@@ -1,7 +1,18 @@
 import Color from "color";
 import { nullthrows } from "./nullthrows";
+import { waveformShader } from "./waveformShader";
 
 const DEFAULT_WAVEFORM_COLOR = [0, 1, 0, 1] as const; // green
+
+// we want to render a 2d texture, for vertices, we just set up two
+// trianges covering the whole vieport
+const TWO_TRIANGLES_COVERING_VIEWPORT = new Float32Array([
+  //   X,    Y,
+  // Triangle 1
+  -1, -1, 1, -1, 1, 1,
+  // Triangle 2
+  -1, -1, 1, 1, -1, 1,
+] as const);
 
 export class GPUWaveformRenderer {
   readonly bindGroup: GPUBindGroup;
@@ -19,11 +30,6 @@ export class GPUWaveformRenderer {
   readonly channelData: Float32Array;
   readonly channelDataStorage: GPUBuffer;
 
-  readonly cellPipeline: GPURenderPipeline;
-
-  readonly device: GPUDevice;
-  readonly context: GPUCanvasContext;
-
   protected setWaveformColor([r, g, b, a]: readonly [
     r: number,
     g: number,
@@ -36,16 +42,31 @@ export class GPUWaveformRenderer {
     this.waveformColor[3] = a;
   }
 
+  protected setOptions(
+    scale?: number,
+    width?: number,
+    height?: number,
+    offset?: number
+  ) {
+    if (scale != null) {
+      this.uniformArray[0] = scale;
+    }
+    if (width != null) {
+      this.uniformArray[1] = width;
+    }
+    if (height != null) {
+      this.uniformArray[2] = height;
+    }
+    if (offset != null) {
+      this.uniformArray[3] = offset;
+    }
+  }
+
   // TODO: make other things use create too for consistency and to remove duplication. `createPipeline` should be private.
-  static async create(canvas: HTMLCanvasElement, channelData: Float32Array) {
+  static async create(channelData: Float32Array) {
     if (!navigator.gpu) {
       throw new Error("WebGPU not supported in this browser.");
     }
-
-    const context = nullthrows(
-      canvas.getContext("webgpu"),
-      "nil webgpu context"
-    );
 
     const adapter = await navigator.gpu.requestAdapter();
     if (adapter == null) {
@@ -55,18 +76,26 @@ export class GPUWaveformRenderer {
     const device = await adapter.requestDevice({
       label: `Device ${new Date().getTime()}`,
     });
+
     const canvasFormat = navigator.gpu.getPreferredCanvasFormat();
-    context.configure({
-      device: device,
-      format: canvasFormat,
-      // https://webgpufundamentals.org/webgpu/lessons/webgpu-transparency.html
-      alphaMode: "premultiplied", //by default, canvas is opaque. dont ignore alpha.
-    });
 
     return GPUWaveformRenderer.createPipeline(
       channelData,
       device,
-      context,
+      canvasFormat
+    );
+  }
+
+  static createSync(device: GPUDevice, channelData: Float32Array) {
+    if (!navigator.gpu) {
+      throw new Error("WebGPU not supported in this browser.");
+    }
+
+    const canvasFormat = navigator.gpu.getPreferredCanvasFormat();
+
+    return GPUWaveformRenderer.createPipeline(
+      channelData,
+      device,
       canvasFormat
     );
   }
@@ -74,7 +103,6 @@ export class GPUWaveformRenderer {
   private static createPipeline(
     channelData: Float32Array,
     device: GPUDevice,
-    context: GPUCanvasContext,
     canvasFormat: GPUTextureFormat
   ) {
     const vertexBufferLayout: GPUVertexBufferLayout = {
@@ -95,107 +123,7 @@ export class GPUWaveformRenderer {
      */
     const cellShaderModule = device.createShaderModule({
       label: "Waveform Shader",
-      code: `
-          struct VertexInput {
-            @location(0) pos: vec2f,
-            @builtin(instance_index) instance: u32,
-          };
-          
-          struct VertexOutput {
-            @builtin(position) pos: vec4f,
-            @location(0) cell: vec2f,
-          };
-  
-          @group(0) @binding(0) var<uniform> uniforms: vec4f;
-          @group(0) @binding(1) var<storage> channelData: array<f32>;
-          @group(0) @binding(2) var<uniform> waveformColor: vec4f;
-          
-          @vertex
-          fn vertexMain(
-            @location(0) pos: vec2f,
-            @builtin(instance_index) instance: u32
-          ) -> VertexOutput {
-            var output: VertexOutput;
-            output.pos = vec4f(pos, 0, 1);
-            output.cell = vec2f(0, 0); // unused
-            return output;
-          }
-  
-          struct FragInput {
-            @location(0) cell: vec2f,
-          };
-  
-          // 4s = 192,000 samples
-          
-          @fragment
-          fn fragmentMain(input: VertexOutput) -> @location(0) vec4f {            
-            let SCALE_FACTOR = uniforms[0];
-            let WIDTH = uniforms[1];
-            let HEIGHT = uniforms[2];
-            let OFFSET = i32(uniforms[3]);
-
-            let index = i32(floor(input.pos.x * f32(SCALE_FACTOR)));
-            let sample = channelData[OFFSET + index];
-  
-            var min_sample = sample;
-            var max_sample = sample;
-  
-            var i = 0;
-            for (; f32(i) < SCALE_FACTOR; i++) {
-              let fwd = channelData[OFFSET + index + i];
-              max_sample = max(max_sample, fwd);
-              min_sample = min(min_sample, fwd);
-              // sample = select(sample, fwd, abs(fwd) > abs(sample));
-              // i += 1;
-            }
-  
-            // sample = 0.4;
-            // let c = input.cell / scale;
-            // return vec4f(c, 1-c.y, 1);
-            // let red = vec4f(1, 0, 0, 1);
-            // let cyan = vec4f(0, 1, 1, 1);
-            // to make red/cyan checkered scale
-            // let scale = vec2u(input.pos.xy) / 8;
-            // let checker = (scale.x + scale.y) % 2 == 1;
-            // return select(red, cyan, checker);
-  
-            // PCM is -1 to 1 btw
-            // normalized -1 to 1, where -1 is down and 1 is up
-            let yPosNorm = -1 * (2 * (floor(input.pos.y) / HEIGHT) - 1);
-
-            // return select(
-            //   vec4f(0, 0, 0, 0),
-            //   vec4f(0, 1, 0, 1),
-            //   input.pos.y <= HEIGHT
-            // );
-            // return vec4f(0, floor(input.pos.y) / HEIGHT, 0, 1);
-            
-            // let checker = 
-            //   // same sign
-            //   (yPosNorm * sample) > 0 && 
-            //   // closer to 0
-            //   abs(yPosNorm) <= abs(sample);
-            // let yval = select(f32(0), f32(1), checker);
-            // let debugVal = select(f32(0), f32(1), 1 > 0);
-            // let yToSampleDist = 1 - (abs(sample - yPosNorm));
-            // let ytmax = 1 - (abs(max_sample - yPosNorm));
-            // let ytmin = 1 - (abs(min_sample - yPosNorm));
-            // let s = select(f32(0), f32(1), yToSampleDist > 0.99);
-            // let sup = select(f32(0), f32(1), ytmax > 0.99);
-            // let sdown = select(f32(0), f32(1), ytmin > 0.99);
-  
-
-            // 0.02 just so the lines look connected
-            let sfinal = select(
-              vec4f(0, 0, 0, 0),
-              waveformColor,
-              yPosNorm <= max_sample + 0.02 && yPosNorm + 0.02 >= min_sample
-            );
-            
-            
-            return sfinal;
-          }
-        `,
+      code: waveformShader,
     });
 
     const cellPipeline = device.createRenderPipeline({
@@ -221,30 +149,20 @@ export class GPUWaveformRenderer {
       cellPipeline,
       channelData,
       device,
-      context
+      canvasFormat
     );
 
     return waveformRenderer;
   }
 
   private constructor(
-    cellPipeline: GPURenderPipeline,
+    readonly renderPipeline: GPURenderPipeline,
     channelData: Float32Array,
-    device: GPUDevice,
-    context: GPUCanvasContext
+    readonly device: GPUDevice,
+    readonly presentationFormat: GPUTextureFormat
   ) {
-    this.device = device;
-    this.context = context;
-    const canvas = this.context.canvas;
-
     // VERTICES
-    this.vertices = new Float32Array([
-      //   X,    Y,
-      // Triangle 1
-      -1, -1, 1, -1, 1, 1,
-      // Triangle 2
-      -1, -1, 1, 1, -1, 1,
-    ] as const);
+    this.vertices = TWO_TRIANGLES_COVERING_VIEWPORT;
     this.vertexBuffer = this.device.createBuffer({
       label: "Cell vertices",
       size: this.vertices.byteLength,
@@ -253,7 +171,7 @@ export class GPUWaveformRenderer {
     this.vertexCount = this.vertices.length / 2; // 6 vertices
 
     // UNIFORMS
-    this.uniformArray = new Float32Array([1, canvas.width, canvas.height, 0]); // scale, width, height, offset
+    this.uniformArray = new Float32Array([1, 1, 1, 0]); // just some default: scale, width, height, offset
     this.uniformBuffer = this.device.createBuffer({
       label: "Grid Uniforms",
       size: this.uniformArray.byteLength,
@@ -276,10 +194,9 @@ export class GPUWaveformRenderer {
       usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     });
 
-    this.cellPipeline = cellPipeline;
     this.bindGroup = this.device.createBindGroup({
       label: "GPU Waveform renderer bind group",
-      layout: cellPipeline.getBindGroupLayout(0),
+      layout: renderPipeline.getBindGroupLayout(0),
       entries: [
         {
           binding: 0,
@@ -295,31 +212,50 @@ export class GPUWaveformRenderer {
         },
       ],
     });
+
+    // performance.mark("writeBuffer1");
+    this.device.queue.writeBuffer(this.channelDataStorage, 0, this.channelData);
+    // performance.mark("writeBuffer2");
+    // performance.measure("writeBufferFoo", "writeBuffer1", "writeBuffer2");
   }
 
-  render(
+  public render(
+    destination: HTMLCanvasElement | OffscreenCanvas | GPUCanvasContext,
     scale: number,
     offset: number,
-    width: number,
-    height: number,
     color?: string | [r: number, g: number, b: number, a: number]
   ) {
-    const canvas = this.context.canvas;
-    canvas.width = width;
-    canvas.height = height;
+    const [canvas, context] = ((): [
+      HTMLCanvasElement | OffscreenCanvas,
+      GPUCanvasContext
+    ] => {
+      if (destination instanceof GPUCanvasContext) {
+        return [destination.canvas, destination];
+      } else {
+        return [
+          destination,
+          nullthrows(destination.getContext("webgpu"), "nil webgpu context"),
+        ];
+      }
+    })();
+
+    context.configure({
+      device: this.device,
+      format: this.presentationFormat,
+      // https://webgpufundamentals.org/webgpu/lessons/webgpu-transparency.html
+      alphaMode: "premultiplied", //by default, canvas is opaque. dont ignore alpha.
+    });
+
+    const cwidth = canvas.width;
+    const cheight = canvas.height;
 
     const waveformColor = ensureColorFormat(color ?? DEFAULT_WAVEFORM_COLOR);
 
-    this.uniformArray[0] = scale;
-    this.uniformArray[1] = width;
-    this.uniformArray[2] = height;
-    this.uniformArray[3] = offset;
+    this.setOptions(scale, cwidth, cheight, offset);
     this.setWaveformColor(waveformColor);
-    // console.log("UNIFORM", this.uniformArray);
 
     this.device.queue.writeBuffer(this.vertexBuffer, 0, this.vertices);
     this.device.queue.writeBuffer(this.uniformBuffer, 0, this.uniformArray);
-    this.device.queue.writeBuffer(this.channelDataStorage, 0, this.channelData);
     this.device.queue.writeBuffer(
       this.waveformColorBuffer,
       0,
@@ -329,7 +265,7 @@ export class GPUWaveformRenderer {
     const renderPassOpts = {
       colorAttachments: [
         {
-          view: this.context.getCurrentTexture().createView({ label: "view" }),
+          view: context.getCurrentTexture().createView({ label: "view" }),
           loadOp: "clear",
           // other clear value?
           clearValue: { r: 0, g: 0, b: 0, a: 0 },
@@ -343,7 +279,7 @@ export class GPUWaveformRenderer {
     });
     const pass = encoder.beginRenderPass(renderPassOpts);
 
-    pass.setPipeline(this.cellPipeline);
+    pass.setPipeline(this.renderPipeline);
     pass.setVertexBuffer(0, this.vertexBuffer);
     pass.setBindGroup(0, this.bindGroup);
     pass.draw(this.vertexCount);

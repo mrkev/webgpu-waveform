@@ -4,7 +4,7 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "npx nx run-many -t dev",
+    "dev": "npm run --workspace=site dev",
     "build": "npx nx run-many -t build",
     "build:site": "npm run --workspace=site build",
     "build:lib": "npm run --workspace=webgpu-waveform build",

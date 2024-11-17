@@ -1,10 +1,9 @@
-import { GPUWaveform, useWaveformRenderer } from "webgpu-waveform-react";
-import { audioContext, loadSound, usePromise } from "./utils";
-import { Example, Example1, Example2, Example3 } from "./Examples"
+import React, { useEffect, useRef } from 'react';
+import GitHubButton from 'react-github-btn';
+import { GPUWaveform, useWaveformRenderer } from "../../webgpu-waveform-react/src/index";
+import { Example, Example1, Example2, Example3 } from "./Examples";
 import { Playground } from "./Playground";
-import { useRef, useEffect } from 'react'
-import GitHubButton from 'react-github-btn'
-import React from 'react'
+import { audioContext, loadSound, usePromise } from "./utils";
 
 export function HID({ h = 'h4', id, children }) {
   return (
@@ -110,26 +109,33 @@ Use `GPUWaveformRenderer.create(...)` to create a new `GPUWaveformRenderer`.
 
 ```typescript
 static async create(
-  canvas: HTMLCanvasElement,
-  channelData: Float32Array
+  channelData: Float32Array,
 ): GPUWaveformRenderer
 ```
 
-It takes in the following arguments:
+It takes in the following argument:
 
-- `canvas: HTMLCanvasElement` — the canvas element to render to
 - `channelData: Float32Array` — the array of PCM samples to render
 
 Finally, use `.render` on the `GPUWaveformRenderer` to render the waveform. It has the following signature:
 
 ```typescript
 render(
+  destination: HTMLCanvasElement | OffscreenCanvas | GPUCanvasContext,
   scale: number,
   offset: number,
-  width: number,
-  height: number
+  color?: string | [r: number, g: number, b: number, a: number],
 );
 ```
+
+Where:
+
+- `destination: React.RefObject<HTMLCanvasElement>` is the canvas or context to render to
+- `scale: number` is the number of frames (pulses) rendered per pixel
+- `offset: number` is the first frame (pulse) that will be rendered
+- `color?: string | [r: number, g: number, b: number, a: number]` is the color of the waveform
+
+> Note: you can set the background color directly on the destination `<canvas />` element via CSS
 
 *Example:*
 
@@ -138,9 +144,9 @@ import { GPUWaveformRenderer } from 'webgpu-waveform';
 
 async function example(canvas, audioBuffer) {
   const channelData = audioBuffer.getChannelData(0);
-  const renderer = await GPUWaveformRenderer.create(canvas, channelData);
+  const renderer = await GPUWaveformRenderer.create(channelData);
 
-  renderer?.render(800, 0, canvas.width, canvas.height);
+  renderer?.render(canvas, 800, 0);
 }
 ```
 
@@ -174,9 +180,14 @@ export function ExampleComponent({ audioBuffer }: { audioBuffer: AudioBuffer }) 
   return (
     <GPUWaveform
       audioBuffer={audioBuffer}
-      scale={800}
-      width={300}
-      height={100}
+      scale={400}
+      style={{
+        width: 300,
+        height: 100,
+      }}
+      color="#FFFF00"
+      width={300 * devicePixelRatio}
+      height={100 * devicePixelRatio}
     />
   )
 }
@@ -192,14 +203,12 @@ The hook `useWaveformRenderer` has the following signature:
 
 ```typescript
 function useWaveformRenderer(
-  canvasRef: React.RefObject<HTMLCanvasElement>,
   audioBuffer: AudioBuffer
 ): RendererStatus;
 ```
 
-It takes in the following arguments:
+It takes in the following argument:
 
-- `canvasRef: React.RefObject<HTMLCanvasElement>` — the canvas element to render to
 - `audioBuffer: AudioBuffer` — the buffer to render
 
 And returns an object of the following type:
@@ -227,14 +236,14 @@ import { useWaveformRenderer } from 'webgpu-waveform-react';
 
 function ExampleComponent({ audioBuffer, width, height }: { audioBuffer: AudioBuffer, width: number, height: number }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const renderer = useWaveformRenderer(canvasRef, audioBuffer);
+  const renderer = useWaveformRenderer(audioBuffer);
 
   useEffect(() => {
     if (renderer.status !== "ready") {
       return;
     }
 
-    renderer?.render(audioBuffer.length / width, 0, width, height);
+    renderer.instance.render(canvasRef.current!, audioBuffer.length / width, 0);
   }, [renderer, audioBuffer, width, height]);
 
   return <canvas ref={canvasRef} width={width} height={height} />;

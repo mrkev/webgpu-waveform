@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Resizable, ResizeCallbackData } from "react-resizable";
+import "react-resizable/css/styles.css";
 import { GPUWaveform } from "../../webgpu-waveform-react/src/index";
 
 const canvas = document.createElement("canvas");
@@ -9,6 +11,8 @@ export function Playground({ audioBuffer }: { audioBuffer: AudioBuffer }) {
   const [offsetFr, setOffsetFr] = useState(0);
   const [frPerPx, setFrPerPx] = useState(441);
   const [color, setColor] = useState("#00FF00");
+  const [width, setWidth] = useState(400);
+  const [height, setHeight] = useState(200);
   // const containerRef = useRef<HTMLDivElement>(null);
   // const divRef = useRef<HTMLDivElement>(null);
 
@@ -101,13 +105,39 @@ export function Playground({ audioBuffer }: { audioBuffer: AudioBuffer }) {
         {frPerPx} frames / pixel
       </div>
 
-      <GPUWaveform
-        audioBuffer={audioBuffer}
-        scale={frPerPx}
-        offset={offsetFr}
-        height={100}
-        color={color}
-      />
+      <Resizable
+        height={height}
+        width={width}
+        onResize={(
+          e: React.SyntheticEvent,
+          { node, size, handle }: ResizeCallbackData
+        ) => {
+          setWidth(size.width);
+          setHeight(size.height);
+        }}
+      >
+        <div
+          className="box"
+          style={{
+            width: width + "px",
+            height: height + "px",
+            border: "1px solid green",
+          }}
+        >
+          <GPUWaveform
+            audioBuffer={audioBuffer}
+            scale={frPerPx}
+            offset={offsetFr}
+            width={width * devicePixelRatio}
+            height={height * devicePixelRatio}
+            style={{
+              width: `${width}px`,
+              height: `${height}px`,
+            }}
+            color={color}
+          />
+        </div>
+      </Resizable>
     </div>
   );
 }

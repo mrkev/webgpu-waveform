@@ -39,8 +39,10 @@ It takes in the following arguments:
 ```javascript
 async function example(canvas, audioBuffer) {
   const channelData = audioBuffer.getChannelData(0);
+  // TODO: remove canvas
   const renderer = await GPUWaveformRenderer.create(canvas, channelData);
 
+  // TODO: PASS CONTEXT, remove width height
   renderer?.render(800, 0, canvas.width, canvas.height);
 }
 ```
