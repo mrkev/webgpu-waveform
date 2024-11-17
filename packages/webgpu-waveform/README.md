@@ -29,9 +29,8 @@ static async create(
 ): GPUWaveformRenderer
 ```
 
-It takes in the following arguments:
+It takes in the following argument:
 
-- `canvas: HTMLCanvasElement` — the canvas element to render to
 - `channelData: Float32Array` — the array of PCM samples to render
 
 **Example:**
@@ -39,10 +38,8 @@ It takes in the following arguments:
 ```javascript
 async function example(canvas, audioBuffer) {
   const channelData = audioBuffer.getChannelData(0);
-  // TODO: remove canvas
-  const renderer = await GPUWaveformRenderer.create(canvas, channelData);
+  const renderer = await GPUWaveformRenderer.create(channelData);
 
-  // TODO: PASS CONTEXT, remove width height
-  renderer?.render(800, 0, canvas.width, canvas.height);
+  renderer?.render(canvas, 800, 0);
 }
 ```

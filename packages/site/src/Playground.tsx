@@ -108,10 +108,7 @@ export function Playground({ audioBuffer }: { audioBuffer: AudioBuffer }) {
       <Resizable
         height={height}
         width={width}
-        onResize={(
-          e: React.SyntheticEvent,
-          { node, size, handle }: ResizeCallbackData
-        ) => {
+        onResize={(_: React.SyntheticEvent, { size }: ResizeCallbackData) => {
           setWidth(size.width);
           setHeight(size.height);
         }}

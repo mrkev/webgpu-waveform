@@ -11,18 +11,18 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "devDependencies": {
-    "@eslint/compat": "^1.2.1",
-    "@eslint/js": "^9.13.0",
-    "@nx/eslint": "20.0.6",
+    "@eslint/compat": "^1.2.3",
+    "@eslint/js": "^9.15.0",
+    "@nx/eslint": "20.1.2",
     "@types/eslint__js": "^8.42.3",
     "eslint": "^9.13.0",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.1.0-rc-e948a5ac-20240807",
     "eslint-plugin-react-refresh": "^0.4.14",
-    "globals": "^15.11.0",
-    "nx": "20.0.6",
+    "globals": "^15.12.0",
+    "nx": "20.1.2",
     "typescript": "^5.6.3",
-    "typescript-eslint": "^8.11.0"
+    "typescript-eslint": "^8.14.0"
   },
-  "packageManager": "pnpm@9.12.2"
+  "packageManager": "pnpm@9.13.2"
 }

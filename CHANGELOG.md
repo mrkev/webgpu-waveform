@@ -1,3 +1,7 @@
+v3.0.1
+
+- `webgpu-waveform` and `webgpu-waveform-react`. update README and dev dependencies.
+
 v3.0.0
 
 - `webgpu-waveform` BREAKING. `.render` now takes in a destination `HTMLCanvasElement | OffscreenCanvas | GPUCanvasContext`,

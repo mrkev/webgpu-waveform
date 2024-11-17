@@ -62,7 +62,6 @@ export class GPUWaveformRenderer {
     }
   }
 
-  // TODO: make other things use create too for consistency and to remove duplication. `createPipeline` should be private.
   static async create(channelData: Float32Array) {
     if (!navigator.gpu) {
       throw new Error("WebGPU not supported in this browser.");
@@ -117,7 +116,7 @@ export class GPUWaveformRenderer {
     } as const;
 
     /**
-     * TODO: optimization idea: metadata sampling min/max at a scale factor of 100, (is 10,000 necessary too?).
+     * IDEA: optimization idea: metadata sampling min/max at a scale factor of 100, (is 10,000 necessary too?).
      * looping +100x can start to get choppy, at this point we can fallback to this alternative buffer for this
      * and higher scale factors.
      */

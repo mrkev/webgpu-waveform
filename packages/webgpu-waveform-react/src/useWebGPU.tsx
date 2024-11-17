@@ -39,7 +39,8 @@ async function initializeWebGPU() {
   return [canvasFormat, adapter, device, encoder] as const;
 }
 
-function useWebGPU(
+// NOTE: unused
+export function useWebGPU(
   canvasRef: React.RefObject<HTMLCanvasElement>
 ): WebGPUStatus {
   const [status, setStatus] = useState<WebGPUStatus>({ status: "waiting" });

@@ -1,7 +1,7 @@
 {
   "name": "webgpu-waveform",
   "private": false,
-  "version": "3.0.0",
+  "version": "3.0.1",
   "type": "module",
   "main": "./dist/webgpu-waveform.umd.cjs",
   "module": "./dist/webgpu-waveform.js",
@@ -23,9 +23,9 @@
     "test": "echo 'no tests atm'"
   },
   "devDependencies": {
-    "@webgpu/types": "^0.1.46",
-    "vite": "^5.4.8",
-    "vite-plugin-dts": "^4.2.3"
+    "@webgpu/types": "^0.1.51",
+    "vite": "^5.4.11",
+    "vite-plugin-dts": "^4.3.0"
   },
   "homepage": "https://aykev.dev/webgpu-waveform/",
   "repository": {

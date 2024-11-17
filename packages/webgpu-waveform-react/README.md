@@ -28,16 +28,11 @@ There's two ways to use this library:
 The hook `useWaveformRenderer` has the following signature:
 
 ```typescript
-// TODO: Remove canvas ref
-function useWaveformRenderer(
-  canvasRef: React.RefObject<HTMLCanvasElement>,
-  audioBuffer: AudioBuffer
-): RendererStatus;
+function useWaveformRenderer(audioBuffer: AudioBuffer): RendererStatus;
 ```
 
-It takes in the following arguments:
+It takes in the following argument:
 
-- `canvasRef: React.RefObject<HTMLCanvasElement>` — the canvas element to render to
 - `audioBuffer: AudioBuffer` — the buffer to render
 
 And returns an object of the following type:
@@ -60,16 +55,14 @@ The objects are returned during the following stages of initialization:
 ```javascript
 function Example({ audioBuffer, width, height }) {
   const canvasRef = useRef < HTMLCanvasElement > null;
-  // TODO: remove canvas ref
-  const renderer = useWaveformRenderer(canvasRef, audioBuffer);
+  const renderer = useWaveformRenderer(audioBuffer);
 
   useEffect(() => {
     if (renderer.status !== "ready") {
       return;
     }
 
-    // TODO: PASS CONETXT, remove width height
-    renderer?.render(audioBuffer.length / width, 0, width, height);
+    renderer.instance.render(canvasRef.current!, audioBuffer.length / width, 0);
   }, [renderer, audioBuffer, width, height]);
 
   return <canvas ref={canvasRef} width={width} height={height} />;
