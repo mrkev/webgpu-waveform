@@ -28,14 +28,13 @@
   },
   "dependencies": {
     "react-merge-refs": "^2.1.1",
-    "use-resize-observer": "^9.1.0",
     "webgpu-waveform": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@webgpu/types": "^0.1.51",
-    "vite": "^5.4.11",
+    "vite": "^6.0.1",
     "vite-plugin-dts": "^4.3.0"
   },
   "homepage": "https://aykev.dev/webgpu-waveform/",
