@@ -1,5 +1,6 @@
 {
   "name": "webgpu-waveform",
+  "description": "Render waveforms using WebGPU and React",
   "private": false,
   "version": "3.0.1",
   "type": "module",

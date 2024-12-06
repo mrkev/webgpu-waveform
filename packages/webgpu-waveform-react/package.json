@@ -1,5 +1,6 @@
 {
   "name": "webgpu-waveform-react",
+  "description": "Render waveforms to HTML Canvas using WebGPU",
   "private": false,
   "version": "3.0.1",
   "type": "module",
@@ -34,7 +35,7 @@
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@webgpu/types": "^0.1.51",
-    "vite": "^6.0.1",
+    "vite": "^6.0.3",
     "vite-plugin-dts": "^4.3.0"
   },
   "homepage": "https://aykev.dev/webgpu-waveform/",
