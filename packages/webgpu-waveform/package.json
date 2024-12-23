@@ -24,9 +24,9 @@
     "test": "echo 'no tests atm'"
   },
   "devDependencies": {
-    "@webgpu/types": "^0.1.51",
-    "vite": "^6.0.1",
-    "vite-plugin-dts": "^4.3.0"
+    "@webgpu/types": "^0.1.52",
+    "vite": "^6.0.5",
+    "vite-plugin-dts": "^4.4.0"
   },
   "homepage": "https://aykev.dev/webgpu-waveform/",
   "repository": {
