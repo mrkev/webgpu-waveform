@@ -1,3 +1,7 @@
+v3.1.0
+
+- `webgpu-waveform-react`. support react 19
+
 v3.0.1
 
 - `webgpu-waveform` and `webgpu-waveform-react`. update README and dev dependencies.
@@ -12,7 +16,7 @@ v3.0.0
 
 v2.1.0
 
-- now using the same version numbef for both `webgpu-waveform` and `webgpu-waveform-react`
+- now using the same version number for both `webgpu-waveform` and `webgpu-waveform-react`
 - can now set waveform color
 
 webgpu-waveform 2.0.0

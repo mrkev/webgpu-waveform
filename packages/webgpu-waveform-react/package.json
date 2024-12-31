@@ -2,7 +2,7 @@
   "name": "webgpu-waveform-react",
   "description": "Render waveforms to HTML Canvas using WebGPU",
   "private": false,
-  "version": "3.0.1",
+  "version": "3.1.0",
   "type": "module",
   "main": "./dist/webgpu-waveform-react.umd.cjs",
   "module": "./dist/webgpu-waveform-react.js",
@@ -24,16 +24,16 @@
     "test": "echo 'no tests atm'"
   },
   "peerDependencies": {
-    "react": ">= 18.0.0",
-    "react-dom": ">= 18.0.0"
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
   },
   "dependencies": {
     "react-merge-refs": "^2.1.1",
     "webgpu-waveform": "workspace:*"
   },
   "devDependencies": {
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
     "@webgpu/types": "^0.1.52",
     "vite": "^6.0.5",
     "vite-plugin-dts": "^4.4.0"

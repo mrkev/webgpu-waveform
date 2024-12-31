@@ -9,22 +9,11 @@
     "preview": "vite preview",
     "test": "echo 'no tests atm'"
   },
-  "peerDependencies": {
-    "react": ">= 18.0.0",
-    "react-dom": ">= 18.0.0"
-  },
-  "peerDependenciesMeta": {
-    "react": {
-      "optional": true
-    },
-    "react-dom": {
-      "optional": true
-    }
-  },
   "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "react-merge-refs": "^2.1.1",
     "react-resizable": "^3.0.5",
-    "use-resize-observer": "^9.1.0",
     "webgpu-waveform": "workspace:*",
     "webgpu-waveform-react": "workspace:*"
   },
@@ -32,17 +21,17 @@
     "@mdx-js/rollup": "^3.1.0",
     "@types/mdx": "^2.0.13",
     "@types/node": "^22.9.0",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
     "@types/react-resizable": "^3.0.8",
-    "@vitejs/plugin-react": "^4.3.3",
-    "@webgpu/types": "^0.1.51",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@webgpu/types": "^0.1.52",
     "concrete.css": "^3.0.0",
     "normalize.css": "^8.0.1",
     "react-github-btn": "^1.4.0",
     "rehype-highlight": "^7.0.1",
     "rehype-slug": "^6.0.0",
-    "remixicon": "^4.5.0",
-    "vite": "^5.4.11"
+    "remixicon": "^4.6.0",
+    "vite": "^6.0.6"
   }
 }

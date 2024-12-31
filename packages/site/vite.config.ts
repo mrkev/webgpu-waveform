@@ -9,7 +9,7 @@ import rehypeSlug from "rehype-slug";
 // Builds the site
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), mdx({ rehypePlugins: [highlight, rehypeSlug] })],
+  plugins: [react(), mdx({ rehypePlugins: [highlight, rehypeSlug] }) as any],
   build: {
     outDir: "../../docs",
     rollupOptions: {

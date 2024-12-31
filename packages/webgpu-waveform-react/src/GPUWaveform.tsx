@@ -51,7 +51,9 @@ export const GPUWaveform = forwardRef(function GPUWaveformImpl(
 
   return (
     <canvas
-      ref={mergeRefs([canvasRef, ref])}
+      ref={(cref) => {
+        mergeRefs([canvasRef, ref])(cref);
+      }}
       width={width}
       height={height}
       {...props}

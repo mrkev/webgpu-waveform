@@ -21,7 +21,8 @@ export default defineConfig({
     },
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled nto your library
-      external: ["react", "react-dom"],
+      // from: https://stackoverflow.com/questions/76135802/how-do-i-make-my-react-package-use-an-external-jsx-runtime
+      external: ["react", "react/jsx-runtime", "react-dom", "react-dom/client"],
       output: {
         // Provide global variables to use in the UMD build for externalized deps
         globals: {
