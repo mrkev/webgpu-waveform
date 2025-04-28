@@ -1,16 +1,23 @@
-import React, { useEffect, useRef } from 'react';
-import GitHubButton from 'react-github-btn';
-import { GPUWaveform, useWaveformRenderer } from "../../webgpu-waveform-react/src/index";
+import React, { useEffect, useRef } from "react";
+import GitHubButton from "react-github-btn";
+import {
+  GPUWaveform,
+  useWaveformRenderer,
+} from "../../webgpu-waveform-react/src/index";
 import { Example, Example1, Example2, Example3 } from "./Examples";
 import { Playground } from "./Playground";
 import { audioContext, loadSound, usePromise } from "./utils";
 
-export function HID({ h = 'h4', id, children }) {
+export function HID({ h = "h4", id, children }) {
   return (
     <a href={`#${id}`}>
-      {React.createElement(h, { id }, ...(Array.isArray(children) ? children : [children]))}
+      {React.createElement(
+        h,
+        { id },
+        ...(Array.isArray(children) ? children : [children])
+      )}
     </a>
-  )
+  );
 }
 
 # webgpu-waveform
@@ -18,61 +25,60 @@ export function HID({ h = 'h4', id, children }) {
 Render waveforms to `<canvas />` using [WebGPU](https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API). It's faster.
 
 <p>
-  <a href="https://github.com/mrkev/webgpu-waveform"><i className="ri-github-fill" ></i> View on github</a>
+  <a href="https://github.com/mrkev/webgpu-waveform">
+    <i className="ri-github-fill"></i> View on github
+  </a>
 </p>
-
 
 _Note: Examples here use a waveform that looks like a cow. Source: [Japhy Riddle](https://www.youtube.com/watch?v=qeUAHHPt-LY)_
 
-<Example render={audioBuffer => <Playground audioBuffer={audioBuffer} />} />
-
+<Example render={(audioBuffer) => <Playground audioBuffer={audioBuffer} />} />
 
 <details style={{paddingLeft: '11%'}}>
-  <summary style={{background: 'black'}}>Source</summary>
+  <summary>Source</summary>
 ```tsx
 export function Main({ audioBuffer }: { audioBuffer: AudioBuffer }) {
   const [offsetFr, setOffsetFr] = useState(0);
   const [frPerPx, setFrPerPx] = useState(441);
   const [color, setColor] = useState("#00FF00");
 
-  return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
-      <div style={{ display: "flex", flexDirection: "row" }}>
-        Color:{" "}
-        <input
-          type="color"
-          value={color}
-          onChange={(e) => setColor(e.target.value)}
-        />
-      </div>
-      <div style={{ display: "flex", flexDirection: "row" }}>
-        Offset:{" "}
-        <input
-          type="range"
-          min={0}
-          max={audioBuffer.length}
-          value={offsetFr}
-          onChange={(v) => {
-            const value = parseInt(v.target.value);
-            setOffsetFr(value);
-          }}
-        ></input>{" "}
-        {offsetFr} frames
-      </div>
-      <div style={{ display: "flex", flexDirection: "row" }}>
-        Scale:{" "}
-        <input
-          type="range"
-          min={1}
-          max={1764}
-          value={frPerPx}
-          onChange={(v) => {
-            const value = parseInt(v.target.value);
-            setFrPerPx(value);
-          }}
-        ></input>{" "}
-        {frPerPx} frames / pixel
-      </div>
+return (
+
+<div style={{ display: "flex", flexDirection: "column" }}>
+<div style={{ display: "flex", flexDirection: "row" }}>
+Color:{" "}
+<input
+type="color"
+value={color}
+onChange={(e) => setColor(e.target.value)}
+/>
+</div>
+<div style={{ display: "flex", flexDirection: "row" }}>
+Offset:{" "}
+<input
+type="range"
+min={0}
+max={audioBuffer.length}
+value={offsetFr}
+onChange={(v) => {
+const value = parseInt(v.target.value);
+setOffsetFr(value);
+}} ></input>{" "}
+{offsetFr} frames
+</div>
+<div style={{ display: "flex", flexDirection: "row" }}>
+Scale:{" "}
+<input
+type="range"
+min={1}
+max={1764}
+value={frPerPx}
+onChange={(v) => {
+const value = parseInt(v.target.value);
+setFrPerPx(value);
+}} ></input>{" "}
+{frPerPx} frames / pixel
+</div>
 
       <GPUWaveform
         audioBuffer={audioBuffer}
@@ -82,9 +88,11 @@ export function Main({ audioBuffer }: { audioBuffer: AudioBuffer }) {
         color={color}
       />
     </div>
-  );
+
+);
 }
-```
+
+````
 </details>
 
 ## Usage
@@ -103,7 +111,7 @@ Install from the npm registry:
 
 ```bash
 npm i webgpu-waveform
-```
+````
 
 Use `GPUWaveformRenderer.create(...)` to create a new `GPUWaveformRenderer`.
 
@@ -137,10 +145,10 @@ Where:
 
 > Note: you can set the background color directly on the destination `<canvas />` element via CSS
 
-*Example:*
+_Example:_
 
 ```javascript
-import { GPUWaveformRenderer } from 'webgpu-waveform';
+import { GPUWaveformRenderer } from "webgpu-waveform";
 
 async function example(canvas, audioBuffer) {
   const channelData = audioBuffer.getChannelData(0);
@@ -150,18 +158,20 @@ async function example(canvas, audioBuffer) {
 }
 ```
 
-*Result:*
+_Result:_
 
-<Example render={audioBuffer => <Example1 audioBuffer={audioBuffer} />} />
+<Example render={(audioBuffer) => <Example1 audioBuffer={audioBuffer} />} />
 
-
-<HID h='h3' id="pacakge:webgpu-waveform-react">`webgpu-waveform-react`</HID>
+<HID h="h3" id="pacakge:webgpu-waveform-react">
+  `webgpu-waveform-react`
+</HID>
 
 There's two ways to use this library:
+
 - as a component: <a href="#GPUWaveform">`GPUWaveform`</a>
 - as a hook: <a href="#useWaveformRenderer">`useWaveformRenderer`</a>
 
-<HID id={'GPUWaveform'}>Using the `GPUWaveform` component</HID>
+<HID id={"GPUWaveform"}>Using the `GPUWaveform` component</HID>
 
 The component `GPUWaveform` takes the following properties:
 
@@ -173,10 +183,13 @@ The component `GPUWaveform` takes the following properties:
 Example:
 
 ```typescript
-import { GPUWaveform } from 'webgpu-waveform-react';
+import { GPUWaveform } from "webgpu-waveform-react";
 
-
-export function ExampleComponent({ audioBuffer }: { audioBuffer: AudioBuffer }) {
+export function ExampleComponent({
+  audioBuffer,
+}: {
+  audioBuffer: AudioBuffer;
+}) {
   return (
     <GPUWaveform
       audioBuffer={audioBuffer}
@@ -189,22 +202,20 @@ export function ExampleComponent({ audioBuffer }: { audioBuffer: AudioBuffer }) 
       width={300 * devicePixelRatio}
       height={100 * devicePixelRatio}
     />
-  )
+  );
 }
 ```
 
 Result:
 
-<Example render={audioBuffer => <Example3 audioBuffer={audioBuffer} />} />
+<Example render={(audioBuffer) => <Example3 audioBuffer={audioBuffer} />} />
 
-<HID id={'useWaveformRenderer'}>Using the `useWaveformRenderer` hook</HID>
+<HID id={"useWaveformRenderer"}>Using the `useWaveformRenderer` hook</HID>
 
 The hook `useWaveformRenderer` has the following signature:
 
 ```typescript
-function useWaveformRenderer(
-  audioBuffer: AudioBuffer
-): RendererStatus;
+function useWaveformRenderer(audioBuffer: AudioBuffer): RendererStatus;
 ```
 
 It takes in the following argument:
@@ -217,9 +228,7 @@ And returns an object of the following type:
 type RendererStatus =
   | { status: "initializing" }
   | { status: "error"; error: any }
-  | { status: "ready";
-      instance: GPUWaveformRenderer;
-    };
+  | { status: "ready"; instance: GPUWaveformRenderer };
 ```
 
 The objects are returned during the following stages of initialization:
@@ -231,10 +240,17 @@ The objects are returned during the following stages of initialization:
 **Example:**
 
 ```typescript
-import { useWaveformRenderer } from 'webgpu-waveform-react';
+import { useWaveformRenderer } from "webgpu-waveform-react";
 
-
-function ExampleComponent({ audioBuffer, width, height }: { audioBuffer: AudioBuffer, width: number, height: number }) {
+function ExampleComponent({
+  audioBuffer,
+  width,
+  height,
+}: {
+  audioBuffer: AudioBuffer;
+  width: number;
+  height: number;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const renderer = useWaveformRenderer(audioBuffer);
 
@@ -247,14 +263,23 @@ function ExampleComponent({ audioBuffer, width, height }: { audioBuffer: AudioBu
   }, [renderer, audioBuffer, width, height]);
 
   return <canvas ref={canvasRef} width={width} height={height} />;
-};
-
+}
 ```
 
 **Result:**
 
-<Example render={audioBuffer => <Example2 audioBuffer={audioBuffer} width={300} height={100} />} />
+<Example
+  render={(audioBuffer) => (
+    <Example2 audioBuffer={audioBuffer} width={300} height={100} />
+  )}
+/>
 
 <footer>
-    Built by <a href='http://aykev.dev'>Kevin Chavez</a> · <a href="https://twitter.com/aykev"><i className="ri-twitter-fill"></i></a> <a href="https://github.com/mrkev"><i className="ri-github-fill" ></i></a>
+  Built by <a href="http://aykev.dev">Kevin Chavez</a> ·{" "}
+  <a href="https://twitter.com/aykev">
+    <i className="ri-twitter-fill"></i>
+  </a>{" "}
+  <a href="https://github.com/mrkev">
+    <i className="ri-github-fill"></i>
+  </a>
 </footer>
