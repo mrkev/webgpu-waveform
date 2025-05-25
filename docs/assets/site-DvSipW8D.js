@@ -268,43 +268,44 @@ fn fragmentMain(input: VertexOutput) -> @location(0) vec4f {
   `,p.jsx(i.span,{className:"hljs-keyword",children:"const"})," [frPerPx, setFrPerPx] = ",p.jsx(i.span,{className:"hljs-title function_",children:"useState"}),"(",p.jsx(i.span,{className:"hljs-number",children:"441"}),`);
   `,p.jsx(i.span,{className:"hljs-keyword",children:"const"})," [color, setColor] = ",p.jsx(i.span,{className:"hljs-title function_",children:"useState"}),"(",p.jsx(i.span,{className:"hljs-string",children:'"#00FF00"'}),`);
 
-`,p.jsx(i.span,{className:"hljs-keyword",children:"return"}),` (
-
-`,p.jsxs(i.span,{className:"xml",children:[p.jsxs(i.span,{className:"hljs-tag",children:["<",p.jsx(i.span,{className:"hljs-name",children:"div"})," ",p.jsx(i.span,{className:"hljs-attr",children:"style"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{{"})," ",p.jsx(i.span,{className:"hljs-attr",children:"display:"}),' "',p.jsx(i.span,{className:"hljs-attr",children:"flex"}),'", ',p.jsx(i.span,{className:"hljs-attr",children:"flexDirection:"}),' "',p.jsx(i.span,{className:"hljs-attr",children:"column"}),'" }}>']}),`
-`,p.jsxs(i.span,{className:"hljs-tag",children:["<",p.jsx(i.span,{className:"hljs-name",children:"div"})," ",p.jsx(i.span,{className:"hljs-attr",children:"style"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{{"})," ",p.jsx(i.span,{className:"hljs-attr",children:"display:"}),' "',p.jsx(i.span,{className:"hljs-attr",children:"flex"}),'", ',p.jsx(i.span,{className:"hljs-attr",children:"flexDirection:"}),' "',p.jsx(i.span,{className:"hljs-attr",children:"row"}),'" }}>']}),`
-Color:{" "}
-`,p.jsxs(i.span,{className:"hljs-tag",children:["<",p.jsx(i.span,{className:"hljs-name",children:"input"}),`
-`,p.jsx(i.span,{className:"hljs-attr",children:"type"}),"=",p.jsx(i.span,{className:"hljs-string",children:'"color"'}),`
-`,p.jsx(i.span,{className:"hljs-attr",children:"value"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{color}"}),`
-`,p.jsx(i.span,{className:"hljs-attr",children:"onChange"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{(e)"})," =>"]}),` setColor(e.target.value)}
-/>
-`,p.jsxs(i.span,{className:"hljs-tag",children:["</",p.jsx(i.span,{className:"hljs-name",children:"div"}),">"]}),`
-`,p.jsxs(i.span,{className:"hljs-tag",children:["<",p.jsx(i.span,{className:"hljs-name",children:"div"})," ",p.jsx(i.span,{className:"hljs-attr",children:"style"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{{"})," ",p.jsx(i.span,{className:"hljs-attr",children:"display:"}),' "',p.jsx(i.span,{className:"hljs-attr",children:"flex"}),'", ',p.jsx(i.span,{className:"hljs-attr",children:"flexDirection:"}),' "',p.jsx(i.span,{className:"hljs-attr",children:"row"}),'" }}>']}),`
-Offset:{" "}
-`,p.jsxs(i.span,{className:"hljs-tag",children:["<",p.jsx(i.span,{className:"hljs-name",children:"input"}),`
-`,p.jsx(i.span,{className:"hljs-attr",children:"type"}),"=",p.jsx(i.span,{className:"hljs-string",children:'"range"'}),`
-`,p.jsx(i.span,{className:"hljs-attr",children:"min"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{0}"}),`
-`,p.jsx(i.span,{className:"hljs-attr",children:"max"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{audioBuffer.length}"}),`
-`,p.jsx(i.span,{className:"hljs-attr",children:"value"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{offsetFr}"}),`
-`,p.jsx(i.span,{className:"hljs-attr",children:"onChange"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{(v)"})," =>"]}),` {
-const value = parseInt(v.target.value);
-setOffsetFr(value);
-}} >`,p.jsxs(i.span,{className:"hljs-tag",children:["</",p.jsx(i.span,{className:"hljs-name",children:"input"}),">"]}),`{" "}
-{offsetFr} frames
-`,p.jsxs(i.span,{className:"hljs-tag",children:["</",p.jsx(i.span,{className:"hljs-name",children:"div"}),">"]}),`
-`,p.jsxs(i.span,{className:"hljs-tag",children:["<",p.jsx(i.span,{className:"hljs-name",children:"div"})," ",p.jsx(i.span,{className:"hljs-attr",children:"style"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{{"})," ",p.jsx(i.span,{className:"hljs-attr",children:"display:"}),' "',p.jsx(i.span,{className:"hljs-attr",children:"flex"}),'", ',p.jsx(i.span,{className:"hljs-attr",children:"flexDirection:"}),' "',p.jsx(i.span,{className:"hljs-attr",children:"row"}),'" }}>']}),`
-Scale:{" "}
-`,p.jsxs(i.span,{className:"hljs-tag",children:["<",p.jsx(i.span,{className:"hljs-name",children:"input"}),`
-`,p.jsx(i.span,{className:"hljs-attr",children:"type"}),"=",p.jsx(i.span,{className:"hljs-string",children:'"range"'}),`
-`,p.jsx(i.span,{className:"hljs-attr",children:"min"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{1}"}),`
-`,p.jsx(i.span,{className:"hljs-attr",children:"max"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{1764}"}),`
-`,p.jsx(i.span,{className:"hljs-attr",children:"value"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{frPerPx}"}),`
-`,p.jsx(i.span,{className:"hljs-attr",children:"onChange"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{(v)"})," =>"]}),` {
-const value = parseInt(v.target.value);
-setFrPerPx(value);
-}} >`,p.jsxs(i.span,{className:"hljs-tag",children:["</",p.jsx(i.span,{className:"hljs-name",children:"input"}),">"]}),`{" "}
-{frPerPx} frames / pixel
-`,p.jsxs(i.span,{className:"hljs-tag",children:["</",p.jsx(i.span,{className:"hljs-name",children:"div"}),">"]}),`
+  `,p.jsx(i.span,{className:"hljs-keyword",children:"return"}),` (
+    `,p.jsxs(i.span,{className:"xml",children:[p.jsxs(i.span,{className:"hljs-tag",children:["<",p.jsx(i.span,{className:"hljs-name",children:"div"})," ",p.jsx(i.span,{className:"hljs-attr",children:"style"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{{"})," ",p.jsx(i.span,{className:"hljs-attr",children:"display:"}),' "',p.jsx(i.span,{className:"hljs-attr",children:"flex"}),'", ',p.jsx(i.span,{className:"hljs-attr",children:"flexDirection:"}),' "',p.jsx(i.span,{className:"hljs-attr",children:"column"}),'" }}>']}),`
+      `,p.jsxs(i.span,{className:"hljs-tag",children:["<",p.jsx(i.span,{className:"hljs-name",children:"div"})," ",p.jsx(i.span,{className:"hljs-attr",children:"style"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{{"})," ",p.jsx(i.span,{className:"hljs-attr",children:"display:"}),' "',p.jsx(i.span,{className:"hljs-attr",children:"flex"}),'", ',p.jsx(i.span,{className:"hljs-attr",children:"flexDirection:"}),' "',p.jsx(i.span,{className:"hljs-attr",children:"row"}),'" }}>']}),`
+        Color:{" "}
+        `,p.jsxs(i.span,{className:"hljs-tag",children:["<",p.jsx(i.span,{className:"hljs-name",children:"input"}),`
+          `,p.jsx(i.span,{className:"hljs-attr",children:"type"}),"=",p.jsx(i.span,{className:"hljs-string",children:'"color"'}),`
+          `,p.jsx(i.span,{className:"hljs-attr",children:"value"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{color}"}),`
+          `,p.jsx(i.span,{className:"hljs-attr",children:"onChange"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{(e)"})," =>"]}),` setColor(e.target.value)}
+        />
+      `,p.jsxs(i.span,{className:"hljs-tag",children:["</",p.jsx(i.span,{className:"hljs-name",children:"div"}),">"]}),`
+      `,p.jsxs(i.span,{className:"hljs-tag",children:["<",p.jsx(i.span,{className:"hljs-name",children:"div"})," ",p.jsx(i.span,{className:"hljs-attr",children:"style"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{{"})," ",p.jsx(i.span,{className:"hljs-attr",children:"display:"}),' "',p.jsx(i.span,{className:"hljs-attr",children:"flex"}),'", ',p.jsx(i.span,{className:"hljs-attr",children:"flexDirection:"}),' "',p.jsx(i.span,{className:"hljs-attr",children:"row"}),'" }}>']}),`
+        Offset:{" "}
+        `,p.jsxs(i.span,{className:"hljs-tag",children:["<",p.jsx(i.span,{className:"hljs-name",children:"input"}),`
+          `,p.jsx(i.span,{className:"hljs-attr",children:"type"}),"=",p.jsx(i.span,{className:"hljs-string",children:'"range"'}),`
+          `,p.jsx(i.span,{className:"hljs-attr",children:"min"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{0}"}),`
+          `,p.jsx(i.span,{className:"hljs-attr",children:"max"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{audioBuffer.length}"}),`
+          `,p.jsx(i.span,{className:"hljs-attr",children:"value"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{offsetFr}"}),`
+          `,p.jsx(i.span,{className:"hljs-attr",children:"onChange"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{(v)"})," =>"]}),` {
+            const value = parseInt(v.target.value);
+            setOffsetFr(value);
+          }}
+        >`,p.jsxs(i.span,{className:"hljs-tag",children:["</",p.jsx(i.span,{className:"hljs-name",children:"input"}),">"]}),`{" "}
+        {offsetFr} frames
+      `,p.jsxs(i.span,{className:"hljs-tag",children:["</",p.jsx(i.span,{className:"hljs-name",children:"div"}),">"]}),`
+      `,p.jsxs(i.span,{className:"hljs-tag",children:["<",p.jsx(i.span,{className:"hljs-name",children:"div"})," ",p.jsx(i.span,{className:"hljs-attr",children:"style"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{{"})," ",p.jsx(i.span,{className:"hljs-attr",children:"display:"}),' "',p.jsx(i.span,{className:"hljs-attr",children:"flex"}),'", ',p.jsx(i.span,{className:"hljs-attr",children:"flexDirection:"}),' "',p.jsx(i.span,{className:"hljs-attr",children:"row"}),'" }}>']}),`
+        Scale:{" "}
+        `,p.jsxs(i.span,{className:"hljs-tag",children:["<",p.jsx(i.span,{className:"hljs-name",children:"input"}),`
+          `,p.jsx(i.span,{className:"hljs-attr",children:"type"}),"=",p.jsx(i.span,{className:"hljs-string",children:'"range"'}),`
+          `,p.jsx(i.span,{className:"hljs-attr",children:"min"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{1}"}),`
+          `,p.jsx(i.span,{className:"hljs-attr",children:"max"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{1764}"}),`
+          `,p.jsx(i.span,{className:"hljs-attr",children:"value"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{frPerPx}"}),`
+          `,p.jsx(i.span,{className:"hljs-attr",children:"onChange"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{(v)"})," =>"]}),` {
+            const value = parseInt(v.target.value);
+            setFrPerPx(value);
+          }}
+        >`,p.jsxs(i.span,{className:"hljs-tag",children:["</",p.jsx(i.span,{className:"hljs-name",children:"input"}),">"]}),`{" "}
+        {frPerPx} frames / pixel
+      `,p.jsxs(i.span,{className:"hljs-tag",children:["</",p.jsx(i.span,{className:"hljs-name",children:"div"}),">"]}),`
 
       `,p.jsxs(i.span,{className:"hljs-tag",children:["<",p.jsx(i.span,{className:"hljs-name",children:"GPUWaveform"}),`
         `,p.jsx(i.span,{className:"hljs-attr",children:"audioBuffer"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{audioBuffer}"}),`
@@ -314,10 +315,8 @@ setFrPerPx(value);
         `,p.jsx(i.span,{className:"hljs-attr",children:"color"}),"=",p.jsx(i.span,{className:"hljs-string",children:"{color}"}),`
       />`]}),`
     `,p.jsxs(i.span,{className:"hljs-tag",children:["</",p.jsx(i.span,{className:"hljs-name",children:"div"}),">"]})]}),`
-
-);
+  );
 }
-
 `]})})]}),`
 `,p.jsx(i.h2,{id:"usage",children:"Usage"}),`
 `,p.jsx(i.p,{children:"There's 2 packages:"}),`
