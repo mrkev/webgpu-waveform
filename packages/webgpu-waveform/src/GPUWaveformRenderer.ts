@@ -17,17 +17,17 @@ const TWO_TRIANGLES_COVERING_VIEWPORT = new Float32Array([
 export class GPUWaveformRenderer {
   readonly bindGroup: GPUBindGroup;
 
-  readonly vertices: Float32Array;
+  readonly vertices: Float32Array<ArrayBuffer>;
   readonly vertexBuffer: GPUBuffer;
   readonly vertexCount: number;
 
-  readonly uniformArray: Float32Array;
+  readonly uniformArray: Float32Array<ArrayBuffer>;
   readonly uniformBuffer: GPUBuffer;
 
-  readonly waveformColor: Float32Array;
+  readonly waveformColor: Float32Array<ArrayBuffer>;
   readonly waveformColorBuffer: GPUBuffer;
 
-  readonly channelData: Float32Array;
+  readonly channelData: Float32Array<ArrayBuffer>;
   readonly channelDataStorage: GPUBuffer;
 
   protected setWaveformColor([r, g, b, a]: readonly [
@@ -62,7 +62,7 @@ export class GPUWaveformRenderer {
     }
   }
 
-  static async create(channelData: Float32Array) {
+  static async create(channelData: Float32Array<ArrayBuffer>) {
     if (!navigator.gpu) {
       throw new Error("WebGPU not supported in this browser.");
     }
@@ -85,7 +85,7 @@ export class GPUWaveformRenderer {
     );
   }
 
-  static createSync(device: GPUDevice, channelData: Float32Array) {
+  static createSync(device: GPUDevice, channelData: Float32Array<ArrayBuffer>) {
     if (!navigator.gpu) {
       throw new Error("WebGPU not supported in this browser.");
     }
@@ -100,7 +100,7 @@ export class GPUWaveformRenderer {
   }
 
   private static createPipeline(
-    channelData: Float32Array,
+    channelData: Float32Array<ArrayBuffer>,
     device: GPUDevice,
     canvasFormat: GPUTextureFormat
   ) {
@@ -156,7 +156,7 @@ export class GPUWaveformRenderer {
 
   private constructor(
     readonly renderPipeline: GPURenderPipeline,
-    channelData: Float32Array,
+    channelData: Float32Array<ArrayBuffer>,
     readonly device: GPUDevice,
     readonly presentationFormat: GPUTextureFormat
   ) {
