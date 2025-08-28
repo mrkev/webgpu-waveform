@@ -21,7 +21,7 @@ export class GPUWaveformRenderer {
   readonly vertexBuffer: GPUBuffer;
   readonly vertexCount: number;
 
-  readonly uniformArray: Float32Array<ArrayBuffer>;
+  readonly uniformArray: ArrayBuffer;
   readonly uniformBuffer: GPUBuffer;
 
   readonly waveformColor: Float32Array<ArrayBuffer>;
@@ -48,17 +48,19 @@ export class GPUWaveformRenderer {
     height?: number,
     offset?: number
   ) {
+    const f32View = new Float32Array(this.uniformArray);
+    const i32View = new Int32Array(this.uniformArray);
     if (scale != null) {
-      this.uniformArray[0] = scale;
+      f32View[0] = scale;
     }
     if (width != null) {
-      this.uniformArray[1] = width;
+      f32View[1] = width;
     }
     if (height != null) {
-      this.uniformArray[2] = height;
+      f32View[2] = height;
     }
     if (offset != null) {
-      this.uniformArray[3] = offset;
+      i32View[3] = offset;
     }
   }
 
@@ -154,6 +156,18 @@ export class GPUWaveformRenderer {
     return waveformRenderer;
   }
 
+  private defaultUniformArray() {
+    // 4 slots, 4 bytes each
+    const arrayBuffer = new ArrayBuffer(4 * 4);
+    const f32View = new Float32Array(arrayBuffer);
+    const i32View = new Int32Array(arrayBuffer);
+    f32View[0] = 1; // scale
+    f32View[1] = 1; // width
+    f32View[2] = 1; // height
+    i32View[3] = 0; // offset
+    return arrayBuffer;
+  }
+
   private constructor(
     readonly renderPipeline: GPURenderPipeline,
     channelData: Float32Array<ArrayBuffer>,
@@ -170,7 +184,7 @@ export class GPUWaveformRenderer {
     this.vertexCount = this.vertices.length / 2; // 6 vertices
 
     // UNIFORMS
-    this.uniformArray = new Float32Array([1, 1, 1, 0]); // just some default: scale, width, height, offset
+    this.uniformArray = this.defaultUniformArray();
     this.uniformBuffer = this.device.createBuffer({
       label: "Grid Uniforms",
       size: this.uniformArray.byteLength,

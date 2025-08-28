@@ -1,3 +1,5 @@
+// TODO: pass in offset as an integer, rather than casting from a float
+
 export const waveformShader = /* wgsl */ `
 
 struct VertexInput {
@@ -14,7 +16,7 @@ struct Uniforms {
   scaleFactor: f32,
   width: f32,
   height: f32,
-  offset: i32, // note: no negative offsets, make u32
+  offset: i32, // no negative offsets
 };
 
 @group(0) @binding(0) var<uniform> uniforms: Uniforms;
@@ -43,7 +45,7 @@ fn fragmentMain(input: VertexOutput) -> @location(0) vec4f {
   let SCALE_FACTOR = uniforms.scaleFactor;
   let WIDTH = uniforms.width;
   let HEIGHT = uniforms.height;
-  let OFFSET = uniforms.offset;
+  let OFFSET = i32(uniforms.offset);
 
   let index = i32(floor(input.pos.x * f32(SCALE_FACTOR)));
   let sample = channelData[OFFSET + index];
