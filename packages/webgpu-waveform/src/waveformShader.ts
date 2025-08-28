@@ -10,7 +10,14 @@ struct VertexOutput {
   @location(0) cell: vec2f,
 };
 
-@group(0) @binding(0) var<uniform> uniforms: vec4f;
+struct Uniforms {
+  scaleFactor: f32,
+  width: f32,
+  height: f32,
+  offset: i32, // note: no negative offsets, make u32
+};
+
+@group(0) @binding(0) var<uniform> uniforms: Uniforms;
 @group(0) @binding(1) var<storage> channelData: array<f32>;
 @group(0) @binding(2) var<uniform> waveformColor: vec4f;
 
@@ -33,10 +40,10 @@ struct FragInput {
 
 @fragment
 fn fragmentMain(input: VertexOutput) -> @location(0) vec4f {            
-  let SCALE_FACTOR = uniforms[0];
-  let WIDTH = uniforms[1];
-  let HEIGHT = uniforms[2];
-  let OFFSET = i32(uniforms[3]);
+  let SCALE_FACTOR = uniforms.scaleFactor;
+  let WIDTH = uniforms.width;
+  let HEIGHT = uniforms.height;
+  let OFFSET = uniforms.offset;
 
   let index = i32(floor(input.pos.x * f32(SCALE_FACTOR)));
   let sample = channelData[OFFSET + index];
