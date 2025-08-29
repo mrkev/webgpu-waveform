@@ -42,19 +42,19 @@ struct FragInput {
 
 @fragment
 fn fragmentMain(input: VertexOutput) -> @location(0) vec4f {            
-  let SCALE_FACTOR = uniforms.scaleFactor;
+  let samplesPerPixel = uniforms.scaleFactor;
   let WIDTH = uniforms.width;
   let HEIGHT = uniforms.height;
-  let OFFSET = i32(uniforms.offset);
+  let OFFSET = uniforms.offset;
 
-  let index = i32(floor(input.pos.x * f32(SCALE_FACTOR)));
+  let index = i32(floor(input.pos.x * f32(samplesPerPixel)));
   let sample = channelData[OFFSET + index];
 
   var min_sample = sample;
   var max_sample = sample;
 
-  var i = 0;
-  for (; f32(i) < SCALE_FACTOR; i++) {
+  
+  for (var i = 0; f32(i) <= samplesPerPixel; i++) {
     let fwd = channelData[OFFSET + index + i];
     max_sample = max(max_sample, fwd);
     min_sample = min(min_sample, fwd);
@@ -74,7 +74,7 @@ fn fragmentMain(input: VertexOutput) -> @location(0) vec4f {
 
   // PCM is -1 to 1 btw
   // normalized -1 to 1, where -1 is down and 1 is up
-  let yPosNorm = -1 * (2 * (floor(input.pos.y) / HEIGHT) - 1);
+  let yPosNorm = -1.0 * (2.0 * (input.pos.y / HEIGHT) - 1.0);
 
   // return select(
   //   vec4f(0, 0, 0, 0),
@@ -82,7 +82,7 @@ fn fragmentMain(input: VertexOutput) -> @location(0) vec4f {
   //   input.pos.y <= HEIGHT
   // );
   // return vec4f(0, floor(input.pos.y) / HEIGHT, 0, 1);
-  
+
   // let checker = 
   //   // same sign
   //   (yPosNorm * sample) > 0 && 
@@ -97,16 +97,14 @@ fn fragmentMain(input: VertexOutput) -> @location(0) vec4f {
   // let sup = select(f32(0), f32(1), ytmax > 0.99);
   // let sdown = select(f32(0), f32(1), ytmin > 0.99);
 
+  let insideWaveform = (yPosNorm <= max_sample + 0.003 && yPosNorm >= min_sample - 0.003);
 
-  // 0.02 just so the lines look connected
   let sfinal = select(
-    vec4f(0, 0, 0, 0),
+    vec4f(0.0, 0.0, 0.0, 0.0),
     waveformColor,
-    yPosNorm <= max_sample + 0.02 && yPosNorm + 0.02 >= min_sample
+    insideWaveform
   );
-  
-  
+
   return sfinal;
 }
-
 `;

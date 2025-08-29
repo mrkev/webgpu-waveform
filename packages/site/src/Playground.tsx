@@ -102,7 +102,17 @@ export function Playground({ audioBuffer }: { audioBuffer: AudioBuffer }) {
             setFrPerPx(value);
           }}
         ></input>{" "}
-        {frPerPx} frames / pixel
+        <input
+          type="number"
+          value={frPerPx}
+          min={1}
+          max={1764}
+          onChange={(v) => {
+            const value = parseInt(v.target.value);
+            setFrPerPx(value);
+          }}
+        />{" "}
+        frames / pixel
       </div>
 
       <Resizable
