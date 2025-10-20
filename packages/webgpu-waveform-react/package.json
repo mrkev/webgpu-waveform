@@ -32,10 +32,10 @@
     "webgpu-waveform": "workspace:*"
   },
   "devDependencies": {
-    "@types/react": "^19.1.12",
-    "@types/react-dom": "^19.1.8",
-    "@webgpu/types": "^0.1.64",
-    "vite": "^7.1.3",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "@webgpu/types": "^0.1.66",
+    "vite": "^7.1.11",
     "vite-plugin-dts": "^4.5.4"
   },
   "homepage": "https://aykev.dev/webgpu-waveform/",
