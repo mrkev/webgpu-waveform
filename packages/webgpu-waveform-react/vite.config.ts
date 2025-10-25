@@ -6,9 +6,7 @@ import dts from "vite-plugin-dts";
 export default defineConfig({
   logLevel: "info",
   plugins: [dts({ rollupTypes: true })],
-  server: {
-    port: 5174,
-  },
+  server: { port: 5174 },
   build: {
     outDir: "dist",
     minify: false,
@@ -20,14 +18,14 @@ export default defineConfig({
       fileName: "webgpu-waveform-react",
     },
     rollupOptions: {
-      // make sure to externalize deps that shouldn't be bundled nto your library
+      // make sure to externalize deps that shouldn't be bundled onto your library
       // from: https://stackoverflow.com/questions/76135802/how-do-i-make-my-react-package-use-an-external-jsx-runtime
       external: ["react", "react/jsx-runtime", "react-dom", "react-dom/client"],
       output: {
         // Provide global variables to use in the UMD build for externalized deps
         globals: {
           react: "React",
-          "reactd-dom": "ReactDOM",
+          "react-dom": "ReactDOM",
         },
       },
     },

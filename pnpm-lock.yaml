@@ -83,7 +83,7 @@ importers:
         version: 3.0.8
       '@vitejs/plugin-react':
         specifier: ^5.0.4
-        version: 5.0.4(vite@7.1.11(@types/node@24.8.1)(yaml@2.6.1))
+        version: 5.0.4(vite@6.4.1(@types/node@24.8.1)(yaml@2.6.1))
       '@webgpu/types':
         specifier: ^0.1.66
         version: 0.1.66
@@ -106,8 +106,8 @@ importers:
         specifier: ^4.7.0
         version: 4.7.0
       vite:
-        specifier: ^7.1.11
-        version: 7.1.11(@types/node@24.8.1)(yaml@2.6.1)
+        specifier: ^6.3.5
+        version: 6.4.1(@types/node@24.8.1)(yaml@2.6.1)
 
   packages/webgpu-waveform:
     dependencies:
@@ -122,20 +122,20 @@ importers:
         specifier: ^0.1.66
         version: 0.1.66
       vite:
-        specifier: ^7.1.11
-        version: 7.1.11(@types/node@24.8.1)(yaml@2.6.1)
+        specifier: ^6.3.5
+        version: 6.4.1(@types/node@24.8.1)(yaml@2.6.1)
       vite-plugin-dts:
         specifier: ^4.5.4
-        version: 4.5.4(@types/node@24.8.1)(rollup@4.49.0)(typescript@5.9.3)(vite@7.1.11(@types/node@24.8.1)(yaml@2.6.1))
+        version: 4.5.4(@types/node@24.8.1)(rollup@4.49.0)(typescript@5.9.3)(vite@6.4.1(@types/node@24.8.1)(yaml@2.6.1))
 
   packages/webgpu-waveform-react:
     dependencies:
       react:
-        specifier: ^18.0.0 || ^19.0.0
-        version: 19.0.0
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.2.0
       react-dom:
-        specifier: ^18.0.0 || ^19.0.0
-        version: 19.0.0(react@19.0.0)
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.2.0(react@19.2.0)
       react-merge-refs:
         specifier: ^2.1.1
         version: 2.1.1
@@ -153,11 +153,11 @@ importers:
         specifier: ^0.1.66
         version: 0.1.66
       vite:
-        specifier: ^7.1.11
-        version: 7.1.11(@types/node@24.8.1)(yaml@2.6.1)
+        specifier: ^6.3.5
+        version: 6.4.1(@types/node@24.8.1)(yaml@2.6.1)
       vite-plugin-dts:
         specifier: ^4.5.4
-        version: 4.5.4(@types/node@24.8.1)(rollup@4.49.0)(typescript@5.9.3)(vite@7.1.11(@types/node@24.8.1)(yaml@2.6.1))
+        version: 4.5.4(@types/node@24.8.1)(rollup@4.49.0)(typescript@5.9.3)(vite@6.4.1(@types/node@24.8.1)(yaml@2.6.1))
 
 packages:
 
@@ -2570,11 +2570,6 @@ packages:
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
 
-  react-dom@19.0.0:
-    resolution: {integrity: sha512-4GV5sHFG0e/0AD4X+ySy6UJd3jVl1iNsNHdpad0qhABJ11twS3TTBnseqsKurKcsNqCEFeGL3uLpVChpIO3QfQ==}
-    peerDependencies:
-      react: ^19.0.0
-
   react-dom@19.2.0:
     resolution: {integrity: sha512-UlbRu4cAiGaIewkPyiRGJk0imDN2T3JjieT6spoL2UeSf5od4n5LB/mQ4ejmxhCFT1tYe8IvaFulzynWovsEFQ==}
     peerDependencies:
@@ -2616,10 +2611,6 @@ packages:
     resolution: {integrity: sha512-vKpeHhI5OZvYn82kXOs1bC8aOXktGU5AmKAgaZS4F5JPburCtbmDPqE7Pzp+1kN4+Wb81LlF33VpGwWwtXem+w==}
     peerDependencies:
       react: '>= 16.3'
-
-  react@19.0.0:
-    resolution: {integrity: sha512-V8AVnmPIICiWpGfm6GLzCR/W5FXLchHop40W4nXBmdlEceh16rCN8O8LNWm5bh5XUX91fh7KpA+W0TgMKmgTpQ==}
-    engines: {node: '>=0.10.0'}
 
   react@19.2.0:
     resolution: {integrity: sha512-tmbWg6W31tQLeB5cdIBOicJDJRR2KzXsV7uSK9iNfLWQ5bIZfxuPEHp7M8wiHyHnn0DD1i7w3Zmin0FtkrwoCQ==}
@@ -2736,9 +2727,6 @@ packages:
 
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
-
-  scheduler@0.25.0:
-    resolution: {integrity: sha512-xFVuu11jh+xcO7JOAGJNOXld8/TcEHK/4CituBUeUb5hqxJLj9YuemAEuvm9gQ/+pgXYfbQuqAkiYu+u7YEsNA==}
 
   scheduler@0.27.0:
     resolution: {integrity: sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q==}
@@ -3074,19 +3062,19 @@ packages:
       vite:
         optional: true
 
-  vite@7.1.11:
-    resolution: {integrity: sha512-uzcxnSDVjAopEUjljkWh8EIrg6tlzrjFUfMcR1EVsRDGwf/ccef0qQPRyOrROwhrTDaApueq+ja+KLPlzR/zdg==}
-    engines: {node: ^20.19.0 || >=22.12.0}
+  vite@6.4.1:
+    resolution: {integrity: sha512-+Oxm7q9hDoLMyJOYfUYBuHQo+dkAloi33apOPP56pzj+vsdJDzr+j1NISE5pyaAuKL4A3UD34qd0lx5+kfKp2g==}
+    engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
     peerDependencies:
-      '@types/node': ^20.19.0 || >=22.12.0
+      '@types/node': ^18.0.0 || ^20.0.0 || >=22.0.0
       jiti: '>=1.21.0'
-      less: ^4.0.0
+      less: '*'
       lightningcss: ^1.21.0
-      sass: ^1.70.0
-      sass-embedded: ^1.70.0
-      stylus: '>=0.54.8'
-      sugarss: ^5.0.0
+      sass: '*'
+      sass-embedded: '*'
+      stylus: '*'
+      sugarss: '*'
       terser: ^5.16.0
       tsx: ^4.8.1
       yaml: ^2.4.2
@@ -4093,7 +4081,7 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@vitejs/plugin-react@5.0.4(vite@7.1.11(@types/node@24.8.1)(yaml@2.6.1))':
+  '@vitejs/plugin-react@5.0.4(vite@6.4.1(@types/node@24.8.1)(yaml@2.6.1))':
     dependencies:
       '@babel/core': 7.28.4
       '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.28.4)
@@ -4101,7 +4089,7 @@ snapshots:
       '@rolldown/pluginutils': 1.0.0-beta.38
       '@types/babel__core': 7.20.5
       react-refresh: 0.17.0
-      vite: 7.1.11(@types/node@24.8.1)(yaml@2.6.1)
+      vite: 6.4.1(@types/node@24.8.1)(yaml@2.6.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -6182,11 +6170,6 @@ snapshots:
 
   queue-microtask@1.2.3: {}
 
-  react-dom@19.0.0(react@19.0.0):
-    dependencies:
-      react: 19.0.0
-      scheduler: 0.25.0
-
   react-dom@19.2.0(react@19.2.0):
     dependencies:
       react: 19.2.0
@@ -6223,8 +6206,6 @@ snapshots:
       react-draggable: 4.4.6(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
     transitivePeerDependencies:
       - react-dom
-
-  react@19.0.0: {}
 
   react@19.2.0: {}
 
@@ -6414,8 +6395,6 @@ snapshots:
       is-regex: 1.2.1
 
   safer-buffer@2.1.2: {}
-
-  scheduler@0.25.0: {}
 
   scheduler@0.27.0: {}
 
@@ -6828,7 +6807,7 @@ snapshots:
       unist-util-stringify-position: 4.0.0
       vfile-message: 4.0.2
 
-  vite-plugin-dts@4.5.4(@types/node@24.8.1)(rollup@4.49.0)(typescript@5.9.3)(vite@7.1.11(@types/node@24.8.1)(yaml@2.6.1)):
+  vite-plugin-dts@4.5.4(@types/node@24.8.1)(rollup@4.49.0)(typescript@5.9.3)(vite@6.4.1(@types/node@24.8.1)(yaml@2.6.1)):
     dependencies:
       '@microsoft/api-extractor': 7.52.8(@types/node@24.8.1)
       '@rollup/pluginutils': 5.1.4(rollup@4.49.0)
@@ -6841,13 +6820,13 @@ snapshots:
       magic-string: 0.30.17
       typescript: 5.9.3
     optionalDependencies:
-      vite: 7.1.11(@types/node@24.8.1)(yaml@2.6.1)
+      vite: 6.4.1(@types/node@24.8.1)(yaml@2.6.1)
     transitivePeerDependencies:
       - '@types/node'
       - rollup
       - supports-color
 
-  vite@7.1.11(@types/node@24.8.1)(yaml@2.6.1):
+  vite@6.4.1(@types/node@24.8.1)(yaml@2.6.1):
     dependencies:
       esbuild: 0.25.3
       fdir: 6.5.0(picomatch@4.0.3)

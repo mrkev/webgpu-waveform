@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Resizable, ResizeCallbackData } from "react-resizable";
 import "react-resizable/css/styles.css";
-import { GPUWaveform } from "../../webgpu-waveform-react/src/index";
+import { GPUWaveform } from "webgpu-waveform-react";
 
 const canvas = document.createElement("canvas");
 canvas.width = 100;

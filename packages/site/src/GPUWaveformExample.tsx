@@ -1,4 +1,4 @@
-import { GPUWaveform } from "../../webgpu-waveform-react/src/index";
+import { GPUWaveform } from "webgpu-waveform-react";
 import { audioContext, loadSound, usePromise } from "./utils";
 
 export function Example() {

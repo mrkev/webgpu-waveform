@@ -9,9 +9,9 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/webgpu-waveform-react.js",
-      "require": "./dist/webgpu-waveform-react.umd.cjs",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/webgpu-waveform-react.umd.cjs"
     }
   },
   "files": [
@@ -24,8 +24,8 @@
     "test": "echo 'no tests atm'"
   },
   "peerDependencies": {
-    "react": "^18.0.0 || ^19.0.0",
-    "react-dom": "^18.0.0 || ^19.0.0"
+    "react": ">=18.0.0 || >=19.0.0",
+    "react-dom": ">=18.0.0 || >=19.0.0"
   },
   "dependencies": {
     "react-merge-refs": "^2.1.1",
@@ -35,7 +35,7 @@
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "@webgpu/types": "^0.1.66",
-    "vite": "^7.1.11",
+    "vite": "^6.3.5",
     "vite-plugin-dts": "^4.5.4"
   },
   "homepage": "https://aykev.dev/webgpu-waveform/",

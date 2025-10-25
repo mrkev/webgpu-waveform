@@ -17,7 +17,7 @@ export default defineConfig({
         site: "./index.html",
       },
     },
-    // minify: false,
+    minify: false,
   },
   // instead of having absolute paths pointing at assets in `index.html`, use
   // relative paths. Works better with github pages where /assets/foobar.js
