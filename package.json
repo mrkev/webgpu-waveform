@@ -12,16 +12,16 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.7",
-    "@eslint/compat": "^1.4.0",
+    "@eslint/compat": "^1.4.1",
     "@eslint/js": "^9.38.0",
     "eslint": "^9.38.0",
     "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.20",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.4.0",
-    "nx": "21.6.5",
+    "nx": "22.0.2",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.46.1"
+    "typescript-eslint": "^8.46.2"
   },
-  "packageManager": "pnpm@10.19.0+sha512.c9fc7236e92adf5c8af42fd5bf1612df99c2ceb62f27047032f4720b33f8eacdde311865e91c411f2774f618d82f320808ecb51718bfa82c060c4ba7c76a32b8"
+  "packageManager": "pnpm@10.20.0"
 }

@@ -17,15 +17,20 @@
   "files": [
     "dist"
   ],
+  "sideEffects": false,
   "scripts": {
     "dev": "vite build -c vite.config.ts --watch",
-    "build": "tsc && vite build -c vite.config.ts --emptyOutDir",
+    "build": "vite build -c vite.config.ts --emptyOutDir",
     "preview": "vite preview",
     "test": "echo 'no tests atm'"
   },
+  "dependencies": {
+    "color": "^5.0.2"
+  },
   "devDependencies": {
+    "@types/color": "^4.2.0",
     "@webgpu/types": "^0.1.66",
-    "vite": "^6.3.5",
+    "vite": "^7.1.12",
     "vite-plugin-dts": "^4.5.4"
   },
   "homepage": "https://aykev.dev/webgpu-waveform/",
@@ -43,8 +48,10 @@
     "audio",
     "pcm"
   ],
-  "dependencies": {
-    "@types/color": "^4.2.0",
-    "color": "^5.0.2"
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

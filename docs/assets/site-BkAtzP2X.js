@@ -1,35 +1,27 @@
 (function polyfill() {
   const relList = document.createElement("link").relList;
-  if (relList && relList.supports && relList.supports("modulepreload")) {
-    return;
-  }
-  for (const link2 of document.querySelectorAll('link[rel="modulepreload"]')) {
-    processPreload(link2);
-  }
+  if (relList && relList.supports && relList.supports("modulepreload")) return;
+  for (const link2 of document.querySelectorAll('link[rel="modulepreload"]')) processPreload(link2);
   new MutationObserver((mutations) => {
     for (const mutation of mutations) {
-      if (mutation.type !== "childList") {
-        continue;
-      }
-      for (const node of mutation.addedNodes) {
-        if (node.tagName === "LINK" && node.rel === "modulepreload")
-          processPreload(node);
-      }
+      if (mutation.type !== "childList") continue;
+      for (const node of mutation.addedNodes) if (node.tagName === "LINK" && node.rel === "modulepreload") processPreload(node);
     }
-  }).observe(document, { childList: true, subtree: true });
+  }).observe(document, {
+    childList: true,
+    subtree: true
+  });
   function getFetchOpts(link2) {
     const fetchOpts = {};
     if (link2.integrity) fetchOpts.integrity = link2.integrity;
     if (link2.referrerPolicy) fetchOpts.referrerPolicy = link2.referrerPolicy;
-    if (link2.crossOrigin === "use-credentials")
-      fetchOpts.credentials = "include";
+    if (link2.crossOrigin === "use-credentials") fetchOpts.credentials = "include";
     else if (link2.crossOrigin === "anonymous") fetchOpts.credentials = "omit";
     else fetchOpts.credentials = "same-origin";
     return fetchOpts;
   }
   function processPreload(link2) {
-    if (link2.ep)
-      return;
+    if (link2.ep) return;
     link2.ep = true;
     const fetchOpts = getFetchOpts(link2);
     fetch(link2.href, fetchOpts);
@@ -43,7 +35,12 @@ function getAugmentedNamespace(n) {
   var f = n.default;
   if (typeof f == "function") {
     var a = function a2() {
-      if (this instanceof a2) {
+      var isInstance = false;
+      try {
+        isInstance = this instanceof a2;
+      } catch {
+      }
+      if (isInstance) {
         return Reflect.construct(f, arguments, this.constructor);
       }
       return f.apply(this, arguments);
@@ -12560,16 +12557,32 @@ function requireClient() {
 }
 var clientExports = requireClient();
 const ReactDOM = /* @__PURE__ */ getDefaultExportFromCjs(clientExports);
-function o(f) {
-  return (r2) => {
-    f.forEach((n) => {
-      typeof n == "function" ? n(r2) : n != null && (n.current = r2);
-    });
+function mergeRefsReact16(refs) {
+  return (value) => {
+    for (const ref of refs) assignRef(ref, value);
   };
 }
-var __defProp$1 = Object.defineProperty;
-var __defNormalProp$1 = (obj, key, value) => key in obj ? __defProp$1(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$1 = (obj, key, value) => __defNormalProp$1(obj, typeof key !== "symbol" ? key + "" : key, value);
+function mergeRefsReact19(refs) {
+  return (value) => {
+    const cleanups = [];
+    for (const ref of refs) {
+      const cleanup = assignRef(ref, value);
+      const isCleanup = typeof cleanup === "function";
+      cleanups.push(isCleanup ? cleanup : () => assignRef(ref, null));
+    }
+    return () => {
+      for (const cleanup of cleanups) cleanup();
+    };
+  };
+}
+function assignRef(ref, value) {
+  if (typeof ref === "function") {
+    return ref(value);
+  } else if (ref) {
+    ref.current = value;
+  }
+}
+var mergeRefs = parseInt(reactExports.version.split(".")[0], 10) >= 19 ? mergeRefsReact19 : mergeRefsReact16;
 const cssKeywords$1 = {
   aliceblue: [240, 248, 255],
   antiquewhite: [250, 235, 215],
@@ -14087,7 +14100,7 @@ function roundToPlace$1(places) {
 function getset$1(model, channel, modifier) {
   model = Array.isArray(model) ? model : [model];
   for (const m of model) {
-    (limiters$1[m] || (limiters$1[m] = []))[channel] = modifier;
+    (limiters$1[m] ||= [])[channel] = modifier;
   }
   model = model[0];
   return function(value) {
@@ -14260,16 +14273,6 @@ const TWO_TRIANGLES_COVERING_VIEWPORT$1 = new Float32Array([
 ]);
 let GPUWaveformRenderer$1 = class GPUWaveformRenderer {
   constructor(renderPipeline, channelData, device, presentationFormat) {
-    __publicField$1(this, "bindGroup");
-    __publicField$1(this, "vertices");
-    __publicField$1(this, "vertexBuffer");
-    __publicField$1(this, "vertexCount");
-    __publicField$1(this, "uniformArray");
-    __publicField$1(this, "uniformBuffer");
-    __publicField$1(this, "waveformColor");
-    __publicField$1(this, "waveformColorBuffer");
-    __publicField$1(this, "channelData");
-    __publicField$1(this, "channelDataStorage");
     this.renderPipeline = renderPipeline;
     this.device = device;
     this.presentationFormat = presentationFormat;
@@ -14318,6 +14321,16 @@ let GPUWaveformRenderer$1 = class GPUWaveformRenderer {
     });
     this.device.queue.writeBuffer(this.channelDataStorage, 0, this.channelData);
   }
+  bindGroup;
+  vertices;
+  vertexBuffer;
+  vertexCount;
+  uniformArray;
+  uniformBuffer;
+  waveformColor;
+  waveformColorBuffer;
+  channelData;
+  channelDataStorage;
   setWaveformColor([r2, g, b, a]) {
     this.waveformColor[0] = r2;
     this.waveformColor[1] = g;
@@ -14534,7 +14547,7 @@ const GPUWaveform = reactExports.forwardRef(function GPUWaveformImpl({
     "canvas",
     {
       ref: (cref) => {
-        o([canvasRef, ref])(cref);
+        mergeRefs([canvasRef, ref])(cref);
       },
       width,
       height,
@@ -14542,9 +14555,6 @@ const GPUWaveform = reactExports.forwardRef(function GPUWaveformImpl({
     }
   );
 });
-var __defProp = Object.defineProperty;
-var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 const cssKeywords = {
   aliceblue: [240, 248, 255],
   antiquewhite: [250, 235, 215],
@@ -16062,7 +16072,7 @@ function roundToPlace(places) {
 function getset(model, channel, modifier) {
   model = Array.isArray(model) ? model : [model];
   for (const m of model) {
-    (limiters[m] || (limiters[m] = []))[channel] = modifier;
+    (limiters[m] ||= [])[channel] = modifier;
   }
   model = model[0];
   return function(value) {
@@ -16235,16 +16245,6 @@ const TWO_TRIANGLES_COVERING_VIEWPORT = new Float32Array([
 ]);
 class GPUWaveformRenderer2 {
   constructor(renderPipeline, channelData, device, presentationFormat) {
-    __publicField(this, "bindGroup");
-    __publicField(this, "vertices");
-    __publicField(this, "vertexBuffer");
-    __publicField(this, "vertexCount");
-    __publicField(this, "uniformArray");
-    __publicField(this, "uniformBuffer");
-    __publicField(this, "waveformColor");
-    __publicField(this, "waveformColorBuffer");
-    __publicField(this, "channelData");
-    __publicField(this, "channelDataStorage");
     this.renderPipeline = renderPipeline;
     this.device = device;
     this.presentationFormat = presentationFormat;
@@ -16293,6 +16293,16 @@ class GPUWaveformRenderer2 {
     });
     this.device.queue.writeBuffer(this.channelDataStorage, 0, this.channelData);
   }
+  bindGroup;
+  vertices;
+  vertexBuffer;
+  vertexCount;
+  uniformArray;
+  uniformBuffer;
+  waveformColor;
+  waveformColorBuffer;
+  channelData;
+  channelDataStorage;
   setWaveformColor([r2, g, b, a]) {
     this.waveformColor[0] = r2;
     this.waveformColor[1] = g;
@@ -16494,7 +16504,7 @@ function Example({
 async function example1(canvas2, audioBuffer) {
   const channelData = audioBuffer.getChannelData(0);
   const renderer = await GPUWaveformRenderer2.create(channelData);
-  renderer == null ? void 0 : renderer.render(canvas2, 800, 0);
+  renderer?.render(canvas2, 800, 0);
 }
 function Example1({ audioBuffer }) {
   const canvasRef = reactExports.useRef(null);
@@ -18214,12 +18224,12 @@ function requireResizable() {
     subClass.prototype.constructor = subClass;
     _setPrototypeOf(subClass, superClass);
   }
-  function _setPrototypeOf(o2, p) {
-    _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf2(o3, p2) {
-      o3.__proto__ = p2;
-      return o3;
+  function _setPrototypeOf(o, p) {
+    _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf2(o2, p2) {
+      o2.__proto__ = p2;
+      return o2;
     };
-    return _setPrototypeOf(o2, p);
+    return _setPrototypeOf(o, p);
   }
   var Resizable$1 = /* @__PURE__ */ function(_React$Component) {
     _inheritsLoose(Resizable2, _React$Component);
@@ -18508,12 +18518,12 @@ function requireResizableBox() {
     subClass.prototype.constructor = subClass;
     _setPrototypeOf(subClass, superClass);
   }
-  function _setPrototypeOf(o2, p) {
-    _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf2(o3, p2) {
-      o3.__proto__ = p2;
-      return o3;
+  function _setPrototypeOf(o, p) {
+    _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf2(o2, p2) {
+      o2.__proto__ = p2;
+      return o2;
     };
-    return _setPrototypeOf(o2, p);
+    return _setPrototypeOf(o, p);
   }
   var ResizableBox$1 = /* @__PURE__ */ function(_React$Component) {
     _inheritsLoose(ResizableBox2, _React$Component);
