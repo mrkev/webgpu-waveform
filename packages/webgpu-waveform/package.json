@@ -2,7 +2,7 @@
   "name": "webgpu-waveform",
   "description": "Render waveforms using WebGPU and React",
   "private": false,
-  "version": "3.2.0",
+  "version": "3.3.0",
   "type": "module",
   "main": "./dist/webgpu-waveform.umd.cjs",
   "module": "./dist/webgpu-waveform.js",

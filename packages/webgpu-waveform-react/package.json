@@ -2,7 +2,7 @@
   "name": "webgpu-waveform-react",
   "description": "Render waveforms to HTML Canvas using WebGPU",
   "private": false,
-  "version": "3.3.0",
+  "version": "3.4.0",
   "type": "module",
   "main": "./dist/webgpu-waveform-react.umd.cjs",
   "module": "./dist/webgpu-waveform-react.js",

@@ -23,7 +23,9 @@ dist-ssr
 *.sln
 *.sw?
 
-
-
+# NX
 .nx/cache
 .nx/workspace-data
+
+# Notes
+.notes/*
