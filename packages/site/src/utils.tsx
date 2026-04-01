@@ -15,7 +15,7 @@ export const audioContext = new AudioContext();
 
 export async function loadSound(
   audioContext: AudioContext,
-  url: string
+  url: string,
 ): Promise<AudioBuffer> {
   const response = await fetch(url);
   const arrayBuffer = await response.arrayBuffer();
