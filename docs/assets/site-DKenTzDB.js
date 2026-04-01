@@ -14146,6 +14146,18 @@ const waveformShader$1 = (
   /* wgsl */
   `
 
+struct Uniforms {
+  scaleFactor: f32,
+  width: f32,
+  height: f32,
+  offset: i32, // no negative offsets
+  bufferLength: i32,
+};
+
+@group(0) @binding(0) var<uniform> uniforms: Uniforms;
+@group(0) @binding(1) var<storage> channelData: array<f32>;
+@group(0) @binding(2) var<uniform> waveformColor: vec4f;
+
 struct VertexInput {
   @location(0) pos: vec2f,
   @builtin(instance_index) instance: u32,
@@ -14153,19 +14165,7 @@ struct VertexInput {
 
 struct VertexOutput {
   @builtin(position) pos: vec4f,
-  @location(0) cell: vec2f,
 };
-
-struct Uniforms {
-  scaleFactor: f32,
-  width: f32,
-  height: f32,
-  offset: i32, // no negative offsets
-};
-
-@group(0) @binding(0) var<uniform> uniforms: Uniforms;
-@group(0) @binding(1) var<storage> channelData: array<f32>;
-@group(0) @binding(2) var<uniform> waveformColor: vec4f;
 
 @vertex
 fn vertexMain(
@@ -14174,31 +14174,31 @@ fn vertexMain(
 ) -> VertexOutput {
   var output: VertexOutput;
   output.pos = vec4f(pos, 0, 1);
-  output.cell = vec2f(0, 0); // unused
   return output;
 }
 
 struct FragInput {
-  @location(0) cell: vec2f,
+  @builtin(position) fragCoord: vec4f,
 };
 
 // 4s = 192,000 samples
 
 @fragment
-fn fragmentMain(input: VertexOutput) -> @location(0) vec4f {            
+fn fragmentMain(input: FragInput) -> @location(0) vec4f {   
+  
   let samplesPerPixel = uniforms.scaleFactor;
   let WIDTH = uniforms.width;
   let HEIGHT = uniforms.height;
   let OFFSET = uniforms.offset;
+  let BUFFERLENGTH = uniforms.bufferLength;
 
-  let index = i32(floor(input.pos.x * f32(samplesPerPixel)));
+  let index = i32(floor(input.fragCoord.x * f32(samplesPerPixel)));
   let sample = channelData[OFFSET + index];
-
+  
   var min_sample = sample;
   var max_sample = sample;
-
   
-  for (var i = 0; f32(i) <= samplesPerPixel; i++) {
+  for (var i = 0; i <= i32(samplesPerPixel); i++) {
     let fwd = channelData[OFFSET + index + i];
     max_sample = max(max_sample, fwd);
     min_sample = min(min_sample, fwd);
@@ -14218,7 +14218,7 @@ fn fragmentMain(input: VertexOutput) -> @location(0) vec4f {
 
   // PCM is -1 to 1 btw
   // normalized -1 to 1, where -1 is down and 1 is up
-  let yPosNorm = -1.0 * (2.0 * (input.pos.y / HEIGHT) - 1.0);
+  let yPosNorm = -1.0 * (2.0 * (input.fragCoord.y / HEIGHT) - 1.0);
 
   // return select(
   //   vec4f(0, 0, 0, 0),
@@ -14241,7 +14241,9 @@ fn fragmentMain(input: VertexOutput) -> @location(0) vec4f {
   // let sup = select(f32(0), f32(1), ytmax > 0.99);
   // let sdown = select(f32(0), f32(1), ytmin > 0.99);
 
-  let insideWaveform = (yPosNorm <= max_sample + 0.003 && yPosNorm >= min_sample - 0.003);
+
+  let epsilon = 1.0 / uniforms.height;
+  let insideWaveform = (yPosNorm <= max_sample + epsilon && yPosNorm >= min_sample - epsilon);
 
   let sfinal = select(
     vec4f(0.0, 0.0, 0.0, 0.0),
@@ -14320,6 +14322,7 @@ let GPUWaveformRenderer$1 = class GPUWaveformRenderer {
       ]
     });
     this.device.queue.writeBuffer(this.channelDataStorage, 0, this.channelData);
+    this.device.queue.writeBuffer(this.vertexBuffer, 0, this.vertices);
   }
   bindGroup;
   vertices;
@@ -14350,7 +14353,7 @@ let GPUWaveformRenderer$1 = class GPUWaveformRenderer {
       f32View[2] = height;
     }
     if (offset != null) {
-      i32View[3] = offset;
+      i32View[3] = offset | 0;
     }
   }
   static async create(channelData) {
@@ -14425,13 +14428,15 @@ let GPUWaveformRenderer$1 = class GPUWaveformRenderer {
     return waveformRenderer;
   }
   defaultUniformArray() {
-    const arrayBuffer = new ArrayBuffer(4 * 4);
+    const arrayBuffer = new ArrayBuffer(4 * 5);
     const f32View = new Float32Array(arrayBuffer);
     const i32View = new Int32Array(arrayBuffer);
     f32View[0] = 1;
     f32View[1] = 1;
     f32View[2] = 1;
     i32View[3] = 0;
+    i32View[4] = arrayBuffer.byteLength;
+    console.log("FOObar");
     return arrayBuffer;
   }
   render(destination, scale, offset, color) {
@@ -14457,7 +14462,6 @@ let GPUWaveformRenderer$1 = class GPUWaveformRenderer {
     const waveformColor = ensureColorFormat$1(color ?? DEFAULT_WAVEFORM_COLOR$1);
     this.setOptions(scale, cwidth, cheight, offset);
     this.setWaveformColor(waveformColor);
-    this.device.queue.writeBuffer(this.vertexBuffer, 0, this.vertices);
     this.device.queue.writeBuffer(this.uniformBuffer, 0, this.uniformArray);
     this.device.queue.writeBuffer(
       this.waveformColorBuffer,
@@ -16118,6 +16122,18 @@ const waveformShader = (
   /* wgsl */
   `
 
+struct Uniforms {
+  scaleFactor: f32,
+  width: f32,
+  height: f32,
+  offset: i32, // no negative offsets
+  bufferLength: i32,
+};
+
+@group(0) @binding(0) var<uniform> uniforms: Uniforms;
+@group(0) @binding(1) var<storage> channelData: array<f32>;
+@group(0) @binding(2) var<uniform> waveformColor: vec4f;
+
 struct VertexInput {
   @location(0) pos: vec2f,
   @builtin(instance_index) instance: u32,
@@ -16125,19 +16141,7 @@ struct VertexInput {
 
 struct VertexOutput {
   @builtin(position) pos: vec4f,
-  @location(0) cell: vec2f,
 };
-
-struct Uniforms {
-  scaleFactor: f32,
-  width: f32,
-  height: f32,
-  offset: i32, // no negative offsets
-};
-
-@group(0) @binding(0) var<uniform> uniforms: Uniforms;
-@group(0) @binding(1) var<storage> channelData: array<f32>;
-@group(0) @binding(2) var<uniform> waveformColor: vec4f;
 
 @vertex
 fn vertexMain(
@@ -16146,31 +16150,31 @@ fn vertexMain(
 ) -> VertexOutput {
   var output: VertexOutput;
   output.pos = vec4f(pos, 0, 1);
-  output.cell = vec2f(0, 0); // unused
   return output;
 }
 
 struct FragInput {
-  @location(0) cell: vec2f,
+  @builtin(position) fragCoord: vec4f,
 };
 
 // 4s = 192,000 samples
 
 @fragment
-fn fragmentMain(input: VertexOutput) -> @location(0) vec4f {            
+fn fragmentMain(input: FragInput) -> @location(0) vec4f {   
+  
   let samplesPerPixel = uniforms.scaleFactor;
   let WIDTH = uniforms.width;
   let HEIGHT = uniforms.height;
   let OFFSET = uniforms.offset;
+  let BUFFERLENGTH = uniforms.bufferLength;
 
-  let index = i32(floor(input.pos.x * f32(samplesPerPixel)));
+  let index = i32(floor(input.fragCoord.x * f32(samplesPerPixel)));
   let sample = channelData[OFFSET + index];
-
+  
   var min_sample = sample;
   var max_sample = sample;
-
   
-  for (var i = 0; f32(i) <= samplesPerPixel; i++) {
+  for (var i = 0; i <= i32(samplesPerPixel); i++) {
     let fwd = channelData[OFFSET + index + i];
     max_sample = max(max_sample, fwd);
     min_sample = min(min_sample, fwd);
@@ -16190,7 +16194,7 @@ fn fragmentMain(input: VertexOutput) -> @location(0) vec4f {
 
   // PCM is -1 to 1 btw
   // normalized -1 to 1, where -1 is down and 1 is up
-  let yPosNorm = -1.0 * (2.0 * (input.pos.y / HEIGHT) - 1.0);
+  let yPosNorm = -1.0 * (2.0 * (input.fragCoord.y / HEIGHT) - 1.0);
 
   // return select(
   //   vec4f(0, 0, 0, 0),
@@ -16213,7 +16217,9 @@ fn fragmentMain(input: VertexOutput) -> @location(0) vec4f {
   // let sup = select(f32(0), f32(1), ytmax > 0.99);
   // let sdown = select(f32(0), f32(1), ytmin > 0.99);
 
-  let insideWaveform = (yPosNorm <= max_sample + 0.003 && yPosNorm >= min_sample - 0.003);
+
+  let epsilon = 1.0 / uniforms.height;
+  let insideWaveform = (yPosNorm <= max_sample + epsilon && yPosNorm >= min_sample - epsilon);
 
   let sfinal = select(
     vec4f(0.0, 0.0, 0.0, 0.0),
@@ -16292,6 +16298,7 @@ class GPUWaveformRenderer2 {
       ]
     });
     this.device.queue.writeBuffer(this.channelDataStorage, 0, this.channelData);
+    this.device.queue.writeBuffer(this.vertexBuffer, 0, this.vertices);
   }
   bindGroup;
   vertices;
@@ -16322,7 +16329,7 @@ class GPUWaveformRenderer2 {
       f32View[2] = height;
     }
     if (offset != null) {
-      i32View[3] = offset;
+      i32View[3] = offset | 0;
     }
   }
   static async create(channelData) {
@@ -16397,13 +16404,15 @@ class GPUWaveformRenderer2 {
     return waveformRenderer;
   }
   defaultUniformArray() {
-    const arrayBuffer = new ArrayBuffer(4 * 4);
+    const arrayBuffer = new ArrayBuffer(4 * 5);
     const f32View = new Float32Array(arrayBuffer);
     const i32View = new Int32Array(arrayBuffer);
     f32View[0] = 1;
     f32View[1] = 1;
     f32View[2] = 1;
     i32View[3] = 0;
+    i32View[4] = arrayBuffer.byteLength;
+    console.log("FOObar");
     return arrayBuffer;
   }
   render(destination, scale, offset, color) {
@@ -16429,7 +16438,6 @@ class GPUWaveformRenderer2 {
     const waveformColor = ensureColorFormat(color ?? DEFAULT_WAVEFORM_COLOR);
     this.setOptions(scale, cwidth, cheight, offset);
     this.setWaveformColor(waveformColor);
-    this.device.queue.writeBuffer(this.vertexBuffer, 0, this.vertices);
     this.device.queue.writeBuffer(this.uniformBuffer, 0, this.uniformArray);
     this.device.queue.writeBuffer(
       this.waveformColorBuffer,

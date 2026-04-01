@@ -15,26 +15,26 @@ const TWO_TRIANGLES_COVERING_VIEWPORT = new Float32Array([
 ] as const);
 
 export class GPUWaveformRenderer {
-  readonly bindGroup: GPUBindGroup;
+  private readonly bindGroup: GPUBindGroup;
 
-  readonly vertices: Float32Array<ArrayBuffer>;
-  readonly vertexBuffer: GPUBuffer;
-  readonly vertexCount: number;
+  private readonly vertices: Float32Array<ArrayBuffer>;
+  private readonly vertexBuffer: GPUBuffer;
+  private readonly vertexCount: number;
 
-  readonly uniformArray: ArrayBuffer;
-  readonly uniformBuffer: GPUBuffer;
+  private readonly uniformArray: ArrayBuffer;
+  private readonly uniformBuffer: GPUBuffer;
 
-  readonly waveformColor: Float32Array<ArrayBuffer>;
-  readonly waveformColorBuffer: GPUBuffer;
+  private readonly waveformColor: Float32Array<ArrayBuffer>;
+  private readonly waveformColorBuffer: GPUBuffer;
 
-  readonly channelData: Float32Array<ArrayBuffer>;
-  readonly channelDataStorage: GPUBuffer;
+  private readonly channelData: Float32Array<ArrayBuffer>;
+  private readonly channelDataStorage: GPUBuffer;
 
   protected setWaveformColor([r, g, b, a]: readonly [
     r: number,
     g: number,
     b: number,
-    a: number
+    a: number,
   ]) {
     this.waveformColor[0] = r;
     this.waveformColor[1] = g;
@@ -46,7 +46,7 @@ export class GPUWaveformRenderer {
     scale?: number,
     width?: number,
     height?: number,
-    offset?: number
+    offset?: number,
   ) {
     const f32View = new Float32Array(this.uniformArray);
     const i32View = new Int32Array(this.uniformArray);
@@ -60,7 +60,7 @@ export class GPUWaveformRenderer {
       f32View[2] = height;
     }
     if (offset != null) {
-      i32View[3] = offset;
+      i32View[3] = offset | 0;
     }
   }
 
@@ -83,7 +83,7 @@ export class GPUWaveformRenderer {
     return GPUWaveformRenderer.createPipeline(
       channelData,
       device,
-      canvasFormat
+      canvasFormat,
     );
   }
 
@@ -97,14 +97,14 @@ export class GPUWaveformRenderer {
     return GPUWaveformRenderer.createPipeline(
       channelData,
       device,
-      canvasFormat
+      canvasFormat,
     );
   }
 
   private static createPipeline(
     channelData: Float32Array<ArrayBuffer>,
     device: GPUDevice,
-    canvasFormat: GPUTextureFormat
+    canvasFormat: GPUTextureFormat,
   ) {
     const vertexBufferLayout: GPUVertexBufferLayout = {
       arrayStride: 8,
@@ -150,7 +150,7 @@ export class GPUWaveformRenderer {
       cellPipeline,
       channelData,
       device,
-      canvasFormat
+      canvasFormat,
     );
 
     return waveformRenderer;
@@ -158,13 +158,15 @@ export class GPUWaveformRenderer {
 
   private defaultUniformArray() {
     // 4 slots, 4 bytes each
-    const arrayBuffer = new ArrayBuffer(4 * 4);
+    const arrayBuffer = new ArrayBuffer(4 * 5);
     const f32View = new Float32Array(arrayBuffer);
     const i32View = new Int32Array(arrayBuffer);
     f32View[0] = 1; // scale
     f32View[1] = 1; // width
     f32View[2] = 1; // height
     i32View[3] = 0; // offset
+    i32View[4] = arrayBuffer.byteLength; // bufferLength
+    console.log("FOObar");
     return arrayBuffer;
   }
 
@@ -172,7 +174,7 @@ export class GPUWaveformRenderer {
     readonly renderPipeline: GPURenderPipeline,
     channelData: Float32Array<ArrayBuffer>,
     readonly device: GPUDevice,
-    readonly presentationFormat: GPUTextureFormat
+    readonly presentationFormat: GPUTextureFormat,
   ) {
     // VERTICES
     this.vertices = TWO_TRIANGLES_COVERING_VIEWPORT;
@@ -230,17 +232,20 @@ export class GPUWaveformRenderer {
     this.device.queue.writeBuffer(this.channelDataStorage, 0, this.channelData);
     // performance.mark("writeBuffer2");
     // performance.measure("writeBufferFoo", "writeBuffer1", "writeBuffer2");
+
+    // vertices don't change, only send them once here
+    this.device.queue.writeBuffer(this.vertexBuffer, 0, this.vertices);
   }
 
   public render(
     destination: HTMLCanvasElement | OffscreenCanvas | GPUCanvasContext,
     scale: number,
     offset: number,
-    color?: string | [r: number, g: number, b: number, a: number]
+    color?: string | [r: number, g: number, b: number, a: number],
   ) {
     const [canvas, context] = ((): [
       HTMLCanvasElement | OffscreenCanvas,
-      GPUCanvasContext
+      GPUCanvasContext,
     ] => {
       if (destination instanceof GPUCanvasContext) {
         return [destination.canvas, destination];
@@ -267,12 +272,11 @@ export class GPUWaveformRenderer {
     this.setOptions(scale, cwidth, cheight, offset);
     this.setWaveformColor(waveformColor);
 
-    this.device.queue.writeBuffer(this.vertexBuffer, 0, this.vertices);
     this.device.queue.writeBuffer(this.uniformBuffer, 0, this.uniformArray);
     this.device.queue.writeBuffer(
       this.waveformColorBuffer,
       0,
-      this.waveformColor
+      this.waveformColor,
     );
 
     const renderPassOpts = {
@@ -304,7 +308,7 @@ export class GPUWaveformRenderer {
 }
 
 function ensureColorFormat(
-  arg: string | readonly [r: number, g: number, b: number, a: number]
+  arg: string | readonly [r: number, g: number, b: number, a: number],
 ): readonly [r: number, g: number, b: number, a: number] {
   if (!(typeof arg === "string")) {
     return arg;
