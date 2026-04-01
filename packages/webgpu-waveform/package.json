@@ -25,12 +25,12 @@
     "test": "echo 'no tests atm'"
   },
   "dependencies": {
-    "color": "^5.0.2"
+    "color": "^5.0.3"
   },
   "devDependencies": {
-    "@types/color": "^4.2.0",
-    "@webgpu/types": "^0.1.66",
-    "vite": "^7.1.12",
+    "@types/color": "^4.2.1",
+    "@webgpu/types": "^0.1.69",
+    "vite": "^8.0.3",
     "vite-plugin-dts": "^4.5.4"
   },
   "homepage": "https://aykev.dev/webgpu-waveform/",
