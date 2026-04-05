@@ -1,23 +1,22 @@
-import { useEffect, useRef } from "react";
-import { GPUWaveform, useWaveformRenderer } from "webgpu-waveform-react";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { GPUWaveformRenderer } from "webgpu-waveform";
-import { audioContext, loadSound, usePromise } from "./utils";
+import { GPUWaveform, useWaveformRenderer } from "webgpu-waveform-react";
+import { audioContext, loadSound, RenderPromise } from "./utils";
 
 export function Example({
   render,
 }: {
   render: (audioBuffer: AudioBuffer) => React.ReactElement;
 }) {
-  const cowAudio = usePromise(() => loadSound(audioContext, "Cow-Shaped.wav"));
-  switch (cowAudio[0]) {
-    case "resolved":
-      const example = render(cowAudio[1]);
-      return <div style={{ paddingLeft: "11%" }}>{example}</div>;
-    case "pending":
-      return <p>loading...</p>;
-    case "rejected":
-      return <p>error: {`${cowAudio[1]}`}</p>;
-  }
+  const [promise] = useState(() => loadSound(audioContext, "Cow-Shaped.wav"));
+  return (
+    <ErrorBoundary fallbackRender={({ error }) => <p>error: {`${error}`}</p>}>
+      <Suspense fallback={<p>loading...</p>}>
+        <RenderPromise promise={promise} render={render} />
+      </Suspense>
+    </ErrorBoundary>
+  );
 }
 
 async function example1(canvas: HTMLCanvasElement, audioBuffer: AudioBuffer) {
@@ -49,7 +48,14 @@ export function Example1({ audioBuffer }: { audioBuffer: AudioBuffer }) {
     );
   }
 
-  return <canvas ref={canvasRef} width={300} height={100} />;
+  return (
+    <canvas
+      ref={canvasRef}
+      width={300 * devicePixelRatio}
+      height={100 * devicePixelRatio}
+      style={{ width: 300, height: 100 }}
+    />
+  );
 }
 
 export function Example2({
@@ -82,7 +88,14 @@ export function Example2({
     );
   }
 
-  return <canvas ref={canvasRef} width={width} height={height} />;
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{ width, height }}
+      width={width * devicePixelRatio}
+      height={height * devicePixelRatio}
+    />
+  );
 }
 
 export function Example3({ audioBuffer }: { audioBuffer: AudioBuffer }) {

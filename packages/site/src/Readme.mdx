@@ -6,7 +6,7 @@ import {
 } from "webgpu-waveform-react";
 import { Example, Example1, Example2, Example3 } from "./Examples";
 import { Playground } from "./Playground";
-import { audioContext, loadSound, usePromise } from "./utils";
+import { audioContext, loadSound } from "./utils";
 
 export function HID({ h = "h4", id, children }) {
   return (
@@ -257,11 +257,17 @@ function ExampleComponent({
     if (renderer.status !== "ready") {
       return;
     }
-
     renderer.instance.render(canvasRef.current!, audioBuffer.length / width, 0);
   }, [renderer, audioBuffer, width, height]);
 
-  return <canvas ref={canvasRef} width={width} height={height} />;
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{ width, height }}
+      width={width * devicePixelRatio}
+      height={height * devicePixelRatio}
+    />
+  )
 }
 ```
 
