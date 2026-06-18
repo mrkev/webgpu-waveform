@@ -1,3 +1,49 @@
+export const waveformComputeShader = /* wgsl */ `
+
+struct Uniforms {
+  scaleFactor: f32,
+  width: f32,
+  height: f32,
+  offset: i32,
+  bufferLength: i32,
+};
+
+@group(0) @binding(0) var<uniform> uniforms: Uniforms;
+@group(0) @binding(1) var<storage, read> channelData: array<f32>;
+@group(0) @binding(2) var<storage, read_write> colMinMax: array<vec2f>;
+
+@compute @workgroup_size(64)
+fn computeMain(@builtin(global_invocation_id) gid: vec3u) {
+  let x = gid.x;
+  if (f32(x) >= uniforms.width) {
+    return;
+  }
+
+  let samplesPerPixel = uniforms.scaleFactor;
+  let index = i32(floor(f32(x) * samplesPerPixel));
+  let base = uniforms.offset + index;
+
+  if (base < 0 || base >= uniforms.bufferLength) {
+    colMinMax[x] = vec2f(0.0, 0.0);
+    return;
+  }
+
+  let first = channelData[base];
+  var minV = first;
+  var maxV = first;
+
+  // Cap the loop so we never read past the channel buffer.
+  let remaining = uniforms.bufferLength - base - 1;
+  let loopMax = min(i32(samplesPerPixel), remaining);
+  for (var i = 1; i <= loopMax; i++) {
+    let v = channelData[base + i];
+    minV = min(minV, v);
+    maxV = max(maxV, v);
+  }
+  colMinMax[x] = vec2f(minV, maxV);
+}
+`;
+
 export const waveformShader = /* wgsl */ `
 
 struct Uniforms {
@@ -9,13 +55,8 @@ struct Uniforms {
 };
 
 @group(0) @binding(0) var<uniform> uniforms: Uniforms;
-@group(0) @binding(1) var<storage> channelData: array<f32>;
+@group(0) @binding(1) var<storage, read> colMinMax: array<vec2f>;
 @group(0) @binding(2) var<uniform> waveformColor: vec4f;
-
-struct VertexInput {
-  @location(0) pos: vec2f,
-  @builtin(instance_index) instance: u32,
-};
 
 struct VertexOutput {
   @builtin(position) pos: vec4f,
@@ -24,7 +65,6 @@ struct VertexOutput {
 @vertex
 fn vertexMain(
   @location(0) pos: vec2f,
-  @builtin(instance_index) instance: u32
 ) -> VertexOutput {
   var output: VertexOutput;
   output.pos = vec4f(pos, 0, 1);
@@ -35,76 +75,23 @@ struct FragInput {
   @builtin(position) fragCoord: vec4f,
 };
 
-// 4s = 192,000 samples
-
 @fragment
-fn fragmentMain(input: FragInput) -> @location(0) vec4f {   
-  
-  let samplesPerPixel = uniforms.scaleFactor;
-  let WIDTH = uniforms.width;
-  let HEIGHT = uniforms.height;
-  let OFFSET = uniforms.offset;
-  let BUFFERLENGTH = uniforms.bufferLength;
+fn fragmentMain(input: FragInput) -> @location(0) vec4f {
+  let x = u32(input.fragCoord.x);
+  let mm = colMinMax[x];
+  let min_sample = mm.x;
+  let max_sample = mm.y;
 
-  let index = i32(floor(input.fragCoord.x * f32(samplesPerPixel)));
-  let sample = channelData[OFFSET + index];
-  
-  var min_sample = sample;
-  var max_sample = sample;
-  
-  for (var i = 0; i <= i32(samplesPerPixel); i++) {
-    let fwd = channelData[OFFSET + index + i];
-    max_sample = max(max_sample, fwd);
-    min_sample = min(min_sample, fwd);
-    // sample = select(sample, fwd, abs(fwd) > abs(sample));
-    // i += 1;
-  }
-
-  // sample = 0.4;
-  // let c = input.cell / scale;
-  // return vec4f(c, 1-c.y, 1);
-  // let red = vec4f(1, 0, 0, 1);
-  // let cyan = vec4f(0, 1, 1, 1);
-  // to make red/cyan checkered scale
-  // let scale = vec2u(input.pos.xy) / 8;
-  // let checker = (scale.x + scale.y) % 2 == 1;
-  // return select(red, cyan, checker);
-
-  // PCM is -1 to 1 btw
-  // normalized -1 to 1, where -1 is down and 1 is up
-  let yPosNorm = -1.0 * (2.0 * (input.fragCoord.y / HEIGHT) - 1.0);
-
-  // return select(
-  //   vec4f(0, 0, 0, 0),
-  //   vec4f(0, 1, 0, 1),
-  //   input.pos.y <= HEIGHT
-  // );
-  // return vec4f(0, floor(input.pos.y) / HEIGHT, 0, 1);
-
-  // let checker = 
-  //   // same sign
-  //   (yPosNorm * sample) > 0 && 
-  //   // closer to 0
-  //   abs(yPosNorm) <= abs(sample);
-  // let yval = select(f32(0), f32(1), checker);
-  // let debugVal = select(f32(0), f32(1), 1 > 0);
-  // let yToSampleDist = 1 - (abs(sample - yPosNorm));
-  // let ytmax = 1 - (abs(max_sample - yPosNorm));
-  // let ytmin = 1 - (abs(min_sample - yPosNorm));
-  // let s = select(f32(0), f32(1), yToSampleDist > 0.99);
-  // let sup = select(f32(0), f32(1), ytmax > 0.99);
-  // let sdown = select(f32(0), f32(1), ytmin > 0.99);
-
+  // PCM is -1 to 1; -1 is down and 1 is up
+  let yPosNorm = -1.0 * (2.0 * (input.fragCoord.y / uniforms.height) - 1.0);
 
   let epsilon = 1.0 / uniforms.height;
   let insideWaveform = (yPosNorm <= max_sample + epsilon && yPosNorm >= min_sample - epsilon);
 
-  let sfinal = select(
+  return select(
     vec4f(0.0, 0.0, 0.0, 0.0),
     waveformColor,
     insideWaveform
   );
-
-  return sfinal;
 }
 `;

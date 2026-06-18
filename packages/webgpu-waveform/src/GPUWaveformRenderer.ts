@@ -1,8 +1,9 @@
 import Color from "color";
 import { nullthrows } from "./nullthrows";
-import { waveformShader } from "./waveformShader";
+import { waveformComputeShader, waveformShader } from "./waveformShader";
 
 const DEFAULT_WAVEFORM_COLOR = [0, 1, 0, 1] as const; // green
+const COMPUTE_WORKGROUP_SIZE = 64;
 
 // we want to render a 2d texture, for vertices, we just set up two
 // trianges covering the whole vieport
@@ -15,20 +16,43 @@ const TWO_TRIANGLES_COVERING_VIEWPORT = new Float32Array([
 ] as const);
 
 export class GPUWaveformRenderer {
-  private readonly bindGroup: GPUBindGroup;
-
   private readonly vertices: Float32Array<ArrayBuffer>;
   private readonly vertexBuffer: GPUBuffer;
   private readonly vertexCount: number;
 
   private readonly uniformArray: ArrayBuffer;
   private readonly uniformBuffer: GPUBuffer;
+  private readonly uniformBytesView: Uint8Array;
+  private readonly prevUniformBytes: Uint8Array;
+  private prevUniformBytesValid = false;
 
   private readonly waveformColor: Float32Array<ArrayBuffer>;
   private readonly waveformColorBuffer: GPUBuffer;
+  private readonly prevWaveformColor = new Float32Array(4);
+  private prevWaveformColorValid = false;
 
   private readonly channelData: Float32Array<ArrayBuffer>;
   private readonly channelDataStorage: GPUBuffer;
+
+  private readonly computePipeline: GPUComputePipeline;
+
+  private colMinMaxBuffer: GPUBuffer | null = null;
+  private colMinMaxCapacity = 0;
+  private computeBindGroup: GPUBindGroup | null = null;
+  private renderBindGroup: GPUBindGroup | null = null;
+
+  private configuredContext: GPUCanvasContext | null = null;
+
+  private lastColorInput:
+    | string
+    | readonly [number, number, number, number]
+    | null = null;
+  private lastColorOutput: readonly [
+    number,
+    number,
+    number,
+    number,
+  ] | null = null;
 
   protected setWaveformColor([r, g, b, a]: readonly [
     r: number,
@@ -74,17 +98,9 @@ export class GPUWaveformRenderer {
       throw new Error("No appropriate GPUAdapter found.");
     }
 
-    const device = await adapter.requestDevice({
-      label: `Device ${new Date().getTime()}`,
-    });
+    const device = await adapter.requestDevice();
 
-    const canvasFormat = navigator.gpu.getPreferredCanvasFormat();
-
-    return GPUWaveformRenderer.createPipeline(
-      channelData,
-      device,
-      canvasFormat,
-    );
+    return GPUWaveformRenderer.createSync(device, channelData);
   }
 
   static createSync(device: GPUDevice, channelData: Float32Array<ArrayBuffer>) {
@@ -122,21 +138,26 @@ export class GPUWaveformRenderer {
      * looping +100x can start to get choppy, at this point we can fallback to this alternative buffer for this
      * and higher scale factors.
      */
-    const cellShaderModule = device.createShaderModule({
-      label: "Waveform Shader",
+    const renderShaderModule = device.createShaderModule({
+      label: "Waveform Render Shader",
       code: waveformShader,
     });
 
-    const cellPipeline = device.createRenderPipeline({
-      label: "Cell pipeline",
+    const computeShaderModule = device.createShaderModule({
+      label: "Waveform Compute Shader",
+      code: waveformComputeShader,
+    });
+
+    const renderPipeline = device.createRenderPipeline({
+      label: "Waveform render pipeline",
       layout: "auto",
       vertex: {
-        module: cellShaderModule,
+        module: renderShaderModule,
         entryPoint: "vertexMain",
         buffers: [vertexBufferLayout],
       },
       fragment: {
-        module: cellShaderModule,
+        module: renderShaderModule,
         entryPoint: "fragmentMain",
         targets: [
           {
@@ -146,18 +167,26 @@ export class GPUWaveformRenderer {
       },
     });
 
-    const waveformRenderer = new GPUWaveformRenderer(
-      cellPipeline,
+    const computePipeline = device.createComputePipeline({
+      label: "Waveform compute pipeline",
+      layout: "auto",
+      compute: {
+        module: computeShaderModule,
+        entryPoint: "computeMain",
+      },
+    });
+
+    return new GPUWaveformRenderer(
+      renderPipeline,
+      computePipeline,
       channelData,
       device,
       canvasFormat,
     );
-
-    return waveformRenderer;
   }
 
   private defaultUniformArray() {
-    // 4 slots, 4 bytes each
+    // 5 slots, 4 bytes each
     const arrayBuffer = new ArrayBuffer(4 * 5);
     const f32View = new Float32Array(arrayBuffer);
     const i32View = new Int32Array(arrayBuffer);
@@ -166,16 +195,18 @@ export class GPUWaveformRenderer {
     f32View[2] = 1; // height
     i32View[3] = 0; // offset
     i32View[4] = arrayBuffer.byteLength; // bufferLength
-    console.log("FOObar");
     return arrayBuffer;
   }
 
   private constructor(
     readonly renderPipeline: GPURenderPipeline,
+    computePipeline: GPUComputePipeline,
     channelData: Float32Array<ArrayBuffer>,
     readonly device: GPUDevice,
     readonly presentationFormat: GPUTextureFormat,
   ) {
+    this.computePipeline = computePipeline;
+
     // VERTICES
     this.vertices = TWO_TRIANGLES_COVERING_VIEWPORT;
     this.vertexBuffer = this.device.createBuffer({
@@ -192,6 +223,8 @@ export class GPUWaveformRenderer {
       size: this.uniformArray.byteLength,
       usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     });
+    this.uniformBytesView = new Uint8Array(this.uniformArray);
+    this.prevUniformBytes = new Uint8Array(this.uniformArray.byteLength);
 
     // CHANNEL DATA
     this.channelData = channelData;
@@ -209,32 +242,88 @@ export class GPUWaveformRenderer {
       usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     });
 
-    this.bindGroup = this.device.createBindGroup({
-      label: "GPU Waveform renderer bind group",
-      layout: renderPipeline.getBindGroupLayout(0),
+    this.device.queue.writeBuffer(this.channelDataStorage, 0, this.channelData);
+    // vertices don't change, only send them once here
+    this.device.queue.writeBuffer(this.vertexBuffer, 0, this.vertices);
+  }
+
+  private ensureColMinMaxBuffer(width: number) {
+    if (this.colMinMaxBuffer != null && this.colMinMaxCapacity >= width) {
+      return;
+    }
+    const capacity = Math.max(width, 1);
+    this.colMinMaxBuffer?.destroy();
+    this.colMinMaxBuffer = this.device.createBuffer({
+      label: "Column min/max",
+      size: capacity * 8, // vec2<f32> per column
+      usage: GPUBufferUsage.STORAGE,
+    });
+    this.colMinMaxCapacity = capacity;
+
+    this.computeBindGroup = this.device.createBindGroup({
+      label: "Compute bind group",
+      layout: this.computePipeline.getBindGroupLayout(0),
       entries: [
-        {
-          binding: 0,
-          resource: { buffer: this.uniformBuffer },
-        },
-        {
-          binding: 1,
-          resource: { buffer: this.channelDataStorage },
-        },
-        {
-          binding: 2,
-          resource: { buffer: this.waveformColorBuffer },
-        },
+        { binding: 0, resource: { buffer: this.uniformBuffer } },
+        { binding: 1, resource: { buffer: this.channelDataStorage } },
+        { binding: 2, resource: { buffer: this.colMinMaxBuffer } },
       ],
     });
 
-    // performance.mark("writeBuffer1");
-    this.device.queue.writeBuffer(this.channelDataStorage, 0, this.channelData);
-    // performance.mark("writeBuffer2");
-    // performance.measure("writeBufferFoo", "writeBuffer1", "writeBuffer2");
+    this.renderBindGroup = this.device.createBindGroup({
+      label: "Render bind group",
+      layout: this.renderPipeline.getBindGroupLayout(0),
+      entries: [
+        { binding: 0, resource: { buffer: this.uniformBuffer } },
+        { binding: 1, resource: { buffer: this.colMinMaxBuffer } },
+        { binding: 2, resource: { buffer: this.waveformColorBuffer } },
+      ],
+    });
+  }
 
-    // vertices don't change, only send them once here
-    this.device.queue.writeBuffer(this.vertexBuffer, 0, this.vertices);
+  private uniformChanged(): boolean {
+    const cur = this.uniformBytesView;
+    const prev = this.prevUniformBytes;
+    if (!this.prevUniformBytesValid) {
+      prev.set(cur);
+      this.prevUniformBytesValid = true;
+      return true;
+    }
+    for (let i = 0; i < cur.length; i++) {
+      if (cur[i] !== prev[i]) {
+        prev.set(cur);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private colorChanged(): boolean {
+    if (!this.prevWaveformColorValid) {
+      this.prevWaveformColor.set(this.waveformColor);
+      this.prevWaveformColorValid = true;
+      return true;
+    }
+    for (let i = 0; i < 4; i++) {
+      if (this.prevWaveformColor[i] !== this.waveformColor[i]) {
+        this.prevWaveformColor.set(this.waveformColor);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private resolveColor(
+    color: string | readonly [number, number, number, number] | undefined,
+  ): readonly [number, number, number, number] {
+    const input = color ?? DEFAULT_WAVEFORM_COLOR;
+    if (this.lastColorInput === input && this.lastColorOutput != null) {
+      return this.lastColorOutput;
+    }
+    const out = ensureColorFormat(input);
+    this.lastColorInput = input;
+    this.lastColorOutput = out;
+    return out;
   }
 
   public render(
@@ -257,52 +346,66 @@ export class GPUWaveformRenderer {
       }
     })();
 
-    context.configure({
-      device: this.device,
-      format: this.presentationFormat,
-      // https://webgpufundamentals.org/webgpu/lessons/webgpu-transparency.html
-      alphaMode: "premultiplied", //by default, canvas is opaque. dont ignore alpha.
-    });
+    if (this.configuredContext !== context) {
+      context.configure({
+        device: this.device,
+        format: this.presentationFormat,
+        // https://webgpufundamentals.org/webgpu/lessons/webgpu-transparency.html
+        alphaMode: "premultiplied", //by default, canvas is opaque. dont ignore alpha.
+      });
+      this.configuredContext = context;
+    }
 
     const cwidth = canvas.width;
     const cheight = canvas.height;
 
-    const waveformColor = ensureColorFormat(color ?? DEFAULT_WAVEFORM_COLOR);
+    this.ensureColMinMaxBuffer(cwidth);
+
+    const waveformColor = this.resolveColor(color);
 
     this.setOptions(scale, cwidth, cheight, offset);
     this.setWaveformColor(waveformColor);
 
-    this.device.queue.writeBuffer(this.uniformBuffer, 0, this.uniformArray);
-    this.device.queue.writeBuffer(
-      this.waveformColorBuffer,
-      0,
-      this.waveformColor,
-    );
+    if (this.uniformChanged()) {
+      this.device.queue.writeBuffer(this.uniformBuffer, 0, this.uniformArray);
+    }
+    if (this.colorChanged()) {
+      this.device.queue.writeBuffer(
+        this.waveformColorBuffer,
+        0,
+        this.waveformColor,
+      );
+    }
 
-    const renderPassOpts = {
+    const encoder = this.device.createCommandEncoder();
+
+    // Compute pass: one (min, max) per pixel column into colMinMax.
+    const computePass = encoder.beginComputePass();
+    computePass.setPipeline(this.computePipeline);
+    computePass.setBindGroup(0, nullthrows(this.computeBindGroup));
+    computePass.dispatchWorkgroups(
+      Math.max(1, Math.ceil(cwidth / COMPUTE_WORKGROUP_SIZE)),
+    );
+    computePass.end();
+
+    // Render pass: per-fragment just reads colMinMax[x] and does the inside test.
+    const renderPass = encoder.beginRenderPass({
       colorAttachments: [
         {
-          view: context.getCurrentTexture().createView({ label: "view" }),
+          view: context.getCurrentTexture().createView(),
           loadOp: "clear",
-          // other clear value?
           clearValue: { r: 0, g: 0, b: 0, a: 0 },
           storeOp: "store",
         },
       ],
-    } as const;
-
-    const encoder = this.device.createCommandEncoder({
-      label: `encoder ${new Date().getTime()}`,
     });
-    const pass = encoder.beginRenderPass(renderPassOpts);
 
-    pass.setPipeline(this.renderPipeline);
-    pass.setVertexBuffer(0, this.vertexBuffer);
-    pass.setBindGroup(0, this.bindGroup);
-    pass.draw(this.vertexCount);
+    renderPass.setPipeline(this.renderPipeline);
+    renderPass.setVertexBuffer(0, this.vertexBuffer);
+    renderPass.setBindGroup(0, nullthrows(this.renderBindGroup));
+    renderPass.draw(this.vertexCount);
+    renderPass.end();
 
-    pass.end();
-    // Finish the command buffer and immediately submit it.
     this.device.queue.submit([encoder.finish()]);
   }
 }
