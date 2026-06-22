@@ -9956,43 +9956,6 @@ var import_client = /* @__PURE__ */ __toESM(require_client(), 1);
 var import_jsx_runtime = require_jsx_runtime$1();
 var import_react$1 = /* @__PURE__ */ __toESM(require_react$1(), 1);
 //#endregion
-//#region ../../node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react-jsx-runtime.production.js
-/**
-* @license React
-* react-jsx-runtime.production.js
-*
-* Copyright (c) Meta Platforms, Inc. and affiliates.
-*
-* This source code is licensed under the MIT license found in the
-* LICENSE file in the root directory of this source tree.
-*/
-var require_react_jsx_runtime_production = /* @__PURE__ */ __commonJSMin(((exports) => {
-	var REACT_ELEMENT_TYPE = Symbol.for("react.transitional.element");
-	function jsxProd(type, config, maybeKey) {
-		var key = null;
-		void 0 !== maybeKey && (key = "" + maybeKey);
-		void 0 !== config.key && (key = "" + config.key);
-		if ("key" in config) {
-			maybeKey = {};
-			for (var propName in config) "key" !== propName && (maybeKey[propName] = config[propName]);
-		} else maybeKey = config;
-		config = maybeKey.ref;
-		return {
-			$$typeof: REACT_ELEMENT_TYPE,
-			type,
-			key,
-			ref: void 0 !== config ? config : null,
-			props: maybeKey
-		};
-	}
-	exports.jsx = jsxProd;
-}));
-//#endregion
-//#region ../../node_modules/.pnpm/react@19.2.0/node_modules/react/jsx-runtime.js
-var require_jsx_runtime = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	module.exports = require_react_jsx_runtime_production();
-}));
-//#endregion
 //#region ../../node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.production.js
 /**
 * @license React
@@ -10069,9 +10032,46 @@ var require_react = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	module.exports = require_react_production();
 }));
 //#endregion
+//#region ../../node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react-jsx-runtime.production.js
+/**
+* @license React
+* react-jsx-runtime.production.js
+*
+* Copyright (c) Meta Platforms, Inc. and affiliates.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+var require_react_jsx_runtime_production = /* @__PURE__ */ __commonJSMin(((exports) => {
+	var REACT_ELEMENT_TYPE = Symbol.for("react.transitional.element");
+	function jsxProd(type, config, maybeKey) {
+		var key = null;
+		void 0 !== maybeKey && (key = "" + maybeKey);
+		void 0 !== config.key && (key = "" + config.key);
+		if ("key" in config) {
+			maybeKey = {};
+			for (var propName in config) "key" !== propName && (maybeKey[propName] = config[propName]);
+		} else maybeKey = config;
+		config = maybeKey.ref;
+		return {
+			$$typeof: REACT_ELEMENT_TYPE,
+			type,
+			key,
+			ref: void 0 !== config ? config : null,
+			props: maybeKey
+		};
+	}
+	exports.jsx = jsxProd;
+}));
+//#endregion
+//#region ../../node_modules/.pnpm/react@19.2.0/node_modules/react/jsx-runtime.js
+var require_jsx_runtime = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	module.exports = require_react_jsx_runtime_production();
+}));
+//#endregion
 //#region ../webgpu-waveform-react/dist/webgpu-waveform-react.js
-var import_jsx_runtime$1 = require_jsx_runtime();
 var import_react = require_react();
+var import_jsx_runtime$1 = require_jsx_runtime();
 function mergeRefsReact16(refs) {
 	return (value) => {
 		for (const ref of refs) assignRef(ref, value);
@@ -10095,7 +10095,7 @@ function assignRef(ref, value) {
 	else if (ref) ref.current = value;
 }
 var mergeRefs = parseInt(import_react.version.split(".")[0], 10) >= 19 ? mergeRefsReact19 : mergeRefsReact16;
-var cssKeywords$1 = {
+var color_name_default$1 = {
 	aliceblue: [
 		240,
 		248,
@@ -10837,8 +10837,8 @@ var cssKeywords$1 = {
 		50
 	]
 };
-var reverseNames$1 = /* @__PURE__ */ Object.create(null);
-for (const name in cssKeywords$1) if (Object.hasOwn(cssKeywords$1, name)) reverseNames$1[cssKeywords$1[name]] = name;
+var reverseNames$1 = Object.create(null);
+for (const name in color_name_default$1) if (Object.hasOwn(color_name_default$1, name)) reverseNames$1[color_name_default$1[name]] = name;
 var cs$1 = {
 	to: {},
 	get: {}
@@ -10871,8 +10871,8 @@ cs$1.get.rgb = function(string) {
 	if (!string) return null;
 	const abbr = /^#([a-f\d]{3,4})$/i;
 	const hex = /^#([a-f\d]{6})([a-f\d]{2})?$/i;
-	const rgba = /^rgba?\(\s*([+-]?\d+)(?=[\s,])\s*(?:,\s*)?([+-]?\d+)(?=[\s,])\s*(?:,\s*)?([+-]?\d+)\s*(?:[,|/]\s*([+-]?[\d.]+)(%?)\s*)?\)$/;
-	const per = /^rgba?\(\s*([+-]?[\d.]+)%\s*,?\s*([+-]?[\d.]+)%\s*,?\s*([+-]?[\d.]+)%\s*(?:[,|/]\s*([+-]?[\d.]+)(%?)\s*)?\)$/;
+	const rgba = /^rgba?\(\s*([+-]?(?:\d*\.)?\d+(?:e\d+)?)(?=[\s,])\s*(?:,\s*)?([+-]?(?:\d*\.)?\d+(?:e\d+)?)(?=[\s,])\s*(?:,\s*)?([+-]?(?:\d*\.)?\d+(?:e\d+)?)\s*(?:[\s,|/]\s*([+-]?(?:\d*\.)?\d+(?:e\d+)?)(%?)\s*)?\)$/i;
+	const per = /^rgba?\(\s*([+-]?[\d.]+)%\s*,?\s*([+-]?[\d.]+)%\s*,?\s*([+-]?[\d.]+)%\s*(?:[\s,|/]\s*([+-]?[\d.]+)(%?)\s*)?\)$/i;
 	const keyword = /^(\w+)$/;
 	let rgb = [
 		0,
@@ -10897,20 +10897,20 @@ cs$1.get.rgb = function(string) {
 		for (i = 0; i < 3; i++) rgb[i] = Number.parseInt(match[i] + match[i], 16);
 		if (hexAlpha) rgb[3] = Number.parseInt(hexAlpha + hexAlpha, 16) / 255;
 	} else if (match = string.match(rgba)) {
-		for (i = 0; i < 3; i++) rgb[i] = Number.parseInt(match[i + 1], 10);
+		for (i = 0; i < 3; i++) rgb[i] = Number.parseFloat(match[i + 1]);
 		if (match[4]) rgb[3] = match[5] ? Number.parseFloat(match[4]) * .01 : Number.parseFloat(match[4]);
 	} else if (match = string.match(per)) {
 		for (i = 0; i < 3; i++) rgb[i] = Math.round(Number.parseFloat(match[i + 1]) * 2.55);
 		if (match[4]) rgb[3] = match[5] ? Number.parseFloat(match[4]) * .01 : Number.parseFloat(match[4]);
-	} else if (match = string.match(keyword)) {
+	} else if (match = string.toLowerCase().match(keyword)) {
 		if (match[1] === "transparent") return [
 			0,
 			0,
 			0,
 			0
 		];
-		if (!Object.hasOwn(cssKeywords$1, match[1])) return null;
-		rgb = cssKeywords$1[match[1]];
+		if (!Object.hasOwn(color_name_default$1, match[1])) return null;
+		rgb = color_name_default$1[match[1]].slice();
 		rgb[3] = 1;
 		return rgb;
 	} else return null;
@@ -10920,7 +10920,7 @@ cs$1.get.rgb = function(string) {
 };
 cs$1.get.hsl = function(string) {
 	if (!string) return null;
-	const match = string.match(/^hsla?\(\s*([+-]?(?:\d{0,3}\.)?\d+)(?:deg)?\s*,?\s*([+-]?[\d.]+)%\s*,?\s*([+-]?[\d.]+)%\s*(?:[,|/]\s*([+-]?(?=\.\d|\d)(?:0|[1-9]\d*)?(?:\.\d*)?(?:[eE][+-]?\d+)?)\s*)?\)$/);
+	const match = string.match(/^hsla?\(\s*([+-]?(?:\d{0,3}\.)?\d+)(?:deg)?\s*,?\s*([+-]?[\d.]+)%\s*,?\s*([+-]?[\d.]+)%\s*(?:[,|/]\s*([+-]?(?=\.\d|\d)(?:0|[1-9]\d*)?(?:\.\d*)?(?:e[+-]?\d+)?)\s*)?\)$/i);
 	if (match) {
 		const alpha = Number.parseFloat(match[4]);
 		return [
@@ -10934,7 +10934,7 @@ cs$1.get.hsl = function(string) {
 };
 cs$1.get.hwb = function(string) {
 	if (!string) return null;
-	const match = string.match(/^hwb\(\s*([+-]?\d{0,3}(?:\.\d+)?)(?:deg)?\s*,\s*([+-]?[\d.]+)%\s*,\s*([+-]?[\d.]+)%\s*(?:,\s*([+-]?(?=\.\d|\d)(?:0|[1-9]\d*)?(?:\.\d*)?(?:[eE][+-]?\d+)?)\s*)?\)$/);
+	const match = string.match(/^hwb\(\s*([+-]?\d{0,3}(?:\.\d+)?)(?:deg)?\s*[\s,]\s*([+-]?[\d.]+)%\s*[\s,]\s*([+-]?[\d.]+)%\s*(?:[\s,]\s*([+-]?(?=\.\d|\d)(?:0|[1-9]\d*)?(?:\.\d*)?(?:e[+-]?\d+)?)\s*)?\)$/i);
 	if (match) {
 		const alpha = Number.parseFloat(match[4]);
 		return [
@@ -10977,7 +10977,7 @@ function hexDouble$1(number_) {
 	return string_.length < 2 ? "0" + string_ : string_;
 }
 var reverseKeywords$1 = {};
-for (const key of Object.keys(cssKeywords$1)) reverseKeywords$1[cssKeywords$1[key]] = key;
+for (const key of Object.keys(color_name_default$1)) reverseKeywords$1[color_name_default$1[key]] = key;
 var convert$1$1 = {
 	rgb: {
 		channels: 3,
@@ -11211,8 +11211,8 @@ convert$1$1.rgb.keyword = function(rgb) {
 	if (reversed) return reversed;
 	let currentClosestDistance = Number.POSITIVE_INFINITY;
 	let currentClosestKeyword;
-	for (const keyword of Object.keys(cssKeywords$1)) {
-		const value = cssKeywords$1[keyword];
+	for (const keyword of Object.keys(color_name_default$1)) {
+		const value = color_name_default$1[keyword];
 		const distance = comparativeDistance$1(rgb, value);
 		if (distance < currentClosestDistance) {
 			currentClosestDistance = distance;
@@ -11222,7 +11222,7 @@ convert$1$1.rgb.keyword = function(rgb) {
 	return currentClosestKeyword;
 };
 convert$1$1.keyword.rgb = function(keyword) {
-	return cssKeywords$1[keyword];
+	return [...color_name_default$1[keyword]];
 };
 convert$1$1.rgb.xyz = function(rgb) {
 	const r = srgbNonlinearTransformInv$1(rgb[0] / 255);
@@ -11860,8 +11860,8 @@ convert$1$1.rgb.gray = function(rgb) {
 };
 function buildGraph$1() {
 	const graph = {};
-	const models2 = Object.keys(convert$1$1);
-	for (let { length } = models2, i = 0; i < length; i++) graph[models2[i]] = {
+	const models = Object.keys(convert$1$1);
+	for (let { length } = models, i = 0; i < length; i++) graph[models[i]] = {
 		distance: -1,
 		parent: null
 	};
@@ -11906,9 +11906,9 @@ function wrapConversion$1(toModel, graph) {
 function route$1(fromModel) {
 	const graph = deriveBFS$1(fromModel);
 	const conversion = {};
-	const models2 = Object.keys(graph);
-	for (let { length } = models2, i = 0; i < length; i++) {
-		const toModel = models2[i];
+	const models = Object.keys(graph);
+	for (let { length } = models, i = 0; i < length; i++) {
+		const toModel = models[i];
 		if (graph[toModel].parent === null) continue;
 		conversion[toModel] = wrapConversion$1(toModel, graph);
 	}
@@ -12266,9 +12266,113 @@ function zeroArray$1(array, length) {
 	return array;
 }
 function nullthrows$1(val, message) {
-	if (val == null) throw new Error(message);
+	if (val == null) throw new Error(message || `Expected ${val} to be non nil.`);
 	return val;
 }
+var waveformComputeShader$1 = `
+
+struct Uniforms {
+  scaleFactor: f32,
+  width: f32,
+  height: f32,
+  offset: i32,
+  bufferLength: i32, // raw channel sample count
+};
+
+@group(0) @binding(0) var<uniform> uniforms: Uniforms;
+@group(0) @binding(1) var<storage, read> channelData: array<f32>;
+@group(0) @binding(2) var<storage, read_write> colMinMax: array<vec2f>;
+
+@compute @workgroup_size(64)
+fn computeMain(@builtin(global_invocation_id) gid: vec3u) {
+  let x = gid.x;
+  if (f32(x) >= uniforms.width) {
+    return;
+  }
+
+  let samplesPerPixel = uniforms.scaleFactor;
+  let index = i32(floor(f32(x) * samplesPerPixel));
+  let base = uniforms.offset + index;
+
+  if (base < 0 || base >= uniforms.bufferLength) {
+    colMinMax[x] = vec2f(0.0, 0.0);
+    return;
+  }
+
+  let first = channelData[base];
+  var minV = first;
+  var maxV = first;
+
+  // Cap the loop so we never read past the channel buffer.
+  let remaining = uniforms.bufferLength - base - 1;
+  let loopMax = min(i32(samplesPerPixel), remaining);
+  for (var i = 1; i <= loopMax; i++) {
+    let v = channelData[base + i];
+    minV = min(minV, v);
+    maxV = max(maxV, v);
+  }
+  colMinMax[x] = vec2f(minV, maxV);
+}
+`;
+var waveformPyramidComputeShader$1 = `
+
+struct Uniforms {
+  scaleFactor: f32,
+  width: f32,
+  height: f32,
+  offset: i32,
+  bufferLength: i32, // raw channel sample count
+};
+
+// Describes the selected pyramid level. Padded to 16 bytes for uniform layout.
+struct LodParams {
+  binSize: u32,     // raw samples summarized by each bin of this level
+  levelLength: u32, // number of bins in this level
+  _pad0: u32,
+  _pad1: u32,
+};
+
+@group(0) @binding(0) var<uniform> uniforms: Uniforms;
+@group(0) @binding(1) var<storage, read> levelData: array<vec2f>;
+@group(0) @binding(2) var<storage, read_write> colMinMax: array<vec2f>;
+@group(0) @binding(3) var<uniform> lod: LodParams;
+
+@compute @workgroup_size(64)
+fn computeMain(@builtin(global_invocation_id) gid: vec3u) {
+  let x = gid.x;
+  if (f32(x) >= uniforms.width) {
+    return;
+  }
+
+  let samplesPerPixel = uniforms.scaleFactor;
+  let index = i32(floor(f32(x) * samplesPerPixel));
+  let startSample = uniforms.offset + index;
+
+  if (startSample < 0 || startSample >= uniforms.bufferLength) {
+    colMinMax[x] = vec2f(0.0, 0.0);
+    return;
+  }
+
+  // Raw sample range [startSample, endSample) covered by this column.
+  let endSample = min(startSample + i32(samplesPerPixel), uniforms.bufferLength);
+
+  // Map that range onto bins of the selected level, clamped to the level.
+  let binSize = i32(lod.binSize);
+  let lastBin = i32(lod.levelLength) - 1;
+  let b0 = clamp(startSample / binSize, 0, lastBin);
+  let b1 = clamp((endSample - 1) / binSize, 0, lastBin);
+
+  let firstBin = levelData[b0];
+  var minV = firstBin.x;
+  var maxV = firstBin.y;
+  for (var b = b0 + 1; b <= b1; b++) {
+    let cur = levelData[b];
+    minV = min(minV, cur.x);
+    maxV = max(maxV, cur.y);
+  }
+  colMinMax[x] = vec2f(minV, maxV);
+}
+`;
 var waveformShader$1 = `
 
 struct Uniforms {
@@ -12280,13 +12384,8 @@ struct Uniforms {
 };
 
 @group(0) @binding(0) var<uniform> uniforms: Uniforms;
-@group(0) @binding(1) var<storage> channelData: array<f32>;
+@group(0) @binding(1) var<storage, read> colMinMax: array<vec2f>;
 @group(0) @binding(2) var<uniform> waveformColor: vec4f;
-
-struct VertexInput {
-  @location(0) pos: vec2f,
-  @builtin(instance_index) instance: u32,
-};
 
 struct VertexOutput {
   @builtin(position) pos: vec4f,
@@ -12295,7 +12394,6 @@ struct VertexOutput {
 @vertex
 fn vertexMain(
   @location(0) pos: vec2f,
-  @builtin(instance_index) instance: u32
 ) -> VertexOutput {
   var output: VertexOutput;
   output.pos = vec4f(pos, 0, 1);
@@ -12306,77 +12404,24 @@ struct FragInput {
   @builtin(position) fragCoord: vec4f,
 };
 
-// 4s = 192,000 samples
-
 @fragment
-fn fragmentMain(input: FragInput) -> @location(0) vec4f {   
-  
-  let samplesPerPixel = uniforms.scaleFactor;
-  let WIDTH = uniforms.width;
-  let HEIGHT = uniforms.height;
-  let OFFSET = uniforms.offset;
-  let BUFFERLENGTH = uniforms.bufferLength;
+fn fragmentMain(input: FragInput) -> @location(0) vec4f {
+  let x = u32(input.fragCoord.x);
+  let mm = colMinMax[x];
+  let min_sample = mm.x;
+  let max_sample = mm.y;
 
-  let index = i32(floor(input.fragCoord.x * f32(samplesPerPixel)));
-  let sample = channelData[OFFSET + index];
-  
-  var min_sample = sample;
-  var max_sample = sample;
-  
-  for (var i = 0; i <= i32(samplesPerPixel); i++) {
-    let fwd = channelData[OFFSET + index + i];
-    max_sample = max(max_sample, fwd);
-    min_sample = min(min_sample, fwd);
-    // sample = select(sample, fwd, abs(fwd) > abs(sample));
-    // i += 1;
-  }
-
-  // sample = 0.4;
-  // let c = input.cell / scale;
-  // return vec4f(c, 1-c.y, 1);
-  // let red = vec4f(1, 0, 0, 1);
-  // let cyan = vec4f(0, 1, 1, 1);
-  // to make red/cyan checkered scale
-  // let scale = vec2u(input.pos.xy) / 8;
-  // let checker = (scale.x + scale.y) % 2 == 1;
-  // return select(red, cyan, checker);
-
-  // PCM is -1 to 1 btw
-  // normalized -1 to 1, where -1 is down and 1 is up
-  let yPosNorm = -1.0 * (2.0 * (input.fragCoord.y / HEIGHT) - 1.0);
-
-  // return select(
-  //   vec4f(0, 0, 0, 0),
-  //   vec4f(0, 1, 0, 1),
-  //   input.pos.y <= HEIGHT
-  // );
-  // return vec4f(0, floor(input.pos.y) / HEIGHT, 0, 1);
-
-  // let checker = 
-  //   // same sign
-  //   (yPosNorm * sample) > 0 && 
-  //   // closer to 0
-  //   abs(yPosNorm) <= abs(sample);
-  // let yval = select(f32(0), f32(1), checker);
-  // let debugVal = select(f32(0), f32(1), 1 > 0);
-  // let yToSampleDist = 1 - (abs(sample - yPosNorm));
-  // let ytmax = 1 - (abs(max_sample - yPosNorm));
-  // let ytmin = 1 - (abs(min_sample - yPosNorm));
-  // let s = select(f32(0), f32(1), yToSampleDist > 0.99);
-  // let sup = select(f32(0), f32(1), ytmax > 0.99);
-  // let sdown = select(f32(0), f32(1), ytmin > 0.99);
-
+  // PCM is -1 to 1; -1 is down and 1 is up
+  let yPosNorm = -1.0 * (2.0 * (input.fragCoord.y / uniforms.height) - 1.0);
 
   let epsilon = 1.0 / uniforms.height;
   let insideWaveform = (yPosNorm <= max_sample + epsilon && yPosNorm >= min_sample - epsilon);
 
-  let sfinal = select(
+  return select(
     vec4f(0.0, 0.0, 0.0, 0.0),
     waveformColor,
     insideWaveform
   );
-
-  return sfinal;
 }
 `;
 var DEFAULT_WAVEFORM_COLOR$1 = [
@@ -12385,6 +12430,9 @@ var DEFAULT_WAVEFORM_COLOR$1 = [
 	0,
 	1
 ];
+var COMPUTE_WORKGROUP_SIZE$1 = 64;
+var PYRAMID_RATIO$1 = 64;
+var COLUMN_LOOP_BUDGET$1 = 64;
 var TWO_TRIANGLES_COVERING_VIEWPORT$1 = new Float32Array([
 	-1,
 	-1,
@@ -12399,67 +12447,36 @@ var TWO_TRIANGLES_COVERING_VIEWPORT$1 = new Float32Array([
 	-1,
 	1
 ]);
-var GPUWaveformRenderer$1 = class GPUWaveformRenderer$1 {
-	constructor(renderPipeline, channelData, device, presentationFormat) {
-		this.renderPipeline = renderPipeline;
-		this.device = device;
-		this.presentationFormat = presentationFormat;
-		this.vertices = TWO_TRIANGLES_COVERING_VIEWPORT$1;
-		this.vertexBuffer = this.device.createBuffer({
-			label: "Cell vertices",
-			size: this.vertices.byteLength,
-			usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST
-		});
-		this.vertexCount = this.vertices.length / 2;
-		this.uniformArray = this.defaultUniformArray();
-		this.uniformBuffer = this.device.createBuffer({
-			label: "Grid Uniforms",
-			size: this.uniformArray.byteLength,
-			usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
-		});
-		this.channelData = channelData;
-		this.channelDataStorage = this.device.createBuffer({
-			label: "Channel Data",
-			size: channelData.byteLength,
-			usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST
-		});
-		this.waveformColor = new Float32Array(DEFAULT_WAVEFORM_COLOR$1);
-		this.waveformColorBuffer = this.device.createBuffer({
-			label: "Waveform Color",
-			size: this.waveformColor.byteLength,
-			usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
-		});
-		this.bindGroup = this.device.createBindGroup({
-			label: "GPU Waveform renderer bind group",
-			layout: renderPipeline.getBindGroupLayout(0),
-			entries: [
-				{
-					binding: 0,
-					resource: { buffer: this.uniformBuffer }
-				},
-				{
-					binding: 1,
-					resource: { buffer: this.channelDataStorage }
-				},
-				{
-					binding: 2,
-					resource: { buffer: this.waveformColorBuffer }
-				}
-			]
-		});
-		this.device.queue.writeBuffer(this.channelDataStorage, 0, this.channelData);
-		this.device.queue.writeBuffer(this.vertexBuffer, 0, this.vertices);
-	}
-	bindGroup;
+var GPUWaveformRenderer$1 = class GPUWaveformRenderer {
 	vertices;
 	vertexBuffer;
 	vertexCount;
 	uniformArray;
 	uniformBuffer;
+	uniformBytesView;
+	prevUniformBytes;
+	prevUniformBytesValid = false;
 	waveformColor;
 	waveformColorBuffer;
+	prevWaveformColor = new Float32Array(4);
+	prevWaveformColorValid = false;
 	channelData;
 	channelDataStorage;
+	computePipeline;
+	pyramidColumnPipeline;
+	pyramidLevels = [];
+	colMinMaxBuffer = null;
+	colMinMaxCapacity = 0;
+	rawComputeBindGroup = null;
+	pyramidComputeBindGroups = [];
+	renderBindGroup = null;
+	lastComputeScale = NaN;
+	lastComputeOffset = NaN;
+	lastComputeWidth = NaN;
+	colMinMaxValid = false;
+	configuredContext = null;
+	lastColorInput = null;
+	lastColorOutput = null;
 	setWaveformColor([r, g, b, a]) {
 		this.waveformColor[0] = r;
 		this.waveformColor[1] = g;
@@ -12478,14 +12495,13 @@ var GPUWaveformRenderer$1 = class GPUWaveformRenderer$1 {
 		if (!navigator.gpu) throw new Error("WebGPU not supported in this browser.");
 		const adapter = await navigator.gpu.requestAdapter();
 		if (adapter == null) throw new Error("No appropriate GPUAdapter found.");
-		const device = await adapter.requestDevice({ label: `Device ${(/* @__PURE__ */ new Date()).getTime()}` });
-		const canvasFormat = navigator.gpu.getPreferredCanvasFormat();
-		return GPUWaveformRenderer$1.createPipeline(channelData, device, canvasFormat);
+		const device = await adapter.requestDevice();
+		return GPUWaveformRenderer.createSync(device, channelData);
 	}
 	static createSync(device, channelData) {
 		if (!navigator.gpu) throw new Error("WebGPU not supported in this browser.");
 		const canvasFormat = navigator.gpu.getPreferredCanvasFormat();
-		return GPUWaveformRenderer$1.createPipeline(channelData, device, canvasFormat);
+		return GPUWaveformRenderer.createPipeline(channelData, device, canvasFormat);
 	}
 	static createPipeline(channelData, device, canvasFormat) {
 		const vertexBufferLayout = {
@@ -12496,22 +12512,44 @@ var GPUWaveformRenderer$1 = class GPUWaveformRenderer$1 {
 				shaderLocation: 0
 			}]
 		};
-		const cellShaderModule = device.createShaderModule({
-			label: "Waveform Shader",
+		const renderShaderModule = device.createShaderModule({
+			label: "Waveform Render Shader",
 			code: waveformShader$1
 		});
-		return new GPUWaveformRenderer$1(device.createRenderPipeline({
-			label: "Cell pipeline",
+		const computeShaderModule = device.createShaderModule({
+			label: "Waveform Compute Shader",
+			code: waveformComputeShader$1
+		});
+		const pyramidColumnShaderModule = device.createShaderModule({
+			label: "Waveform Pyramid Column Shader",
+			code: waveformPyramidComputeShader$1
+		});
+		return new GPUWaveformRenderer(device.createRenderPipeline({
+			label: "Waveform render pipeline",
 			layout: "auto",
 			vertex: {
-				module: cellShaderModule,
+				module: renderShaderModule,
 				entryPoint: "vertexMain",
 				buffers: [vertexBufferLayout]
 			},
 			fragment: {
-				module: cellShaderModule,
+				module: renderShaderModule,
 				entryPoint: "fragmentMain",
 				targets: [{ format: canvasFormat }]
+			}
+		}), device.createComputePipeline({
+			label: "Waveform compute pipeline",
+			layout: "auto",
+			compute: {
+				module: computeShaderModule,
+				entryPoint: "computeMain"
+			}
+		}), device.createComputePipeline({
+			label: "Waveform pyramid column pipeline",
+			layout: "auto",
+			compute: {
+				module: pyramidColumnShaderModule,
+				entryPoint: "computeMain"
 			}
 		}), channelData, device, canvasFormat);
 	}
@@ -12523,29 +12561,241 @@ var GPUWaveformRenderer$1 = class GPUWaveformRenderer$1 {
 		f32View[1] = 1;
 		f32View[2] = 1;
 		i32View[3] = 0;
-		i32View[4] = arrayBuffer.byteLength;
-		console.log("FOObar");
+		i32View[4] = 0;
 		return arrayBuffer;
+	}
+	constructor(renderPipeline, computePipeline, pyramidColumnPipeline, channelData, device, presentationFormat) {
+		this.renderPipeline = renderPipeline;
+		this.device = device;
+		this.presentationFormat = presentationFormat;
+		this.computePipeline = computePipeline;
+		this.pyramidColumnPipeline = pyramidColumnPipeline;
+		this.vertices = TWO_TRIANGLES_COVERING_VIEWPORT$1;
+		this.vertexBuffer = this.device.createBuffer({
+			label: "Cell vertices",
+			size: this.vertices.byteLength,
+			usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST
+		});
+		this.vertexCount = this.vertices.length / 2;
+		this.uniformArray = this.defaultUniformArray();
+		this.uniformBuffer = this.device.createBuffer({
+			label: "Grid Uniforms",
+			size: this.uniformArray.byteLength,
+			usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
+		});
+		this.uniformBytesView = new Uint8Array(this.uniformArray);
+		this.prevUniformBytes = new Uint8Array(this.uniformArray.byteLength);
+		this.channelData = channelData;
+		this.channelDataStorage = this.device.createBuffer({
+			label: "Channel Data",
+			size: channelData.byteLength,
+			usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST
+		});
+		new Int32Array(this.uniformArray)[4] = this.channelData.length;
+		this.waveformColor = new Float32Array(DEFAULT_WAVEFORM_COLOR$1);
+		this.waveformColorBuffer = this.device.createBuffer({
+			label: "Waveform Color",
+			size: this.waveformColor.byteLength,
+			usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
+		});
+		this.device.queue.writeBuffer(this.channelDataStorage, 0, this.channelData);
+		this.device.queue.writeBuffer(this.vertexBuffer, 0, this.vertices);
+		this.buildPyramid();
+	}
+	/**
+	* Builds the min/max LOD pyramid once and uploads each level to the GPU.
+	*
+	* The reduction runs on the CPU (see buildMinMaxPyramid): it's a one-time,
+	* load-only cost and keeping it on the CPU makes the buffer layout trivial to
+	* reason about. For very large buffers the level-1 pass is O(N) and can take
+	* tens of milliseconds; if that ever becomes a problem it can be moved to a
+	* GPU reduction pass or a worker without touching the render path — only this
+	* method and the buffers it fills would change.
+	*/
+	buildPyramid() {
+		const levels = buildMinMaxPyramid$1(this.channelData, PYRAMID_RATIO$1);
+		for (const level of levels) {
+			const dataBuffer = this.device.createBuffer({
+				label: `Pyramid level (bin ${level.binSize})`,
+				size: level.data.byteLength,
+				usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST
+			});
+			this.device.queue.writeBuffer(dataBuffer, 0, level.data);
+			const lodBuffer = this.device.createBuffer({
+				label: `Pyramid LOD params (bin ${level.binSize})`,
+				size: 16,
+				usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
+			});
+			this.device.queue.writeBuffer(lodBuffer, 0, new Uint32Array([
+				level.binSize,
+				level.length,
+				0,
+				0
+			]));
+			this.pyramidLevels.push({
+				dataBuffer,
+				lodBuffer,
+				binSize: level.binSize,
+				length: level.length
+			});
+		}
+	}
+	/**
+	* Chooses which compute path to run for the given samples-per-pixel.
+	* Returns -1 for the raw (fine) path, or an index into pyramidLevels.
+	*/
+	selectLevel(samplesPerPixel) {
+		if (samplesPerPixel <= COLUMN_LOOP_BUDGET$1 || this.pyramidLevels.length === 0) return -1;
+		const minBinSize = samplesPerPixel / COLUMN_LOOP_BUDGET$1;
+		for (let i = 0; i < this.pyramidLevels.length; i++) if (this.pyramidLevels[i].binSize >= minBinSize) return i;
+		return this.pyramidLevels.length - 1;
+	}
+	ensureColMinMaxBuffer(width) {
+		if (this.colMinMaxBuffer != null && this.colMinMaxCapacity >= width) return;
+		const capacity = Math.max(width, 1);
+		this.colMinMaxBuffer?.destroy();
+		this.colMinMaxBuffer = this.device.createBuffer({
+			label: "Column min/max",
+			size: capacity * 8,
+			usage: GPUBufferUsage.STORAGE
+		});
+		this.colMinMaxCapacity = capacity;
+		this.rawComputeBindGroup = this.device.createBindGroup({
+			label: "Raw compute bind group",
+			layout: this.computePipeline.getBindGroupLayout(0),
+			entries: [
+				{
+					binding: 0,
+					resource: { buffer: this.uniformBuffer }
+				},
+				{
+					binding: 1,
+					resource: { buffer: this.channelDataStorage }
+				},
+				{
+					binding: 2,
+					resource: { buffer: this.colMinMaxBuffer }
+				}
+			]
+		});
+		this.pyramidComputeBindGroups = this.pyramidLevels.map((level) => this.device.createBindGroup({
+			label: `Pyramid compute bind group (bin ${level.binSize})`,
+			layout: this.pyramidColumnPipeline.getBindGroupLayout(0),
+			entries: [
+				{
+					binding: 0,
+					resource: { buffer: this.uniformBuffer }
+				},
+				{
+					binding: 1,
+					resource: { buffer: level.dataBuffer }
+				},
+				{
+					binding: 2,
+					resource: { buffer: nullthrows$1(this.colMinMaxBuffer) }
+				},
+				{
+					binding: 3,
+					resource: { buffer: level.lodBuffer }
+				}
+			]
+		}));
+		this.renderBindGroup = this.device.createBindGroup({
+			label: "Render bind group",
+			layout: this.renderPipeline.getBindGroupLayout(0),
+			entries: [
+				{
+					binding: 0,
+					resource: { buffer: this.uniformBuffer }
+				},
+				{
+					binding: 1,
+					resource: { buffer: this.colMinMaxBuffer }
+				},
+				{
+					binding: 2,
+					resource: { buffer: this.waveformColorBuffer }
+				}
+			]
+		});
+		this.colMinMaxValid = false;
+	}
+	uniformChanged() {
+		const cur = this.uniformBytesView;
+		const prev = this.prevUniformBytes;
+		if (!this.prevUniformBytesValid) {
+			prev.set(cur);
+			this.prevUniformBytesValid = true;
+			return true;
+		}
+		for (let i = 0; i < cur.length; i++) if (cur[i] !== prev[i]) {
+			prev.set(cur);
+			return true;
+		}
+		return false;
+	}
+	colorChanged() {
+		if (!this.prevWaveformColorValid) {
+			this.prevWaveformColor.set(this.waveformColor);
+			this.prevWaveformColorValid = true;
+			return true;
+		}
+		for (let i = 0; i < 4; i++) if (this.prevWaveformColor[i] !== this.waveformColor[i]) {
+			this.prevWaveformColor.set(this.waveformColor);
+			return true;
+		}
+		return false;
+	}
+	resolveColor(color) {
+		const input = color ?? DEFAULT_WAVEFORM_COLOR$1;
+		if (this.lastColorInput === input && this.lastColorOutput != null) return this.lastColorOutput;
+		const out = ensureColorFormat$1(input);
+		this.lastColorInput = input;
+		this.lastColorOutput = out;
+		return out;
 	}
 	render(destination, scale, offset, color) {
 		const [canvas, context] = (() => {
 			if (destination instanceof GPUCanvasContext) return [destination.canvas, destination];
 			else return [destination, nullthrows$1(destination.getContext("webgpu"), "nil webgpu context")];
 		})();
-		context.configure({
-			device: this.device,
-			format: this.presentationFormat,
-			alphaMode: "premultiplied"
-		});
+		if (this.configuredContext !== context) {
+			context.configure({
+				device: this.device,
+				format: this.presentationFormat,
+				alphaMode: "premultiplied"
+			});
+			this.configuredContext = context;
+		}
 		const cwidth = canvas.width;
 		const cheight = canvas.height;
-		const waveformColor = ensureColorFormat$1(color ?? DEFAULT_WAVEFORM_COLOR$1);
+		this.ensureColMinMaxBuffer(cwidth);
+		const waveformColor = this.resolveColor(color);
 		this.setOptions(scale, cwidth, cheight, offset);
 		this.setWaveformColor(waveformColor);
-		this.device.queue.writeBuffer(this.uniformBuffer, 0, this.uniformArray);
-		this.device.queue.writeBuffer(this.waveformColorBuffer, 0, this.waveformColor);
-		const renderPassOpts = { colorAttachments: [{
-			view: context.getCurrentTexture().createView({ label: "view" }),
+		if (this.uniformChanged()) this.device.queue.writeBuffer(this.uniformBuffer, 0, this.uniformArray);
+		if (this.colorChanged()) this.device.queue.writeBuffer(this.waveformColorBuffer, 0, this.waveformColor);
+		const needsCompute = !this.colMinMaxValid || scale !== this.lastComputeScale || offset !== this.lastComputeOffset || cwidth !== this.lastComputeWidth;
+		const encoder = this.device.createCommandEncoder();
+		if (needsCompute) {
+			const level = this.selectLevel(scale);
+			const computePass = encoder.beginComputePass();
+			if (level < 0) {
+				computePass.setPipeline(this.computePipeline);
+				computePass.setBindGroup(0, nullthrows$1(this.rawComputeBindGroup));
+			} else {
+				computePass.setPipeline(this.pyramidColumnPipeline);
+				computePass.setBindGroup(0, nullthrows$1(this.pyramidComputeBindGroups[level]));
+			}
+			computePass.dispatchWorkgroups(Math.max(1, Math.ceil(cwidth / COMPUTE_WORKGROUP_SIZE$1)));
+			computePass.end();
+			this.lastComputeScale = scale;
+			this.lastComputeOffset = offset;
+			this.lastComputeWidth = cwidth;
+			this.colMinMaxValid = true;
+		}
+		const renderPass = encoder.beginRenderPass({ colorAttachments: [{
+			view: context.getCurrentTexture().createView(),
 			loadOp: "clear",
 			clearValue: {
 				r: 0,
@@ -12554,17 +12804,77 @@ var GPUWaveformRenderer$1 = class GPUWaveformRenderer$1 {
 				a: 0
 			},
 			storeOp: "store"
-		}] };
-		const encoder = this.device.createCommandEncoder({ label: `encoder ${(/* @__PURE__ */ new Date()).getTime()}` });
-		const pass = encoder.beginRenderPass(renderPassOpts);
-		pass.setPipeline(this.renderPipeline);
-		pass.setVertexBuffer(0, this.vertexBuffer);
-		pass.setBindGroup(0, this.bindGroup);
-		pass.draw(this.vertexCount);
-		pass.end();
+		}] });
+		renderPass.setPipeline(this.renderPipeline);
+		renderPass.setVertexBuffer(0, this.vertexBuffer);
+		renderPass.setBindGroup(0, nullthrows$1(this.renderBindGroup));
+		renderPass.draw(this.vertexCount);
+		renderPass.end();
 		this.device.queue.submit([encoder.finish()]);
 	}
 };
+/**
+* Builds a min/max LOD pyramid from raw channel samples.
+*
+* Level 1 reduces the raw samples in groups of `ratio`; each subsequent level
+* reduces the previous level by `ratio` again (hierarchical, so building every
+* level is O(N) total and each reduction step is cheap). A level's element i
+* holds the (min, max) over `binSize` consecutive raw samples, stored as
+* interleaved [min0, max0, min1, max1, ...] which maps directly onto a WGSL
+* `array<vec2f>`.
+*
+* Level 0 (the raw samples) is intentionally not produced here — the fine-zoom
+* path scans channelData directly, so only the coarser levels are needed.
+* Building stops once a level collapses the whole buffer into a single bin.
+*/
+function buildMinMaxPyramid$1(channelData, ratio) {
+	const levels = [];
+	const sampleCount = channelData.length;
+	if (sampleCount === 0) return levels;
+	let binSize = ratio;
+	for (;;) {
+		const length = Math.ceil(sampleCount / binSize);
+		const data = new Float32Array(length * 2);
+		if (levels.length === 0) for (let b = 0; b < length; b++) {
+			const start = b * binSize;
+			const end = Math.min(start + binSize, sampleCount);
+			let mn = channelData[start];
+			let mx = mn;
+			for (let i = start + 1; i < end; i++) {
+				const v = channelData[i];
+				if (v < mn) mn = v;
+				if (v > mx) mx = v;
+			}
+			data[b * 2] = mn;
+			data[b * 2 + 1] = mx;
+		}
+		else {
+			const prev = levels[levels.length - 1];
+			for (let b = 0; b < length; b++) {
+				const start = b * ratio;
+				const end = Math.min(start + ratio, prev.length);
+				let mn = prev.data[start * 2];
+				let mx = prev.data[start * 2 + 1];
+				for (let i = start + 1; i < end; i++) {
+					const pmn = prev.data[i * 2];
+					const pmx = prev.data[i * 2 + 1];
+					if (pmn < mn) mn = pmn;
+					if (pmx > mx) mx = pmx;
+				}
+				data[b * 2] = mn;
+				data[b * 2 + 1] = mx;
+			}
+		}
+		levels.push({
+			data,
+			binSize,
+			length
+		});
+		if (length <= 1) break;
+		binSize *= ratio;
+	}
+	return levels;
+}
 function ensureColorFormat$1(arg) {
 	if (!(typeof arg === "string")) return arg;
 	const color = Color$1(arg);
@@ -12682,7 +12992,7 @@ function C(r = [], e = []) {
 }
 //#endregion
 //#region ../webgpu-waveform/dist/webgpu-waveform.js
-var cssKeywords = {
+var color_name_default = {
 	aliceblue: [
 		240,
 		248,
@@ -13424,8 +13734,8 @@ var cssKeywords = {
 		50
 	]
 };
-var reverseNames = /* @__PURE__ */ Object.create(null);
-for (const name in cssKeywords) if (Object.hasOwn(cssKeywords, name)) reverseNames[cssKeywords[name]] = name;
+var reverseNames = Object.create(null);
+for (const name in color_name_default) if (Object.hasOwn(color_name_default, name)) reverseNames[color_name_default[name]] = name;
 var cs = {
 	to: {},
 	get: {}
@@ -13458,8 +13768,8 @@ cs.get.rgb = function(string) {
 	if (!string) return null;
 	const abbr = /^#([a-f\d]{3,4})$/i;
 	const hex = /^#([a-f\d]{6})([a-f\d]{2})?$/i;
-	const rgba = /^rgba?\(\s*([+-]?\d+)(?=[\s,])\s*(?:,\s*)?([+-]?\d+)(?=[\s,])\s*(?:,\s*)?([+-]?\d+)\s*(?:[,|/]\s*([+-]?[\d.]+)(%?)\s*)?\)$/;
-	const per = /^rgba?\(\s*([+-]?[\d.]+)%\s*,?\s*([+-]?[\d.]+)%\s*,?\s*([+-]?[\d.]+)%\s*(?:[,|/]\s*([+-]?[\d.]+)(%?)\s*)?\)$/;
+	const rgba = /^rgba?\(\s*([+-]?(?:\d*\.)?\d+(?:e\d+)?)(?=[\s,])\s*(?:,\s*)?([+-]?(?:\d*\.)?\d+(?:e\d+)?)(?=[\s,])\s*(?:,\s*)?([+-]?(?:\d*\.)?\d+(?:e\d+)?)\s*(?:[\s,|/]\s*([+-]?(?:\d*\.)?\d+(?:e\d+)?)(%?)\s*)?\)$/i;
+	const per = /^rgba?\(\s*([+-]?[\d.]+)%\s*,?\s*([+-]?[\d.]+)%\s*,?\s*([+-]?[\d.]+)%\s*(?:[\s,|/]\s*([+-]?[\d.]+)(%?)\s*)?\)$/i;
 	const keyword = /^(\w+)$/;
 	let rgb = [
 		0,
@@ -13484,20 +13794,20 @@ cs.get.rgb = function(string) {
 		for (i = 0; i < 3; i++) rgb[i] = Number.parseInt(match[i] + match[i], 16);
 		if (hexAlpha) rgb[3] = Number.parseInt(hexAlpha + hexAlpha, 16) / 255;
 	} else if (match = string.match(rgba)) {
-		for (i = 0; i < 3; i++) rgb[i] = Number.parseInt(match[i + 1], 10);
+		for (i = 0; i < 3; i++) rgb[i] = Number.parseFloat(match[i + 1]);
 		if (match[4]) rgb[3] = match[5] ? Number.parseFloat(match[4]) * .01 : Number.parseFloat(match[4]);
 	} else if (match = string.match(per)) {
 		for (i = 0; i < 3; i++) rgb[i] = Math.round(Number.parseFloat(match[i + 1]) * 2.55);
 		if (match[4]) rgb[3] = match[5] ? Number.parseFloat(match[4]) * .01 : Number.parseFloat(match[4]);
-	} else if (match = string.match(keyword)) {
+	} else if (match = string.toLowerCase().match(keyword)) {
 		if (match[1] === "transparent") return [
 			0,
 			0,
 			0,
 			0
 		];
-		if (!Object.hasOwn(cssKeywords, match[1])) return null;
-		rgb = cssKeywords[match[1]];
+		if (!Object.hasOwn(color_name_default, match[1])) return null;
+		rgb = color_name_default[match[1]].slice();
 		rgb[3] = 1;
 		return rgb;
 	} else return null;
@@ -13507,7 +13817,7 @@ cs.get.rgb = function(string) {
 };
 cs.get.hsl = function(string) {
 	if (!string) return null;
-	const match = string.match(/^hsla?\(\s*([+-]?(?:\d{0,3}\.)?\d+)(?:deg)?\s*,?\s*([+-]?[\d.]+)%\s*,?\s*([+-]?[\d.]+)%\s*(?:[,|/]\s*([+-]?(?=\.\d|\d)(?:0|[1-9]\d*)?(?:\.\d*)?(?:[eE][+-]?\d+)?)\s*)?\)$/);
+	const match = string.match(/^hsla?\(\s*([+-]?(?:\d{0,3}\.)?\d+)(?:deg)?\s*,?\s*([+-]?[\d.]+)%\s*,?\s*([+-]?[\d.]+)%\s*(?:[,|/]\s*([+-]?(?=\.\d|\d)(?:0|[1-9]\d*)?(?:\.\d*)?(?:e[+-]?\d+)?)\s*)?\)$/i);
 	if (match) {
 		const alpha = Number.parseFloat(match[4]);
 		return [
@@ -13521,7 +13831,7 @@ cs.get.hsl = function(string) {
 };
 cs.get.hwb = function(string) {
 	if (!string) return null;
-	const match = string.match(/^hwb\(\s*([+-]?\d{0,3}(?:\.\d+)?)(?:deg)?\s*,\s*([+-]?[\d.]+)%\s*,\s*([+-]?[\d.]+)%\s*(?:,\s*([+-]?(?=\.\d|\d)(?:0|[1-9]\d*)?(?:\.\d*)?(?:[eE][+-]?\d+)?)\s*)?\)$/);
+	const match = string.match(/^hwb\(\s*([+-]?\d{0,3}(?:\.\d+)?)(?:deg)?\s*[\s,]\s*([+-]?[\d.]+)%\s*[\s,]\s*([+-]?[\d.]+)%\s*(?:[\s,]\s*([+-]?(?=\.\d|\d)(?:0|[1-9]\d*)?(?:\.\d*)?(?:e[+-]?\d+)?)\s*)?\)$/i);
 	if (match) {
 		const alpha = Number.parseFloat(match[4]);
 		return [
@@ -13564,7 +13874,7 @@ function hexDouble(number_) {
 	return string_.length < 2 ? "0" + string_ : string_;
 }
 var reverseKeywords = {};
-for (const key of Object.keys(cssKeywords)) reverseKeywords[cssKeywords[key]] = key;
+for (const key of Object.keys(color_name_default)) reverseKeywords[color_name_default[key]] = key;
 var convert$1 = {
 	rgb: {
 		channels: 3,
@@ -13798,8 +14108,8 @@ convert$1.rgb.keyword = function(rgb) {
 	if (reversed) return reversed;
 	let currentClosestDistance = Number.POSITIVE_INFINITY;
 	let currentClosestKeyword;
-	for (const keyword of Object.keys(cssKeywords)) {
-		const value = cssKeywords[keyword];
+	for (const keyword of Object.keys(color_name_default)) {
+		const value = color_name_default[keyword];
 		const distance = comparativeDistance(rgb, value);
 		if (distance < currentClosestDistance) {
 			currentClosestDistance = distance;
@@ -13809,7 +14119,7 @@ convert$1.rgb.keyword = function(rgb) {
 	return currentClosestKeyword;
 };
 convert$1.keyword.rgb = function(keyword) {
-	return cssKeywords[keyword];
+	return [...color_name_default[keyword]];
 };
 convert$1.rgb.xyz = function(rgb) {
 	const r = srgbNonlinearTransformInv(rgb[0] / 255);
@@ -14447,8 +14757,8 @@ convert$1.rgb.gray = function(rgb) {
 };
 function buildGraph() {
 	const graph = {};
-	const models2 = Object.keys(convert$1);
-	for (let { length } = models2, i = 0; i < length; i++) graph[models2[i]] = {
+	const models = Object.keys(convert$1);
+	for (let { length } = models, i = 0; i < length; i++) graph[models[i]] = {
 		distance: -1,
 		parent: null
 	};
@@ -14493,9 +14803,9 @@ function wrapConversion(toModel, graph) {
 function route(fromModel) {
 	const graph = deriveBFS(fromModel);
 	const conversion = {};
-	const models2 = Object.keys(graph);
-	for (let { length } = models2, i = 0; i < length; i++) {
-		const toModel = models2[i];
+	const models = Object.keys(graph);
+	for (let { length } = models, i = 0; i < length; i++) {
+		const toModel = models[i];
 		if (graph[toModel].parent === null) continue;
 		conversion[toModel] = wrapConversion(toModel, graph);
 	}
@@ -14853,9 +15163,113 @@ function zeroArray(array, length) {
 	return array;
 }
 function nullthrows(val, message) {
-	if (val == null) throw new Error(message);
+	if (val == null) throw new Error(message || `Expected ${val} to be non nil.`);
 	return val;
 }
+var waveformComputeShader = `
+
+struct Uniforms {
+  scaleFactor: f32,
+  width: f32,
+  height: f32,
+  offset: i32,
+  bufferLength: i32, // raw channel sample count
+};
+
+@group(0) @binding(0) var<uniform> uniforms: Uniforms;
+@group(0) @binding(1) var<storage, read> channelData: array<f32>;
+@group(0) @binding(2) var<storage, read_write> colMinMax: array<vec2f>;
+
+@compute @workgroup_size(64)
+fn computeMain(@builtin(global_invocation_id) gid: vec3u) {
+  let x = gid.x;
+  if (f32(x) >= uniforms.width) {
+    return;
+  }
+
+  let samplesPerPixel = uniforms.scaleFactor;
+  let index = i32(floor(f32(x) * samplesPerPixel));
+  let base = uniforms.offset + index;
+
+  if (base < 0 || base >= uniforms.bufferLength) {
+    colMinMax[x] = vec2f(0.0, 0.0);
+    return;
+  }
+
+  let first = channelData[base];
+  var minV = first;
+  var maxV = first;
+
+  // Cap the loop so we never read past the channel buffer.
+  let remaining = uniforms.bufferLength - base - 1;
+  let loopMax = min(i32(samplesPerPixel), remaining);
+  for (var i = 1; i <= loopMax; i++) {
+    let v = channelData[base + i];
+    minV = min(minV, v);
+    maxV = max(maxV, v);
+  }
+  colMinMax[x] = vec2f(minV, maxV);
+}
+`;
+var waveformPyramidComputeShader = `
+
+struct Uniforms {
+  scaleFactor: f32,
+  width: f32,
+  height: f32,
+  offset: i32,
+  bufferLength: i32, // raw channel sample count
+};
+
+// Describes the selected pyramid level. Padded to 16 bytes for uniform layout.
+struct LodParams {
+  binSize: u32,     // raw samples summarized by each bin of this level
+  levelLength: u32, // number of bins in this level
+  _pad0: u32,
+  _pad1: u32,
+};
+
+@group(0) @binding(0) var<uniform> uniforms: Uniforms;
+@group(0) @binding(1) var<storage, read> levelData: array<vec2f>;
+@group(0) @binding(2) var<storage, read_write> colMinMax: array<vec2f>;
+@group(0) @binding(3) var<uniform> lod: LodParams;
+
+@compute @workgroup_size(64)
+fn computeMain(@builtin(global_invocation_id) gid: vec3u) {
+  let x = gid.x;
+  if (f32(x) >= uniforms.width) {
+    return;
+  }
+
+  let samplesPerPixel = uniforms.scaleFactor;
+  let index = i32(floor(f32(x) * samplesPerPixel));
+  let startSample = uniforms.offset + index;
+
+  if (startSample < 0 || startSample >= uniforms.bufferLength) {
+    colMinMax[x] = vec2f(0.0, 0.0);
+    return;
+  }
+
+  // Raw sample range [startSample, endSample) covered by this column.
+  let endSample = min(startSample + i32(samplesPerPixel), uniforms.bufferLength);
+
+  // Map that range onto bins of the selected level, clamped to the level.
+  let binSize = i32(lod.binSize);
+  let lastBin = i32(lod.levelLength) - 1;
+  let b0 = clamp(startSample / binSize, 0, lastBin);
+  let b1 = clamp((endSample - 1) / binSize, 0, lastBin);
+
+  let firstBin = levelData[b0];
+  var minV = firstBin.x;
+  var maxV = firstBin.y;
+  for (var b = b0 + 1; b <= b1; b++) {
+    let cur = levelData[b];
+    minV = min(minV, cur.x);
+    maxV = max(maxV, cur.y);
+  }
+  colMinMax[x] = vec2f(minV, maxV);
+}
+`;
 var waveformShader = `
 
 struct Uniforms {
@@ -14867,13 +15281,8 @@ struct Uniforms {
 };
 
 @group(0) @binding(0) var<uniform> uniforms: Uniforms;
-@group(0) @binding(1) var<storage> channelData: array<f32>;
+@group(0) @binding(1) var<storage, read> colMinMax: array<vec2f>;
 @group(0) @binding(2) var<uniform> waveformColor: vec4f;
-
-struct VertexInput {
-  @location(0) pos: vec2f,
-  @builtin(instance_index) instance: u32,
-};
 
 struct VertexOutput {
   @builtin(position) pos: vec4f,
@@ -14882,7 +15291,6 @@ struct VertexOutput {
 @vertex
 fn vertexMain(
   @location(0) pos: vec2f,
-  @builtin(instance_index) instance: u32
 ) -> VertexOutput {
   var output: VertexOutput;
   output.pos = vec4f(pos, 0, 1);
@@ -14893,77 +15301,24 @@ struct FragInput {
   @builtin(position) fragCoord: vec4f,
 };
 
-// 4s = 192,000 samples
-
 @fragment
-fn fragmentMain(input: FragInput) -> @location(0) vec4f {   
-  
-  let samplesPerPixel = uniforms.scaleFactor;
-  let WIDTH = uniforms.width;
-  let HEIGHT = uniforms.height;
-  let OFFSET = uniforms.offset;
-  let BUFFERLENGTH = uniforms.bufferLength;
+fn fragmentMain(input: FragInput) -> @location(0) vec4f {
+  let x = u32(input.fragCoord.x);
+  let mm = colMinMax[x];
+  let min_sample = mm.x;
+  let max_sample = mm.y;
 
-  let index = i32(floor(input.fragCoord.x * f32(samplesPerPixel)));
-  let sample = channelData[OFFSET + index];
-  
-  var min_sample = sample;
-  var max_sample = sample;
-  
-  for (var i = 0; i <= i32(samplesPerPixel); i++) {
-    let fwd = channelData[OFFSET + index + i];
-    max_sample = max(max_sample, fwd);
-    min_sample = min(min_sample, fwd);
-    // sample = select(sample, fwd, abs(fwd) > abs(sample));
-    // i += 1;
-  }
-
-  // sample = 0.4;
-  // let c = input.cell / scale;
-  // return vec4f(c, 1-c.y, 1);
-  // let red = vec4f(1, 0, 0, 1);
-  // let cyan = vec4f(0, 1, 1, 1);
-  // to make red/cyan checkered scale
-  // let scale = vec2u(input.pos.xy) / 8;
-  // let checker = (scale.x + scale.y) % 2 == 1;
-  // return select(red, cyan, checker);
-
-  // PCM is -1 to 1 btw
-  // normalized -1 to 1, where -1 is down and 1 is up
-  let yPosNorm = -1.0 * (2.0 * (input.fragCoord.y / HEIGHT) - 1.0);
-
-  // return select(
-  //   vec4f(0, 0, 0, 0),
-  //   vec4f(0, 1, 0, 1),
-  //   input.pos.y <= HEIGHT
-  // );
-  // return vec4f(0, floor(input.pos.y) / HEIGHT, 0, 1);
-
-  // let checker = 
-  //   // same sign
-  //   (yPosNorm * sample) > 0 && 
-  //   // closer to 0
-  //   abs(yPosNorm) <= abs(sample);
-  // let yval = select(f32(0), f32(1), checker);
-  // let debugVal = select(f32(0), f32(1), 1 > 0);
-  // let yToSampleDist = 1 - (abs(sample - yPosNorm));
-  // let ytmax = 1 - (abs(max_sample - yPosNorm));
-  // let ytmin = 1 - (abs(min_sample - yPosNorm));
-  // let s = select(f32(0), f32(1), yToSampleDist > 0.99);
-  // let sup = select(f32(0), f32(1), ytmax > 0.99);
-  // let sdown = select(f32(0), f32(1), ytmin > 0.99);
-
+  // PCM is -1 to 1; -1 is down and 1 is up
+  let yPosNorm = -1.0 * (2.0 * (input.fragCoord.y / uniforms.height) - 1.0);
 
   let epsilon = 1.0 / uniforms.height;
   let insideWaveform = (yPosNorm <= max_sample + epsilon && yPosNorm >= min_sample - epsilon);
 
-  let sfinal = select(
+  return select(
     vec4f(0.0, 0.0, 0.0, 0.0),
     waveformColor,
     insideWaveform
   );
-
-  return sfinal;
 }
 `;
 var DEFAULT_WAVEFORM_COLOR = [
@@ -14972,6 +15327,9 @@ var DEFAULT_WAVEFORM_COLOR = [
 	0,
 	1
 ];
+var COMPUTE_WORKGROUP_SIZE = 64;
+var PYRAMID_RATIO = 64;
+var COLUMN_LOOP_BUDGET = 64;
 var TWO_TRIANGLES_COVERING_VIEWPORT = new Float32Array([
 	-1,
 	-1,
@@ -14987,66 +15345,35 @@ var TWO_TRIANGLES_COVERING_VIEWPORT = new Float32Array([
 	1
 ]);
 var GPUWaveformRenderer = class GPUWaveformRenderer {
-	constructor(renderPipeline, channelData, device, presentationFormat) {
-		this.renderPipeline = renderPipeline;
-		this.device = device;
-		this.presentationFormat = presentationFormat;
-		this.vertices = TWO_TRIANGLES_COVERING_VIEWPORT;
-		this.vertexBuffer = this.device.createBuffer({
-			label: "Cell vertices",
-			size: this.vertices.byteLength,
-			usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST
-		});
-		this.vertexCount = this.vertices.length / 2;
-		this.uniformArray = this.defaultUniformArray();
-		this.uniformBuffer = this.device.createBuffer({
-			label: "Grid Uniforms",
-			size: this.uniformArray.byteLength,
-			usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
-		});
-		this.channelData = channelData;
-		this.channelDataStorage = this.device.createBuffer({
-			label: "Channel Data",
-			size: channelData.byteLength,
-			usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST
-		});
-		this.waveformColor = new Float32Array(DEFAULT_WAVEFORM_COLOR);
-		this.waveformColorBuffer = this.device.createBuffer({
-			label: "Waveform Color",
-			size: this.waveformColor.byteLength,
-			usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
-		});
-		this.bindGroup = this.device.createBindGroup({
-			label: "GPU Waveform renderer bind group",
-			layout: renderPipeline.getBindGroupLayout(0),
-			entries: [
-				{
-					binding: 0,
-					resource: { buffer: this.uniformBuffer }
-				},
-				{
-					binding: 1,
-					resource: { buffer: this.channelDataStorage }
-				},
-				{
-					binding: 2,
-					resource: { buffer: this.waveformColorBuffer }
-				}
-			]
-		});
-		this.device.queue.writeBuffer(this.channelDataStorage, 0, this.channelData);
-		this.device.queue.writeBuffer(this.vertexBuffer, 0, this.vertices);
-	}
-	bindGroup;
 	vertices;
 	vertexBuffer;
 	vertexCount;
 	uniformArray;
 	uniformBuffer;
+	uniformBytesView;
+	prevUniformBytes;
+	prevUniformBytesValid = false;
 	waveformColor;
 	waveformColorBuffer;
+	prevWaveformColor = new Float32Array(4);
+	prevWaveformColorValid = false;
 	channelData;
 	channelDataStorage;
+	computePipeline;
+	pyramidColumnPipeline;
+	pyramidLevels = [];
+	colMinMaxBuffer = null;
+	colMinMaxCapacity = 0;
+	rawComputeBindGroup = null;
+	pyramidComputeBindGroups = [];
+	renderBindGroup = null;
+	lastComputeScale = NaN;
+	lastComputeOffset = NaN;
+	lastComputeWidth = NaN;
+	colMinMaxValid = false;
+	configuredContext = null;
+	lastColorInput = null;
+	lastColorOutput = null;
 	setWaveformColor([r, g, b, a]) {
 		this.waveformColor[0] = r;
 		this.waveformColor[1] = g;
@@ -15065,9 +15392,8 @@ var GPUWaveformRenderer = class GPUWaveformRenderer {
 		if (!navigator.gpu) throw new Error("WebGPU not supported in this browser.");
 		const adapter = await navigator.gpu.requestAdapter();
 		if (adapter == null) throw new Error("No appropriate GPUAdapter found.");
-		const device = await adapter.requestDevice({ label: `Device ${(/* @__PURE__ */ new Date()).getTime()}` });
-		const canvasFormat = navigator.gpu.getPreferredCanvasFormat();
-		return GPUWaveformRenderer.createPipeline(channelData, device, canvasFormat);
+		const device = await adapter.requestDevice();
+		return GPUWaveformRenderer.createSync(device, channelData);
 	}
 	static createSync(device, channelData) {
 		if (!navigator.gpu) throw new Error("WebGPU not supported in this browser.");
@@ -15083,22 +15409,44 @@ var GPUWaveformRenderer = class GPUWaveformRenderer {
 				shaderLocation: 0
 			}]
 		};
-		const cellShaderModule = device.createShaderModule({
-			label: "Waveform Shader",
+		const renderShaderModule = device.createShaderModule({
+			label: "Waveform Render Shader",
 			code: waveformShader
 		});
+		const computeShaderModule = device.createShaderModule({
+			label: "Waveform Compute Shader",
+			code: waveformComputeShader
+		});
+		const pyramidColumnShaderModule = device.createShaderModule({
+			label: "Waveform Pyramid Column Shader",
+			code: waveformPyramidComputeShader
+		});
 		return new GPUWaveformRenderer(device.createRenderPipeline({
-			label: "Cell pipeline",
+			label: "Waveform render pipeline",
 			layout: "auto",
 			vertex: {
-				module: cellShaderModule,
+				module: renderShaderModule,
 				entryPoint: "vertexMain",
 				buffers: [vertexBufferLayout]
 			},
 			fragment: {
-				module: cellShaderModule,
+				module: renderShaderModule,
 				entryPoint: "fragmentMain",
 				targets: [{ format: canvasFormat }]
+			}
+		}), device.createComputePipeline({
+			label: "Waveform compute pipeline",
+			layout: "auto",
+			compute: {
+				module: computeShaderModule,
+				entryPoint: "computeMain"
+			}
+		}), device.createComputePipeline({
+			label: "Waveform pyramid column pipeline",
+			layout: "auto",
+			compute: {
+				module: pyramidColumnShaderModule,
+				entryPoint: "computeMain"
 			}
 		}), channelData, device, canvasFormat);
 	}
@@ -15110,29 +15458,241 @@ var GPUWaveformRenderer = class GPUWaveformRenderer {
 		f32View[1] = 1;
 		f32View[2] = 1;
 		i32View[3] = 0;
-		i32View[4] = arrayBuffer.byteLength;
-		console.log("FOObar");
+		i32View[4] = 0;
 		return arrayBuffer;
+	}
+	constructor(renderPipeline, computePipeline, pyramidColumnPipeline, channelData, device, presentationFormat) {
+		this.renderPipeline = renderPipeline;
+		this.device = device;
+		this.presentationFormat = presentationFormat;
+		this.computePipeline = computePipeline;
+		this.pyramidColumnPipeline = pyramidColumnPipeline;
+		this.vertices = TWO_TRIANGLES_COVERING_VIEWPORT;
+		this.vertexBuffer = this.device.createBuffer({
+			label: "Cell vertices",
+			size: this.vertices.byteLength,
+			usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST
+		});
+		this.vertexCount = this.vertices.length / 2;
+		this.uniformArray = this.defaultUniformArray();
+		this.uniformBuffer = this.device.createBuffer({
+			label: "Grid Uniforms",
+			size: this.uniformArray.byteLength,
+			usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
+		});
+		this.uniformBytesView = new Uint8Array(this.uniformArray);
+		this.prevUniformBytes = new Uint8Array(this.uniformArray.byteLength);
+		this.channelData = channelData;
+		this.channelDataStorage = this.device.createBuffer({
+			label: "Channel Data",
+			size: channelData.byteLength,
+			usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST
+		});
+		new Int32Array(this.uniformArray)[4] = this.channelData.length;
+		this.waveformColor = new Float32Array(DEFAULT_WAVEFORM_COLOR);
+		this.waveformColorBuffer = this.device.createBuffer({
+			label: "Waveform Color",
+			size: this.waveformColor.byteLength,
+			usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
+		});
+		this.device.queue.writeBuffer(this.channelDataStorage, 0, this.channelData);
+		this.device.queue.writeBuffer(this.vertexBuffer, 0, this.vertices);
+		this.buildPyramid();
+	}
+	/**
+	* Builds the min/max LOD pyramid once and uploads each level to the GPU.
+	*
+	* The reduction runs on the CPU (see buildMinMaxPyramid): it's a one-time,
+	* load-only cost and keeping it on the CPU makes the buffer layout trivial to
+	* reason about. For very large buffers the level-1 pass is O(N) and can take
+	* tens of milliseconds; if that ever becomes a problem it can be moved to a
+	* GPU reduction pass or a worker without touching the render path — only this
+	* method and the buffers it fills would change.
+	*/
+	buildPyramid() {
+		const levels = buildMinMaxPyramid(this.channelData, PYRAMID_RATIO);
+		for (const level of levels) {
+			const dataBuffer = this.device.createBuffer({
+				label: `Pyramid level (bin ${level.binSize})`,
+				size: level.data.byteLength,
+				usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST
+			});
+			this.device.queue.writeBuffer(dataBuffer, 0, level.data);
+			const lodBuffer = this.device.createBuffer({
+				label: `Pyramid LOD params (bin ${level.binSize})`,
+				size: 16,
+				usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
+			});
+			this.device.queue.writeBuffer(lodBuffer, 0, new Uint32Array([
+				level.binSize,
+				level.length,
+				0,
+				0
+			]));
+			this.pyramidLevels.push({
+				dataBuffer,
+				lodBuffer,
+				binSize: level.binSize,
+				length: level.length
+			});
+		}
+	}
+	/**
+	* Chooses which compute path to run for the given samples-per-pixel.
+	* Returns -1 for the raw (fine) path, or an index into pyramidLevels.
+	*/
+	selectLevel(samplesPerPixel) {
+		if (samplesPerPixel <= COLUMN_LOOP_BUDGET || this.pyramidLevels.length === 0) return -1;
+		const minBinSize = samplesPerPixel / COLUMN_LOOP_BUDGET;
+		for (let i = 0; i < this.pyramidLevels.length; i++) if (this.pyramidLevels[i].binSize >= minBinSize) return i;
+		return this.pyramidLevels.length - 1;
+	}
+	ensureColMinMaxBuffer(width) {
+		if (this.colMinMaxBuffer != null && this.colMinMaxCapacity >= width) return;
+		const capacity = Math.max(width, 1);
+		this.colMinMaxBuffer?.destroy();
+		this.colMinMaxBuffer = this.device.createBuffer({
+			label: "Column min/max",
+			size: capacity * 8,
+			usage: GPUBufferUsage.STORAGE
+		});
+		this.colMinMaxCapacity = capacity;
+		this.rawComputeBindGroup = this.device.createBindGroup({
+			label: "Raw compute bind group",
+			layout: this.computePipeline.getBindGroupLayout(0),
+			entries: [
+				{
+					binding: 0,
+					resource: { buffer: this.uniformBuffer }
+				},
+				{
+					binding: 1,
+					resource: { buffer: this.channelDataStorage }
+				},
+				{
+					binding: 2,
+					resource: { buffer: this.colMinMaxBuffer }
+				}
+			]
+		});
+		this.pyramidComputeBindGroups = this.pyramidLevels.map((level) => this.device.createBindGroup({
+			label: `Pyramid compute bind group (bin ${level.binSize})`,
+			layout: this.pyramidColumnPipeline.getBindGroupLayout(0),
+			entries: [
+				{
+					binding: 0,
+					resource: { buffer: this.uniformBuffer }
+				},
+				{
+					binding: 1,
+					resource: { buffer: level.dataBuffer }
+				},
+				{
+					binding: 2,
+					resource: { buffer: nullthrows(this.colMinMaxBuffer) }
+				},
+				{
+					binding: 3,
+					resource: { buffer: level.lodBuffer }
+				}
+			]
+		}));
+		this.renderBindGroup = this.device.createBindGroup({
+			label: "Render bind group",
+			layout: this.renderPipeline.getBindGroupLayout(0),
+			entries: [
+				{
+					binding: 0,
+					resource: { buffer: this.uniformBuffer }
+				},
+				{
+					binding: 1,
+					resource: { buffer: this.colMinMaxBuffer }
+				},
+				{
+					binding: 2,
+					resource: { buffer: this.waveformColorBuffer }
+				}
+			]
+		});
+		this.colMinMaxValid = false;
+	}
+	uniformChanged() {
+		const cur = this.uniformBytesView;
+		const prev = this.prevUniformBytes;
+		if (!this.prevUniformBytesValid) {
+			prev.set(cur);
+			this.prevUniformBytesValid = true;
+			return true;
+		}
+		for (let i = 0; i < cur.length; i++) if (cur[i] !== prev[i]) {
+			prev.set(cur);
+			return true;
+		}
+		return false;
+	}
+	colorChanged() {
+		if (!this.prevWaveformColorValid) {
+			this.prevWaveformColor.set(this.waveformColor);
+			this.prevWaveformColorValid = true;
+			return true;
+		}
+		for (let i = 0; i < 4; i++) if (this.prevWaveformColor[i] !== this.waveformColor[i]) {
+			this.prevWaveformColor.set(this.waveformColor);
+			return true;
+		}
+		return false;
+	}
+	resolveColor(color) {
+		const input = color ?? DEFAULT_WAVEFORM_COLOR;
+		if (this.lastColorInput === input && this.lastColorOutput != null) return this.lastColorOutput;
+		const out = ensureColorFormat(input);
+		this.lastColorInput = input;
+		this.lastColorOutput = out;
+		return out;
 	}
 	render(destination, scale, offset, color) {
 		const [canvas, context] = (() => {
 			if (destination instanceof GPUCanvasContext) return [destination.canvas, destination];
 			else return [destination, nullthrows(destination.getContext("webgpu"), "nil webgpu context")];
 		})();
-		context.configure({
-			device: this.device,
-			format: this.presentationFormat,
-			alphaMode: "premultiplied"
-		});
+		if (this.configuredContext !== context) {
+			context.configure({
+				device: this.device,
+				format: this.presentationFormat,
+				alphaMode: "premultiplied"
+			});
+			this.configuredContext = context;
+		}
 		const cwidth = canvas.width;
 		const cheight = canvas.height;
-		const waveformColor = ensureColorFormat(color ?? DEFAULT_WAVEFORM_COLOR);
+		this.ensureColMinMaxBuffer(cwidth);
+		const waveformColor = this.resolveColor(color);
 		this.setOptions(scale, cwidth, cheight, offset);
 		this.setWaveformColor(waveformColor);
-		this.device.queue.writeBuffer(this.uniformBuffer, 0, this.uniformArray);
-		this.device.queue.writeBuffer(this.waveformColorBuffer, 0, this.waveformColor);
-		const renderPassOpts = { colorAttachments: [{
-			view: context.getCurrentTexture().createView({ label: "view" }),
+		if (this.uniformChanged()) this.device.queue.writeBuffer(this.uniformBuffer, 0, this.uniformArray);
+		if (this.colorChanged()) this.device.queue.writeBuffer(this.waveformColorBuffer, 0, this.waveformColor);
+		const needsCompute = !this.colMinMaxValid || scale !== this.lastComputeScale || offset !== this.lastComputeOffset || cwidth !== this.lastComputeWidth;
+		const encoder = this.device.createCommandEncoder();
+		if (needsCompute) {
+			const level = this.selectLevel(scale);
+			const computePass = encoder.beginComputePass();
+			if (level < 0) {
+				computePass.setPipeline(this.computePipeline);
+				computePass.setBindGroup(0, nullthrows(this.rawComputeBindGroup));
+			} else {
+				computePass.setPipeline(this.pyramidColumnPipeline);
+				computePass.setBindGroup(0, nullthrows(this.pyramidComputeBindGroups[level]));
+			}
+			computePass.dispatchWorkgroups(Math.max(1, Math.ceil(cwidth / COMPUTE_WORKGROUP_SIZE)));
+			computePass.end();
+			this.lastComputeScale = scale;
+			this.lastComputeOffset = offset;
+			this.lastComputeWidth = cwidth;
+			this.colMinMaxValid = true;
+		}
+		const renderPass = encoder.beginRenderPass({ colorAttachments: [{
+			view: context.getCurrentTexture().createView(),
 			loadOp: "clear",
 			clearValue: {
 				r: 0,
@@ -15141,17 +15701,77 @@ var GPUWaveformRenderer = class GPUWaveformRenderer {
 				a: 0
 			},
 			storeOp: "store"
-		}] };
-		const encoder = this.device.createCommandEncoder({ label: `encoder ${(/* @__PURE__ */ new Date()).getTime()}` });
-		const pass = encoder.beginRenderPass(renderPassOpts);
-		pass.setPipeline(this.renderPipeline);
-		pass.setVertexBuffer(0, this.vertexBuffer);
-		pass.setBindGroup(0, this.bindGroup);
-		pass.draw(this.vertexCount);
-		pass.end();
+		}] });
+		renderPass.setPipeline(this.renderPipeline);
+		renderPass.setVertexBuffer(0, this.vertexBuffer);
+		renderPass.setBindGroup(0, nullthrows(this.renderBindGroup));
+		renderPass.draw(this.vertexCount);
+		renderPass.end();
 		this.device.queue.submit([encoder.finish()]);
 	}
 };
+/**
+* Builds a min/max LOD pyramid from raw channel samples.
+*
+* Level 1 reduces the raw samples in groups of `ratio`; each subsequent level
+* reduces the previous level by `ratio` again (hierarchical, so building every
+* level is O(N) total and each reduction step is cheap). A level's element i
+* holds the (min, max) over `binSize` consecutive raw samples, stored as
+* interleaved [min0, max0, min1, max1, ...] which maps directly onto a WGSL
+* `array<vec2f>`.
+*
+* Level 0 (the raw samples) is intentionally not produced here — the fine-zoom
+* path scans channelData directly, so only the coarser levels are needed.
+* Building stops once a level collapses the whole buffer into a single bin.
+*/
+function buildMinMaxPyramid(channelData, ratio) {
+	const levels = [];
+	const sampleCount = channelData.length;
+	if (sampleCount === 0) return levels;
+	let binSize = ratio;
+	for (;;) {
+		const length = Math.ceil(sampleCount / binSize);
+		const data = new Float32Array(length * 2);
+		if (levels.length === 0) for (let b = 0; b < length; b++) {
+			const start = b * binSize;
+			const end = Math.min(start + binSize, sampleCount);
+			let mn = channelData[start];
+			let mx = mn;
+			for (let i = start + 1; i < end; i++) {
+				const v = channelData[i];
+				if (v < mn) mn = v;
+				if (v > mx) mx = v;
+			}
+			data[b * 2] = mn;
+			data[b * 2 + 1] = mx;
+		}
+		else {
+			const prev = levels[levels.length - 1];
+			for (let b = 0; b < length; b++) {
+				const start = b * ratio;
+				const end = Math.min(start + ratio, prev.length);
+				let mn = prev.data[start * 2];
+				let mx = prev.data[start * 2 + 1];
+				for (let i = start + 1; i < end; i++) {
+					const pmn = prev.data[i * 2];
+					const pmx = prev.data[i * 2 + 1];
+					if (pmn < mn) mn = pmn;
+					if (pmx > mx) mx = pmx;
+				}
+				data[b * 2] = mn;
+				data[b * 2 + 1] = mx;
+			}
+		}
+		levels.push({
+			data,
+			binSize,
+			length
+		});
+		if (length <= 1) break;
+		binSize *= ratio;
+	}
+	return levels;
+}
 function ensureColorFormat(arg) {
 	if (!(typeof arg === "string")) return arg;
 	const color = Color(arg);
@@ -15178,12 +15798,12 @@ function Example({ render }) {
 	const [promise] = (0, import_react$1.useState)(() => loadSound(audioContext, "Cow-Shaped.wav"));
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(m, {
 		fallbackRender: ({ error }) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: ["error: ", `${error}`] }),
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react$1.Suspense, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react$1.Suspense, {
 			fallback: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "loading..." }),
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(RenderPromise, {
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(RenderPromise, {
 				promise,
 				render
-			}), ";"]
+			})
 		})
 	});
 }
