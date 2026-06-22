@@ -1,5 +1,12 @@
 # webgpu-waveform-react
 
+## 3.4.1
+
+### Patch Changes
+
+- Updated dependencies
+  - webgpu-waveform@3.4.0
+
 ## 3.4.0
 
 ### Minor Changes
